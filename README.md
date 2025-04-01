@@ -1,6 +1,19 @@
-# React + Vite
+# 🛒 Grocery UI (React + Vite)
+
+This repository contains the frontend setup for a Grocery UI application built using **React** and **Vite**.
+
+---
+
+## 🚀 Project Setup
+
+### 📌 **Step 1: Clone the Repository**
 
 
-## Expanding the ESLint configuration
+git clone https://github.com/Aviraj0403/Grocery-ui.git
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+##  Step 2: Navigate into the Project
+cd Grocery-ui
+
+##📌 Step 3: Install Dependencies
+
+npm install
