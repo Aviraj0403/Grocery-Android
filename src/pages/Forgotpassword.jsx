@@ -6,12 +6,11 @@ import Axios from '../utils/Axios';
 import summaryApi from '../common/SummeryApi';
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+const Forgotpassword = () => {
     const[data,setdata] = useState({
         email:"",
-        password:"",
     })
-    const[showpassword,setshowpassword] = useState(false);
+
 
     const handlechange = (e) =>{
            const {name,value} = e.target;
@@ -28,7 +27,7 @@ const Login = () => {
        
 
         const response = await Axios({
-            ...summaryApi.login,
+            ...summaryApi.forgot_password,
             data : data
         })
 
@@ -40,7 +39,7 @@ const Login = () => {
   return (
     <section className=' w-full container mx-auto px-4'>
       <div className='bg-green-50 my-4 w-full max-w-lg mx-auto rounded p-6'>
-          <p className='hover:text-green-600'>Login</p>
+          <p className='hover:text-green-600 font-bold  mb-2 text-slate-700'>Forgot-password</p>
 
           <form className='grid gap-3 py-4' onSubmit={handleregister}>
 
@@ -55,48 +54,19 @@ const Login = () => {
                 />
             </div>
 
-
-            <div className='grid gap-1'>
-                <label htmlFor="password">Password:</label>
-                <div className='bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700'>
-                <input type={showpassword ? "text":"password"} id='password' autoFocus 
-                className='w-full outline-none'
-                name='password'
-                value={data.password}
-                onChange={handlechange}
-                placeholder='Enter your password'
-                />
-                 <div onClick={()=>setshowpassword(preve => !preve)} className='cursor-pointer'>
-                    {
-                        showpassword ?(
-                            <FaRegEye/>
-                        ):(
-                            <FaRegEyeSlash/>
-                        )
-                    }
-                </div>
-                </div>
-                <Link to={"/forgot-password"} className='block ml-auto hover:text-green-600'>Forgot password</Link>
-
-            </div>
-           
-
-
-
-           
            <button onClick={handleregister} disabled={!validvalue} className={`${validvalue ? "bg-green-600 hover:bg-green-700":"bg-gray-500"}  text-white py-2 rounded font-semibold my-3 tracking-wide`}>
-            Login
+            Send otp
             </button>
             
           </form>
 
           <p>
-            Dont have account ? <Link to={"/register"} 
-            className='font-semibold text-green-600 hover:text-green-700'>Register</Link>
+            Already have an account ? <Link to={"/login"} 
+            className='font-semibold text-green-600 hover:text-green-700'>Login</Link>
           </p>
       </div>
     </section>
   )
 }
 
-export default Login
+export default Forgotpassword;
