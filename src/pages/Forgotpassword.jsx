@@ -22,6 +22,7 @@ const Forgotpassword = () => {
                  }
            })
     }
+    
     const handleregister = async(e)=>{
         e.preventDefault();
        
