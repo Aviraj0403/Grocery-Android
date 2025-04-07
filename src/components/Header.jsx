@@ -7,6 +7,8 @@ import useMobile from "../hooks/Usemobile";
 import { FaCartShopping } from "react-icons/fa6";
 import { RiLoginCircleFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import { RxTriangleDown } from "react-icons/rx";
+import { GoTriangleUp } from "react-icons/go";
 
 
 const Header = () => {
@@ -62,14 +64,29 @@ const Header = () => {
             </button>
             {/* desktop only */}
             <div className="hidden lg:flex items-center gap-10">
-              <button onClick={redirectToLoginPage} className="text-lg  flex items-center gap-2 bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-white">
-                <div className="animate-bounce">
-                  <RiLoginCircleFill size={32}/>
-                  </div>
-                  <div className="animate-bounce">
-                    login
-                  </div>
-              </button>
+               
+                {
+                  user?._id ? (
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p>Account</p>
+                        <RxTriangleDown/>
+                        {/* <GoTriangleUp/> */}
+                      </div>
+                    </div>
+                  ) : (
+                    <button onClick={redirectToLoginPage} className="text-lg  flex items-center gap-2 bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-white">
+                    <div className="animate-bounce">
+                      <RiLoginCircleFill size={32}/>
+                      </div>
+                      <div className="animate-bounce">
+                        login
+                      </div>
+                  </button>
+                  )
+                }
+
+             
               <button className="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-white">
                 {/* add to cart icon  */}
                 <div className="animate-bounce">

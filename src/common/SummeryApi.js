@@ -1,4 +1,5 @@
 import { register } from "swiper/element"
+import { setUserDetails } from "../store/Userslice";
 
 export const baseURL = "http://localhost:8080"
 
@@ -26,6 +27,10 @@ const summaryApi = {
     refreshToken : {
         url : 'api/user/refresh-token',
         method : 'post'
+    },
+    userDetails : {
+        url : "/api/user/user-details",
+        method : 'get'
     }
 }
 export default summaryApi;
