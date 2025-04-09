@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../assets/logo2.png";
 import Search from "./Search";
 import { Link, useLocation,useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { RiLoginCircleFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { RxTriangleDown } from "react-icons/rx";
 import { GoTriangleUp } from "react-icons/go";
+import Usermenu from "./Usermenu";
 
 
 const Header = () => {
@@ -17,11 +18,23 @@ const Header = () => {
   const isSearchPage = location.pathname === "/search";
   const navigate = useNavigate();
   const user = useSelector((state)=>state?.user)
+  const [openUserMenu,setopenUserMenu] = useState(false);
 
   console.log("user from store",user)
 
   const redirectToLoginPage = ()=>{
      navigate("/login")
+  }
+  const handleCloseUserMenu = ()=>{
+    setopenUserMenu(false);
+  }
+
+  const handleMobileUser= () =>{
+        if(!user._id){
+          navigate("/login")
+          return
+        }
+        navigate("/user")
   }
 
   // console.log(first)
@@ -59,7 +72,7 @@ const Header = () => {
 
             {/* user icon display in only mobile version */}
 
-            <button className="text-neutral-500 lg:hidden ">
+            <button className="text-neutral-500 lg:hidden" onClick={handleMobileUser}>
               <FaRegUserCircle size={26} />
             </button>
             {/* desktop only */}
@@ -67,12 +80,28 @@ const Header = () => {
                
                 {
                   user?._id ? (
-                    <div>
-                      <div className="flex items-center gap-2">
+                    <div className="relative">
+                      <div onClick={()=>setopenUserMenu(preve => !preve)} className="flex select-none items-center gap-2 cursor-pointer">
                         <p>Account</p>
-                        <RxTriangleDown/>
-                        {/* <GoTriangleUp/> */}
+                        {
+                          openUserMenu ? (
+                            <GoTriangleUp size={24}/>
+                          ) : (
+                            <RxTriangleDown size={24}/>
+                          )
+                        }
+                        
                       </div>
+                      {
+                        openUserMenu && (
+                          <div className="absolute right-0 top-12">
+                          <div className="bg-red-500 rounded p-4 min-w-52 lg:shadow-lg">
+                            <Usermenu close={handleCloseUserMenu}/>
+                          </div>
+                      </div>
+                        )
+                      }
+                   
                     </div>
                   ) : (
                     <button onClick={redirectToLoginPage} className="text-lg  flex items-center gap-2 bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-white">

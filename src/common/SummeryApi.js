@@ -1,5 +1,5 @@
 import { register } from "swiper/element"
-import { setUserDetails } from "../store/Userslice";
+import { logout, setUserDetails } from "../store/Userslice";
 
 export const baseURL = "http://localhost:8080"
 
@@ -31,6 +31,10 @@ const summaryApi = {
     userDetails : {
         url : "/api/user/user-details",
         method : 'get'
+    },
+    logout : {
+        url: "/api/user/logout",
+        method : "get"
     }
 }
 export default summaryApi;

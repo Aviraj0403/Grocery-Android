@@ -8,5 +8,5 @@ body{
   font-weight: weight;
   font-style: normal;
   
-    @apply bg-slate-200
+    @apply bg-slate-200 text-neutral-700
 }
