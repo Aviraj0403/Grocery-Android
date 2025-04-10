@@ -20,7 +20,6 @@ const Header = () => {
   const user = useSelector((state)=>state?.user)
   const [openUserMenu,setopenUserMenu] = useState(false);
 
-  console.log("user from store",user)
 
   const redirectToLoginPage = ()=>{
      navigate("/login")

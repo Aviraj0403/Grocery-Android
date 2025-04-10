@@ -38,8 +38,8 @@ const Login = () => {
         
         console.log(response);
         toast.success("Logged in successfully!");
-        // navigate('/');
-        <Link to={"/"} className='block ml-auto hover:text-green-600'>Forgot password</Link>
+        navigate('/');
+        // <Link to={"/"} className='block ml-auto hover:text-green-600'>Forgot password</Link>
     }
 
    const validvalue = Object.values(data).every(el => el)
