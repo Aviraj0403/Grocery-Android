@@ -1,11 +1,11 @@
 import { register } from "swiper/element"
 import { logout, setUserDetails } from "../store/Userslice";
 
-export const baseURL = "http://localhost:8080"
+export const baseURL = "http://localhost:4001"
 
 const summaryApi = {
     register :{
-        baseURL : '/api/user/register',
+        baseURL : '/api/user/login',
         method : 'post'
     },
     login : {

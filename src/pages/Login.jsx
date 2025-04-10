@@ -4,9 +4,13 @@ import { FaRegEye } from "react-icons/fa";
 import toast from 'react-hot-toast';
 import Axios from '../utils/Axios';
 import summaryApi from '../common/SummeryApi';
+import { useNavigate } from 'react-router-dom';
+
 import { Link } from 'react-router-dom';
 
 const Login = () => {
+    const navigate = useNavigate();
+
     const[data,setdata] = useState({
         email:"",
         password:"",
@@ -31,9 +35,11 @@ const Login = () => {
             ...summaryApi.login,
             data : data
         })
-
+        
         console.log(response);
-
+        toast.success("Logged in successfully!");
+        // navigate('/');
+        <Link to={"/"} className='block ml-auto hover:text-green-600'>Forgot password</Link>
     }
 
    const validvalue = Object.values(data).every(el => el)
