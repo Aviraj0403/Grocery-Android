@@ -1,19 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import { RouterProvider } from 'react-router-dom'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import { RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store/Store.js';
 import router from './route/Index.jsx'
+// import router from './router.jsx';
+// import WindowContextProvider from './context/windowContext.jsx';
 
-// import router from './router.jsx'
-import { Provider } from 'react-redux'
-import { store } from './store/Store.js'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-    <RouterProvider router={router}/>
+
+      {/* <WindowContextProvider> */}
+        <RouterProvider router={router} />
+      {/* </WindowContextProvider> */}
     </Provider>
-    
-    {/* <App /> */}
-  </StrictMode>,
-)
+  </StrictMode>
+);

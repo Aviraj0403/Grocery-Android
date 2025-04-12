@@ -14,7 +14,8 @@ import Myorder from "./pages/Myorder";
 import Address from "./pages/Address";
 
 // Admin related imports
-// import { AdminLayout, AdminDashboard, AdminUsers, AdminOrders } from "./admin";
+import {AdminLayout,AdminDashboard} from "./admin";
+// import { AdminDashboard} from "./admin/dashboardAdmin";
 
 const router = createBrowserRouter([
    {
@@ -43,8 +44,8 @@ const router = createBrowserRouter([
          element: <AdminLayout />,
          children: [
            { path: "", element: <AdminDashboard /> },
-           { path: "users", element: <AdminUsers /> },
-           { path: "orders", element: <AdminOrders /> },
+          //  { path: "users", element: <AdminUsers /> },
+          //  { path: "orders", element: <AdminOrders /> },
          ],
        },
      ],
