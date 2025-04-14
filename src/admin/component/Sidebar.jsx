@@ -31,7 +31,7 @@ function Sidebar({ className, toggleSidebar }) {
         {/* PRODUCT MANAGEMENT */}
         <NavSection title="Products">
           <NavItem to="products" label="All Products" icon={<FaBoxOpen size={20} />} />
-          <NavItem to="add-product" label="Add Product" icon={<FaPlusSquare size={20} />} />
+          <NavItem to="addProduct" label="Add Product" icon={<FaPlusSquare size={20} />} />
           <NavItem to="categories" label="Categories" icon={<MdCategory size={20} />} />
           <NavItem to="inventory" label="Inventory" icon={<MdInventory2 size={20} />} />
         </NavSection>

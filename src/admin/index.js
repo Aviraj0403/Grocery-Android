@@ -9,3 +9,8 @@ export {
   RouterCumb,
   ProgressBar,
 } from "./component/index.js";
+export {
+  AddProduct,
+} from "./pages/index.js";
+
+// export {addProduct } from "./pages/AddProduct/index.js";

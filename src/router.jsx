@@ -8,14 +8,16 @@ import Forgotpassword from "./pages/Forgotpassword";
 import Otpverifiaction from "./pages/Otpverifiaction";
 import Resetpassword from "./pages/Resetpassword";
 import Usermenumobile from "./pages/Usermenumobile";
+
+// user section
 import Dashboard from "./layouts/Dashboard";
 import Profile from "./pages/Profile";
 import Myorder from "./pages/Myorder";
 import Address from "./pages/Address";
 
 // Admin related imports
-import {AdminLayout,AdminDashboard} from "./admin";
-// import { AdminDashboard} from "./admin/dashboardAdmin";
+import {AdminLayout,AdminDashboard, AddProduct} from "./admin";
+// import { AdminDashboard} from "./admin";
 
 const router = createBrowserRouter([
    {
@@ -44,6 +46,7 @@ const router = createBrowserRouter([
          element: <AdminLayout />,
          children: [
            { path: "", element: <AdminDashboard /> },
+           { path: "addProduct", element: <AddProduct /> },
           //  { path: "users", element: <AdminUsers /> },
           //  { path: "orders", element: <AdminOrders /> },
          ],

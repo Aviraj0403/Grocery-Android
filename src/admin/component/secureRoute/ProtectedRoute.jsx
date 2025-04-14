@@ -1,21 +1,21 @@
+// src/components/ProtectedRoute.jsx
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext.jsx';
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { user } = useAuth();
+  console.log("user", user);
 
-  // If there is no logged in user, redirect to login
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
-  // If allowedRoles are provided, check if the current user's role is allowed
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
-  // If everything is okay, render the nested routes/components
+
   return <Outlet />;
 };
 
