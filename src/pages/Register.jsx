@@ -4,17 +4,20 @@ import { FaRegEye } from "react-icons/fa";
 import toast from 'react-hot-toast';
 import Axios from '../utils/Axios';
 import summaryApi from '../common/SummeryApi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import AxiosToastError from '../utils/AxiosToastError';
 
 const Register = () => {
     const[data,setdata] = useState({
-        name:"",
+        userName:"",
         email:"",
+        phoneNumber:"",
         password:"",
         confirmPassword:""
     })
     const[showpassword,setshowpassword] = useState(false);
     const[showconfirmpassword,setshowconfirmpassword] = useState(false);
+    const navigate = useNavigate();
     const handlechange = (e) =>{
            const {name,value} = e.target;
 
@@ -33,12 +36,33 @@ const Register = () => {
             )  
             return 
         }
+       try {
         const response = await Axios({
-            ...summaryApi.register
-           
+            ...summaryApi.register,
+           data : data
         })
 
-        console.log(response);
+        if(response.data.error){
+            toast.error(response.data.message)
+        }
+         
+        if(response.data.success){
+            toast.success(response.data.message)
+            setdata({
+                userName:"",
+                email:"",
+                phoneNumber:"",
+                password:"",
+                confirmPassword:""
+            })
+            navigate("/login")
+        }
+
+       } catch (error) {
+        AxiosToastError(error)
+       }
+
+        
 
     }
 
@@ -51,10 +75,10 @@ const Register = () => {
           <form className='grid gap-3 mt-6' onSubmit={handleregister}>
             <div className='grid gap-1'>
                 <label htmlFor="name">Name:</label>
-                <input type="text" id='name' autoFocus 
+                <input type="text" id='userName' autoFocus 
                 className='bg-blue-50 p-2 border rounded outline-none focus:border-green-700'
-                name='name'
-                value={data.name}
+                name='userName'
+                value={data.userName}
                 onChange={handlechange}
                 placeholder='Enter your name...'
                 />
@@ -68,6 +92,18 @@ const Register = () => {
                 value={data.email}
                 onChange={handlechange}
                 placeholder='Enter your email...'
+                />
+            </div>
+
+
+            <div className='grid gap-1 '>
+                <label htmlFor="number">Number:</label>
+                <input type="number" id='phoneNumber' autoFocus 
+                className='bg-blue-50 p-2 border rounded outline-none focus:border-green-700'
+                name='phoneNumber'
+                value={data.phoneNumber}
+                onChange={handlechange}
+                placeholder='Enter your number'
                 />
             </div>
 

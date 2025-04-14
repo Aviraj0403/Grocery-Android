@@ -5,7 +5,7 @@ export const baseURL = "http://localhost:4001"
 
 const summaryApi = {
     register :{
-        baseURL : '/api/user/login',
+        url : '/api/user/register',
         method : 'post'
     },
     login : {
@@ -13,16 +13,16 @@ const summaryApi = {
         method : 'post'
     },
     forgot_password : {
-        url : '/api/user/forgot-password',
-        method : 'put'
+        url : '/api/user/forgotPassword',
+        method : 'post'
     },
     forgot_password_otp_verification : {
-        url : 'api/user/verify-forgot-password-otp',
-        method : 'put'
+        url : 'api/user/forgotPassword',
+        method : 'post'
     },
     resetPassword : {
-        url : '/api/user/reset-password',
-        method : 'put'
+        url : '/api/user/resetPassword',
+        method : 'post'
     },
     refreshToken : {
         url : 'api/user/refresh-token',
@@ -35,6 +35,14 @@ const summaryApi = {
     logout : {
         url: "/api/user/logout",
         method : "get"
+    },
+    uploadAvatar : {
+        url : "/api/user/upload-avatar",
+        method :"put"
+    },
+    updateUserDetails : {
+        url : "/api/user/update-user",
+        method : "put"
     }
 }
 export default summaryApi;

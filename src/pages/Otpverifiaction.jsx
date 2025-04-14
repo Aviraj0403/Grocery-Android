@@ -4,12 +4,13 @@ import { FaRegEye } from "react-icons/fa";
 import toast from 'react-hot-toast';
 import Axios from '../utils/Axios';
 import summaryApi from '../common/SummeryApi';
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 const Otpverifiaction = () => {
     const[data,setdata] = useState(["","","","","",""])
     const inputref = useRef([])
     const location = useLocation();
+    const navigate = useNavigate();
     // console.log("location",location);
 
     // useEffect(() => {
@@ -32,6 +33,7 @@ const Otpverifiaction = () => {
         })
 
         console.log(response);
+        navigate("/reset-password")
 
     }
 

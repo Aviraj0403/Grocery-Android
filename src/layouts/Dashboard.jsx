@@ -9,13 +9,13 @@ const Dashboard = () => {
        <div className='container mx-auto p-3 grid lg:grid-cols-2'>
         
             {/* left part */}
-            <div className='py-3 sticky top-30 overflow-y-auto hidden lg:block'>
+            <div className='py-3 sticky top-30 overflow-y-auto hidden lg:block border-r'>
                   <Usermenu/>
             </div>
         
 
             {/* right part */}  
-            <div className='bg-white p-4'>
+            <div className='bg-white min-h-[75vh]'>
                  <Outlet/>
             </div>
         

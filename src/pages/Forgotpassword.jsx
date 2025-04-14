@@ -4,11 +4,13 @@ import { FaRegEye } from "react-icons/fa";
 import toast from 'react-hot-toast';
 import Axios from '../utils/Axios';
 import summaryApi from '../common/SummeryApi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Forgotpassword = () => {
+  const  navigate = useNavigate();
     const[data,setdata] = useState({
         email:"",
+        
     })
 
 
@@ -33,6 +35,8 @@ const Forgotpassword = () => {
         })
 
         console.log(response);
+       toast.success("Otp at email");
+        navigate('/verification-otp');
 
     }
 

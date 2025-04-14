@@ -35,8 +35,12 @@ const Login = () => {
             ...summaryApi.login,
             data : data
         })
+
+        // if(response.data.error){
+        //     toast.error("wrong password")
+        // }
         
-        console.log(response);
+        // console.log(response);
         toast.success("Logged in successfully!");
         navigate('/');
         // <Link to={"/"} className='block ml-auto hover:text-green-600'>Forgot password</Link>
