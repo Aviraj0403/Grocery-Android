@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 // Mock data
 const mockOrders = [
-  { id: 1, customer: "Alice", total: 1500, status: "Paid" },
+  { id: 1, customer: "Tiwari", total: 1500, status: "Paid" },
   { id: 2, customer: "Bob", total: 800, status: "Pending" },
   { id: 3, customer: "Charlie", total: 2200, status: "Paid" },
 ];
