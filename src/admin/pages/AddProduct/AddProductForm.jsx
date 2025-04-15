@@ -42,7 +42,7 @@ const AddProduct = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axiosInstance.get('/api/categories');
+        const response = await axiosInstance.get('http://localhost:4001/api/getAllCategories');
         // Adjust based on your API response structure.
         setCategories(response.data.categories || []);
       } catch (error) {
@@ -103,7 +103,7 @@ const AddProduct = () => {
     e.preventDefault();
     try {
       // Make POST request to create the product
-      const response = await axiosInstance.post('/api/products', product);
+      const response = await axiosInstance.post('http://localhost:4001/api/createProduct', product);
       toast.success("Product added successfully!");
       // Reset form or redirect as needed.
       setProduct({
