@@ -6,39 +6,39 @@
         },
       {
         "src": "/admin/(.*)",
-        "dest": "/index.html"
+        "dest": "/"
       },
       {
         "src": "/dashboard/(.*)",
-        "dest": "/index.html"
+        "dest": "/"
       },
       {
         "src": "/user/(.*)",
-        "dest": "/index.html"
+        "dest": "/"
       },
       {
         "src": "/search",
-        "dest": "/index.html"
+        "dest": "/"
       },
       {
         "src": "/login",
-        "dest": "/index.html"
+        "dest": "/"
       },
       {
         "src": "/register",
-        "dest": "/index.html"
+        "dest": "/"
       },
       {
         "src": "/forgot-password",
-        "dest": "/index.html"
+        "dest": "/"
       },
       {
         "src": "/verification-otp",
-        "dest": "/index.html"
+        "dest": "/"
       },
       {
         "src": "/reset-password",
-        "dest": "/index.html"
+        "dest": "/"
       }
      
     ]

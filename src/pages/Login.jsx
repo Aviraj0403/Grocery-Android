@@ -42,7 +42,7 @@ const Login = () => {
         
         // console.log(response);
         toast.success("Logged in successfully!");
-        navigate('/');
+        navigate('/admin');
         // <Link to={"/"} className='block ml-auto hover:text-green-600'>Forgot password</Link>
     }
 
