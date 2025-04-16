@@ -1,0 +1,55 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "src/index.js",
+        "use": "@vercel/static-build"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/admin/(.*)",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/dashboard/(.*)",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/user/(.*)",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/search",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/login",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/register",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/forgot-password",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/verification-otp",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/reset-password",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/:path*",
+        "dest": "/index.html"
+      }
+    ],
+    "env": {
+      "REACT_APP_API_URL": "https://grocery-backend-9jjx.onrender.com"
+    }
+  }
+  
