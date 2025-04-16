@@ -11,7 +11,7 @@ function Header({ toggleSidebar, openSidebar }) {
       <div className="container mx-auto flex justify-between">
         {/* <img src={logo} alt="" className=" w-14 h-12 rounded-full scale-150" /> */}
         <div className="flex items-center space-x-4">
-          <p className="text-sm max-sm:hidden">Branch: Dwarka (Main)</p>
+          <p className="text-sm max-sm:hidden">Branch: Bettiah (Main)</p>
           <select className="border rounded px-2 py-1 text-black max-sm:hidden">
             <option value="english">English</option>
             <option value="Hindi">Hindi</option>
@@ -26,7 +26,7 @@ function Header({ toggleSidebar, openSidebar }) {
               onClick={() => setIsOpenProfile(!isOpenProfile)}
               className="bg-orange-700 flex items-center gap-1 text-white px-3 py-2 rounded"
             >
-              <FaUserAstronaut /> John Doe {/* Hardcoded username */}
+              <FaUserAstronaut /> Shanu-Mart {/* Hardcoded username */}
             </button>
             {isOpenProfile && <Profile />}
           </div>

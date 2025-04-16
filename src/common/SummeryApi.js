@@ -1,7 +1,8 @@
 import { register } from "swiper/element"
 import { logout, setUserDetails } from "../store/Userslice";
 
-export const baseURL = "http://localhost:4001"
+export const baseURL = "https://grocery-backend-9jjx.onrender.com"
+// export const baseURL = "http://localhost:4001"
 
 const summaryApi = {
     register :{

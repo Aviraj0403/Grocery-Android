@@ -17,7 +17,7 @@ const Footer = () => {
         <a href="" className='hov'>
           <FaInstagram/>
         </a>
-        <a href="" className='hov'>
+        <a href="/admin" className='hov'>
           <FaLinkedin/>
         </a>
         <a href="" className='hov' >

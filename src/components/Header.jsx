@@ -103,12 +103,12 @@ const Header = () => {
                    
                     </div>
                   ) : (
-                    <button onClick={redirectToLoginPage} className="text-lg  flex items-center gap-2 bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-white">
-                    <div className="animate-bounce">
-                      <RiLoginCircleFill size={32}/>
+                    <button onClick={redirectToLoginPage} className="text-lg  flex items-center gap-2  hover:text-green-500 px-4 py-2 ">
+                    <div>
+                      {/* <RiLoginCircleFill size={32}/> */}
                       </div>
-                      <div className="animate-bounce">
-                        login
+                      <div>
+                        Login
                       </div>
                   </button>
                   )
@@ -118,9 +118,9 @@ const Header = () => {
               <button className="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-white">
                 {/* add to cart icon  */}
                 <div className="animate-bounce">
-                   <FaCartShopping size={32}/>
+                   <FaCartShopping size={32} className="hover:text-neutral-500"/>
                 </div>
-                <div className="font-bold animate-bounce">
+                <div className="font-bold py-1">
                   My Cart
                 </div>
               </button>

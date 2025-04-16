@@ -25,13 +25,14 @@ function Sidebar({ className, toggleSidebar }) {
       {/* MAIN NAV */}
       <div className="px-2">
         <NavSection title="Main">
-          <NavItem to="dashboard" label="Dashboard" icon={<MdDashboard size={20} />} />
+          <NavItem to="/admin" label="Dashboard" icon={<MdDashboard size={20} />} />
         </NavSection>
 
         {/* PRODUCT MANAGEMENT */}
         <NavSection title="Products">
-          <NavItem to="products" label="All Products" icon={<FaBoxOpen size={20} />} />
+          <NavItem to="adminProducts" label="All Products" icon={<FaBoxOpen size={20} />} />
           <NavItem to="addProduct" label="Add Product" icon={<FaPlusSquare size={20} />} />
+          {/* <NavItem to="editProduct" label="Edit Product" icon={<FaPlusSquare size={20} />} /> */}
           <NavItem to="categories" label="Categories" icon={<MdCategory size={20} />} />
           <NavItem to="inventory" label="Inventory" icon={<MdInventory2 size={20} />} />
         </NavSection>

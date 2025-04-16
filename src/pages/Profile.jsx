@@ -15,7 +15,7 @@ const Profile = () => {
     mobile: user.mobile,
   });
 
-  const [loading,setloading] = useState(false);
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     setuserdata({
@@ -36,28 +36,26 @@ const Profile = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       setloading(true);
       const response = await Axios({
-              ...summaryApi.updateUserDetails,
-              data : userdata
-      })
+        ...summaryApi.updateUserDetails,
+        data: userdata,
+      });
 
-        const {data : responseData} = response
+      const { data: responseData } = response;
 
-        if(responseData.success){
-          toast.success(responseData.message);
-        }
-
+      if (responseData.success) {
+        toast.success(responseData.message);
+      }
     } catch (error) {
       AxiosToastError(error);
-    }finally{
+    } finally {
       setloading(false);
     }
-
   };
   return (
     <div>
@@ -127,10 +125,7 @@ const Profile = () => {
         </div>
 
         <button className="border px-4 py-2 font-semibold border border-green-500 text-green-500 hover:text-neutral-800 rounded  hover:bg-green-600">
-          {
-            loading ? "Loading.." : "Submit"
-          }
-        
+          {loading ? "Loading.." : "Submit"}
         </button>
       </form>
     </div>
