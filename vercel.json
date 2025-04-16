@@ -1,11 +1,4 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "src/main.jsx",
-        "use": "@vercel/static-build"
-      }
-    ],
     "routes": [
       {
         "src": "/admin/(.*)",
@@ -44,12 +37,9 @@
         "dest": "/index.html"
       },
       {
-        "src": "/:path*",
+        "src": "/(.*)",
         "dest": "/index.html"
       }
-    ],
-    "env": {
-      "REACT_APP_API_URL": "https://grocery-backend-9jjx.onrender.com"
-    }
+    ]
   }
   
