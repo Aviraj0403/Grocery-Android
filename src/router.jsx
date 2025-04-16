@@ -16,7 +16,7 @@ import Myorder from "./pages/Myorder";
 import Address from "./pages/Address";
 
 // Admin related imports
-import {AdminLayout,AdminDashboard, AddProduct} from "./admin";
+import {AdminLayout,AdminDashboard, AddProduct, AdminProducts, EditProducts} from "./admin";
 // import { AdminDashboard} from "./admin";
 
 const router = createBrowserRouter([
@@ -47,6 +47,9 @@ const router = createBrowserRouter([
          children: [
            { path: "", element: <AdminDashboard /> },
            { path: "addProduct", element: <AddProduct /> },
+           { path: "adminProducts", element: <AdminProducts /> },
+           { path: "edit-product/:id", element: <EditProducts /> },
+           
           //  { path: "users", element: <AdminUsers /> },
           //  { path: "orders", element: <AdminOrders /> },
          ],

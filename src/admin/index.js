@@ -11,6 +11,8 @@ export {
 } from "./component/index.js";
 export {
   AddProduct,
+  AdminProducts,
+  EditProducts,
 } from "./pages/index.js";
 
 // export {addProduct } from "./pages/AddProduct/index.js";

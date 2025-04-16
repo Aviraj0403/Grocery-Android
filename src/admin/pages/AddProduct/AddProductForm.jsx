@@ -1,10 +1,33 @@
-// src/components/AddProductForm.jsx
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../../utils/Axios'; // Your Axios instance
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import { Button, Box, Typography, TextField, MenuItem } from '@mui/material';
+import axiosInstance from '../../../utils/Axios';
 import { toast } from 'react-hot-toast';
 
+// Validation schema for the product form
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required("Product name is required"),
+  category: Yup.string().required("Category is required"),
+  description: Yup.string().required("Description is required"),
+  // Add more validations as needed
+});
+
+// Initial form values
+const initialValues = {
+  name: "",
+  productCode: "",
+  category: "",
+  subCategory: "",
+  brand: "",
+  description: "",
+  discount: 0,
+  multilingualName: { en: "", hi: "" },
+  meta: { origin: "", expiryDate: "", ingredients: "" },
+};
+
 const AddProduct = () => {
-  // Define initial state for the product
+  // State for the product (images remains as an array)
   const [product, setProduct] = useState({
     name: '',
     slug: '',
@@ -17,7 +40,7 @@ const AddProduct = () => {
     variants: [],
     activeVariant: '',
     tags: '',
-    images: '', // You could use file inputs or URL strings
+    images: [],
     discount: 0,
     rating: 0,
     reviewCount: 0,
@@ -27,7 +50,7 @@ const AddProduct = () => {
     meta: { origin: '', expiryDate: '', ingredients: '' }
   });
 
-  // For handling a new variant before adding it to product.variants.
+  // For handling a variant before adding it to product.variants.
   const [variant, setVariant] = useState({
     unit: '',
     price: '',
@@ -35,32 +58,35 @@ const AddProduct = () => {
     packaging: ''
   });
 
-  // Categories to populate the category dropdown
+  // States for image file selection and preview URLs.
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+
+  // Categories for the dropdown – fetched from backend.
   const [categories, setCategories] = useState([]);
 
-  // Fetch categories on component mount
+  // Fetch categories on mount.
   useEffect(() => {
-    const fetchCategories = async () => {
+    async function fetchCategories() {
       try {
         const response = await axiosInstance.get('http://localhost:4001/api/getAllCategories');
-        // Adjust based on your API response structure.
         setCategories(response.data.categories || []);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
         toast.error("Failed to fetch categories");
       }
-    };
-
+    }
     fetchCategories();
   }, []);
 
-  // General input change handler for product fields
+  // Handle general input changes.
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProduct(prev => ({ ...prev, [name]: value }));
+    // Convert empty subCategory to null so Mongoose can cast it properly.
+    setProduct(prev => ({ ...prev, [name]: name === "subCategory" && value === "" ? null : value }));
   };
 
-  // For multilingual inputs (for example, English and Hindi names)
+  // Handle multilingual input changes.
   const handleMultilingualChange = (e) => {
     const { name, value } = e.target;
     setProduct(prev => ({
@@ -69,7 +95,7 @@ const AddProduct = () => {
     }));
   };
 
-  // For meta fields such as origin, expiryDate, and ingredients
+  // Handle meta data inputs.
   const handleMetaChange = (e) => {
     const { name, value } = e.target;
     setProduct(prev => ({
@@ -78,34 +104,73 @@ const AddProduct = () => {
     }));
   };
 
-  // Handle changes for the variant input group
+  // Handle changes in the variant inputs.
   const handleVariantChange = (e) => {
     const { name, value } = e.target;
     setVariant(prev => ({ ...prev, [name]: value }));
   };
 
-  // Append current variant to product.variants, then reset variant state
+  // Append variant to list.
   const addVariant = () => {
-    if (variant.unit && variant.price && variant.stockQty) {
-      setProduct(prev => ({
-        ...prev,
-        variants: [...prev.variants, variant]
-      }));
-      // Optionally clear variant state
-      setVariant({ unit: '', price: '', stockQty: '', packaging: '' });
-    } else {
+    if (!variant.unit || !variant.price || !variant.stockQty) {
       toast.error("Please fill in all variant fields (unit, price, stock).");
+      return;
     }
+    setProduct(prev => ({
+      ...prev,
+      variants: [...prev.variants, variant]
+    }));
+    setVariant({ unit: '', price: '', stockQty: '', packaging: '' });
   };
 
-  // Submit handler for the form
+  // Handle file selection for image upload.
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length !== 1 && files.length !== 3) {
+      toast.error("Please select either 1 or 3 images.");
+      return;
+    }
+    setSelectedFiles(files);
+    const filePreviews = files.map(file => URL.createObjectURL(file));
+    setPreviews(filePreviews);
+  };
+
+  // Remove selected images.
+  const removeImages = () => {
+    setSelectedFiles([]);
+    setPreviews([]);
+  };
+
+  // Handle form submission:
+  // 1. Create the product (without images).
+  // 2. Upload images using a separate API call.
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      // Make POST request to create the product
+      // Create product without images.
       const response = await axiosInstance.post('http://localhost:4001/api/createProduct', product);
-      toast.success("Product added successfully!");
-      // Reset form or redirect as needed.
+      const createdProduct = response.data.product;
+      toast.success("Product created successfully!");
+
+      // Upload images if the selection is valid.
+      if (selectedFiles.length === 1 || selectedFiles.length === 3) {
+        const formData = new FormData();
+        selectedFiles.forEach(file => {
+          formData.append('files', file);
+        });
+        await axiosInstance.post(
+          `http://localhost:4001/api/products/${createdProduct._id}/images`,
+          formData,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
+        toast.success("Images uploaded successfully!");
+        removeImages();
+      } else {
+        toast.error("Please select either 1 or 3 images before submitting.");
+      }
+
+      // Reset product state (clear the form).
       setProduct({
         name: '',
         slug: '',
@@ -118,7 +183,7 @@ const AddProduct = () => {
         variants: [],
         activeVariant: '',
         tags: '',
-        images: '',
+        images: [],
         discount: 0,
         rating: 0,
         reviewCount: 0,
@@ -134,97 +199,171 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <Box className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
+      <Typography variant="h4" className="text-center text-2xl font-bold mb-6">
+        Add New Product
+      </Typography>
+
+      {/* Image Upload Section */}
+      <Box className="flex justify-center mb-6">
+        <Box className="relative w-full max-w-md bg-yellow-50 border-2 border-orange-400 border-dashed rounded-lg p-4 flex flex-col items-center">
+          {previews.length > 0 ? (
+            <>
+              {previews.map((src, index) => (
+                <img
+                  key={index}
+                  src={src}
+                  alt={`Preview ${index + 1}`}
+                  className="max-w-full max-h-48 rounded-lg mb-2"
+                />
+              ))}
+              <Button
+                type="button"
+                onClick={removeImages}
+                variant="contained"
+                color="error"
+                className="absolute top-2 right-2"
+              >
+                Remove
+              </Button>
+            </>
+          ) : (
+            <>
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <label htmlFor="image" className="bg-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer">
+                Upload Product Image(s)
+              </label>
+            </>
+          )}
+        </Box>
+      </Box>
+
+      {/* Product Details Form */}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <Box className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block font-semibold mb-2">Product Name</label>
+            <input
+              type="text"
+              name="name"
+              value={product.name}
+              onChange={handleInputChange}
+              className="w-full border p-3 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-semibold mb-2">Slug</label>
+            <input
+              type="text"
+              name="slug"
+              value={product.slug}
+              onChange={handleInputChange}
+              className="w-full border p-3 rounded"
+              required
+            />
+          </div>
+        </Box>
+
+        <Box className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block font-semibold mb-2">Category</label>
+            <select
+              name="category"
+              value={product.category}
+              onChange={handleInputChange}
+              required
+              className="w-full border p-3 rounded"
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block font-semibold mb-2">Sub Category</label>
+            <select
+              name="subCategory"
+              value={product.subCategory || ""}
+              onChange={handleInputChange}
+              className="w-full border p-3 rounded"
+            >
+              <option value="">None</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </Box>
+
         <div>
-          <label className="block font-semibold">Product Name</label>
-          <input
-            type="text"
-            name="name"
-            value={product.name}
-            onChange={handleInputChange}
-            className="w-full border p-2"
-            required
-          />
-        </div>
-        <div>
-          <label className="block font-semibold">Slug</label>
-          <input
-            type="text"
-            name="slug"
-            value={product.slug}
-            onChange={handleInputChange}
-            className="w-full border p-2"
-            required
-          />
-        </div>
-        <div>
-          <label className="block font-semibold">Category</label>
-          <select
-            name="category"
-            value={product.category}
-            onChange={handleInputChange}
-            required
-            className="w-full border p-2"
-          >
-            <option value="">Select Category</option>
-            {categories.map(cat => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block font-semibold">Brand</label>
+          <label className="block font-semibold mb-2">Brand</label>
           <input
             type="text"
             name="brand"
             value={product.brand}
             onChange={handleInputChange}
-            className="w-full border p-2"
+            className="w-full border p-3 rounded"
           />
         </div>
+
         <div>
-          <label className="block font-semibold">Description</label>
+          <label className="block font-semibold mb-2">Description</label>
           <textarea
             name="description"
             value={product.description}
             onChange={handleInputChange}
-            className="w-full border p-2"
+            className="w-full border p-3 rounded"
             required
-          />
+          ></textarea>
         </div>
-        <div>
-          <h3 className="font-bold">Multilingual Name</h3>
-          <label>English:</label>
+
+        <div className="border p-4 rounded-md">
+          <Typography variant="h6" className="mb-2 font-bold">
+            Multilingual Name
+          </Typography>
+          <label className="block">English:</label>
           <input
             type="text"
             name="en"
             value={product.multilingualName.en}
-            onChange={handleMultilingualChange}
-            className="w-full border p-2"
+            onChange={(e) => handleMultilingualChange(e)}
+            className="w-full border p-3 rounded mb-2"
           />
-          <label>Hindi:</label>
+          <label className="block">Hindi:</label>
           <input
             type="text"
             name="hi"
             value={product.multilingualName.hi}
-            onChange={handleMultilingualChange}
-            className="w-full border p-2"
+            onChange={(e) => handleMultilingualChange(e)}
+            className="w-full border p-3 rounded"
           />
         </div>
-        <div>
-          <h3 className="font-bold">Variants</h3>
-          <div className="grid grid-cols-2 gap-2">
+
+        <div className="border p-4 rounded-md">
+          <Typography variant="h6" className="mb-2 font-bold">
+            Variants
+          </Typography>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input
               type="text"
               placeholder="Unit (e.g., 1kg)"
               name="unit"
               value={variant.unit}
               onChange={handleVariantChange}
-              className="border p-2"
+              className="border p-3 rounded"
             />
             <input
               type="number"
@@ -232,7 +371,7 @@ const AddProduct = () => {
               name="price"
               value={variant.price}
               onChange={handleVariantChange}
-              className="border p-2"
+              className="border p-3 rounded"
             />
             <input
               type="number"
@@ -240,7 +379,7 @@ const AddProduct = () => {
               name="stockQty"
               value={variant.stockQty}
               onChange={handleVariantChange}
-              className="border p-2"
+              className="border p-3 rounded"
             />
             <input
               type="text"
@@ -248,59 +387,71 @@ const AddProduct = () => {
               name="packaging"
               value={variant.packaging}
               onChange={handleVariantChange}
-              className="border p-2"
+              className="border p-3 rounded"
             />
           </div>
           <button
             type="button"
             onClick={addVariant}
-            className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+            className="mt-3 bg-blue-500 text-white px-4 py-2 rounded"
           >
             Add Variant
           </button>
           {product.variants.length > 0 && (
-            <ul className="mt-2 border p-2">
-              {product.variants.map((v, i) => (
-                <li key={i}>
+            <ul className="mt-3 border p-3 rounded">
+              {product.variants.map((v, index) => (
+                <li key={index} className="mb-2">
                   {v.unit} - ${v.price} - Stock: {v.stockQty} - Packaging: {v.packaging}
                 </li>
               ))}
             </ul>
           )}
         </div>
-        <div>
-          <h3 className="font-bold">Meta Data</h3>
-          <label>Origin:</label>
-          <input
-            type="text"
-            name="origin"
-            value={product.meta.origin}
-            onChange={handleMetaChange}
-            className="w-full border p-2"
-          />
-          <label>Expiry Date:</label>
-          <input
-            type="date"
-            name="expiryDate"
-            value={product.meta.expiryDate}
-            onChange={handleMetaChange}
-            className="w-full border p-2"
-          />
-          <label>Ingredients:</label>
-          <textarea
-            name="ingredients"
-            value={product.meta.ingredients}
-            onChange={handleMetaChange}
-            className="w-full border p-2"
-          ></textarea>
+
+        <div className="border p-4 rounded-md">
+          <Typography variant="h6" className="mb-3 font-bold">
+            Meta Data
+          </Typography>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block font-semibold">Origin</label>
+              <input
+                type="text"
+                name="origin"
+                value={product.meta.origin}
+                onChange={handleMetaChange}
+                className="w-full border p-3 rounded"
+              />
+            </div>
+            <div>
+              <label className="block font-semibold">Expiry Date</label>
+              <input
+                type="date"
+                name="expiryDate"
+                value={product.meta.expiryDate}
+                onChange={handleMetaChange}
+                className="w-full border p-3 rounded"
+              />
+            </div>
+            <div>
+              <label className="block font-semibold">Ingredients</label>
+              <textarea
+                name="ingredients"
+                value={product.meta.ingredients}
+                onChange={handleMetaChange}
+                className="w-full border p-3 rounded"
+              ></textarea>
+            </div>
+          </div>
         </div>
-        <div>
-          <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+
+        <div className="text-center">
+          <Button type="submit" variant="contained" color="primary" fullWidth>
             Submit Product
-          </button>
+          </Button>
         </div>
       </form>
-    </div>
+    </Box>
   );
 };
 

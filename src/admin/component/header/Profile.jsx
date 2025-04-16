@@ -21,7 +21,9 @@ function Profile() {
           </div>
         </div>
         <div className="text-center p-3">
-          <h2 className="font-bold">John Doe</h2>
+          <h2 className="font-bold">
+            Shanu-Mart
+          </h2>
           <p className="text-sm font-semibold text-gray-500">
             john.doe@example.com
           </p>
