@@ -40,7 +40,7 @@ const Layout = () => {
         
         <div className="mt-[10vh]">
           <ProgressBar progressWidth={progressWidth} />
-          <RouterCumb />
+          <RouterCumb /> 
         </div>
         {/* Main outlet for dynamic routing */}
         <main ref={divRef ? divRef : null} className="flex-grow p-4 overflow-y-scroll bg-orange-100/30">
