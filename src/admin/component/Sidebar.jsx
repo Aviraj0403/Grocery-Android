@@ -34,7 +34,7 @@ function Sidebar({ className, toggleSidebar }) {
           <NavItem to="addProduct" label="Add Product" icon={<FaPlusSquare size={20} />} />
           {/* <NavItem to="editProduct" label="Edit Product" icon={<FaPlusSquare size={20} />} /> */}
           <NavItem to="categories" label="Categories" icon={<MdCategory size={20} />} />
-          <NavItem to="inventory" label="Inventory" icon={<MdInventory2 size={20} />} />
+          {/* <NavItem to="inventory" label="Inventory" icon={<MdInventory2 size={20} />} /> */}
         </NavSection>
 
         {/* ORDERS */}
@@ -46,7 +46,7 @@ function Sidebar({ className, toggleSidebar }) {
         {/* CUSTOMERS */}
         <NavSection title="Customers">
           <NavItem to="customers" label="Customer List" icon={<FaUsers size={20} />} />
-          <NavItem to="feedback" label="Feedback" icon={<FaClipboardList size={20} />} />
+          {/* <NavItem to="feedback" label="Feedback" icon={<FaClipboardList size={20} />} /> */}
         </NavSection>
 
         {/* PROMOTIONS */}
@@ -59,12 +59,12 @@ function Sidebar({ className, toggleSidebar }) {
         <NavSection title="Reports">
           <NavItem to="sales-report" label="Sales Report" icon={<FaChartBar size={20} />} />
           <NavItem to="inventory-report" label="Inventory Report" icon={<FaChartBar size={20} />} />
-          <NavItem to="gst-report" label="GST Report" icon={<FaFileInvoiceDollar size={20} />} />
+          {/* <NavItem to="gst-report" label="GST Report" icon={<FaFileInvoiceDollar size={20} />} /> */}
         </NavSection>
 
         {/* SETTINGS */}
         <NavSection title="Settings">
-          <NavItem to="settings" label="Settings" icon={<FaCog size={20} />} />
+          {/* <NavItem to="settings" label="Settings" icon={<FaCog size={20} />} /> */}
         </NavSection>
       </div>
     </aside>

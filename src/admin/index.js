@@ -13,6 +13,8 @@ export {
   AddProduct,
   AdminProducts,
   EditProducts,
+  ProductDetails,
+  CategoryManager,
 } from "./pages/index.js";
 
 // export {addProduct } from "./pages/AddProduct/index.js";
