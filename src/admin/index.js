@@ -15,6 +15,7 @@ export {
   EditProducts,
   ProductDetails,
   CategoryManager,
+  UserList,
 } from "./pages/index.js";
 
 // export {addProduct } from "./pages/AddProduct/index.js";

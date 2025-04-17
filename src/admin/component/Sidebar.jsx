@@ -45,7 +45,7 @@ function Sidebar({ className, toggleSidebar }) {
 
         {/* CUSTOMERS */}
         <NavSection title="Customers">
-          <NavItem to="customers" label="Customer List" icon={<FaUsers size={20} />} />
+          <NavItem to="users" label="User List" icon={<FaUsers size={20} />} />
           {/* <NavItem to="feedback" label="Feedback" icon={<FaClipboardList size={20} />} /> */}
         </NavSection>
 
