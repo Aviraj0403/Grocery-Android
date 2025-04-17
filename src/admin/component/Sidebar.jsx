@@ -40,7 +40,7 @@ function Sidebar({ className, toggleSidebar }) {
         {/* ORDERS */}
         <NavSection title="Orders">
           <NavItem to="orders" label="All Orders" icon={<FaClipboardList size={20} />} />
-          <NavItem to="returns" label="Returns / Refunds" icon={<FaFileInvoiceDollar size={20} />} />
+          {/* <NavItem to="returns" label="Returns / Refunds" icon={<FaFileInvoiceDollar size={20} />} /> */}
         </NavSection>
 
         {/* CUSTOMERS */}
@@ -63,9 +63,9 @@ function Sidebar({ className, toggleSidebar }) {
         </NavSection>
 
         {/* SETTINGS */}
-        <NavSection title="Settings">
+        {/* <NavSection title="Settings"> */}
           {/* <NavItem to="settings" label="Settings" icon={<FaCog size={20} />} /> */}
-        </NavSection>
+        {/* </NavSection> */}
       </div>
     </aside>
   );

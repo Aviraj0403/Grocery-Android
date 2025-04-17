@@ -4,3 +4,5 @@ export {default as EditProducts} from "./ManageGrocery/EditProductPage.jsx";
 export {default as ProductDetails} from "./ManageGrocery/ProductDetails.jsx";
 export {default as CategoryManager} from "./Category/CategoryManager.jsx";
 export {default as UserList} from "./UserList/UserList.jsx";
+// export {default as UserDetails} from "./UserList/UserDetails.jsx";
+export {default as AdminOrderManager} from "./Orders/AdminOrderManager.jsx";

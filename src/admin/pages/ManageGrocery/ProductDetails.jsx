@@ -31,8 +31,8 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
-  if (loading) return <div className="p-6 text-center text-gray-600">Loading...</div>;
-  if (!product) return <div className="p-6 text-center text-red-600">Product not found.</div>;
+  if (loading) return <div className="p-4 text-center text-gray-600 w-full">Loading...</div>;
+  if (!product) return <div className="p-4 text-center text-red-600 w-full">Product not found.</div>;
 
   const {
     name,
@@ -52,16 +52,20 @@ const ProductDetails = () => {
   const unit = activeVariant.unit || '—';
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
-      {/* Image + Info Block */}
-      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
-        {/* Product Image */}
-        <div className="lg:w-1/2 w-full">
-          <div className="w-full aspect-[4/3] rounded-xl shadow-md overflow-hidden bg-gray-100">
+    <div className="w-full overflow-x-hidden px-2 py-4 space-y-6">
+      {/* Image + Info */}
+      <div className="flex flex-wrap gap-4 w-full">
+        {/* Product Image (50% width even on mobile) */}
+        <div className="w-1/2 min-w-[150px] max-w-[50%] overflow-hidden">
+          <div className="rounded-md shadow-md bg-gray-100 overflow-hidden">
             {mainImage ? (
-              <img src={mainImage} alt={name} className="w-full h-full object-cover" />
+              <img
+                src={mainImage}
+                alt={name}
+                className="w-full h-40 sm:h-72 object-cover rounded-md transition-all duration-300"
+              />
             ) : (
-              <div className="flex items-center justify-center w-full h-full text-sm text-gray-500">
+              <div className="flex items-center justify-center h-40 sm:h-72 text-gray-500 text-xs">
                 No Image
               </div>
             )}
@@ -69,15 +73,13 @@ const ProductDetails = () => {
 
           {/* Thumbnails */}
           {images.length > 1 && (
-            <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-hide">
+            <div className="mt-2 flex gap-2 overflow-x-auto scrollbar-hide">
               {images.map((src, idx) => (
                 <button
                   key={idx}
                   onClick={() => setMainImage(src)}
-                  className={`w-16 h-16 rounded-md border-2 overflow-hidden flex-shrink-0 ${
-                    mainImage === src
-                      ? 'border-blue-600'
-                      : 'border-gray-200 hover:border-gray-400'
+                  className={`w-12 h-12 flex-shrink-0 rounded border-2 ${
+                    mainImage === src ? 'border-blue-600' : 'border-gray-300'
                   }`}
                 >
                   <img src={src} alt={`thumb-${idx}`} className="w-full h-full object-cover" />
@@ -88,43 +90,30 @@ const ProductDetails = () => {
         </div>
 
         {/* Product Info */}
-        <div className="lg:w-1/2 space-y-6">
-          {/* CTA */}
+        <div className="flex-1 min-w-[50%] space-y-4">
           <div className="flex flex-col sm:flex-row gap-3">
             <NavLink
               to={`/admin/edit-product/${id}`}
-              className="w-full px-4 py-3 text-center text-white bg-blue-600 rounded-md hover:bg-blue-700 transition"
+              className="w-full text-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm"
             >
               Edit Product
             </NavLink>
             <NavLink
               to="/admin/adminProducts"
-              className="w-full px-4 py-3 text-center bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+              className="w-full text-center bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded text-sm hidden sm:block"
             >
               Back to List
             </NavLink>
           </div>
 
-          {/* Product Title */}
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 text-center lg:text-left">{name}</h1>
-            <p className="text-sm text-gray-500 text-center lg:text-left mt-1">
+          <div className="text-left">
+            <h1 className="text-base sm:text-lg font-bold text-gray-900 break-words">{name}</h1>
+            <p className="text-xs text-gray-500 mt-1">
               {category?.name} &bull; {subCategory?.name || '—'}
             </p>
-            <div className="mt-2 flex flex-wrap justify-center lg:justify-start gap-2">
-              {tags.map((tag, i) => (
-                <span
-                  key={i}
-                  className="bg-gray-100 text-xs text-gray-700 px-2 py-1 rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
           </div>
 
-          {/* Info Cards */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
             <InfoCard title="Price" value={`₹${price}`} />
             <InfoCard
               title="Stock"
@@ -138,15 +127,15 @@ const ProductDetails = () => {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 sticky top-0 z-10 bg-white">
-        <nav className="flex overflow-x-auto scrollbar-hide gap-6 text-sm sm:text-base px-1">
+      <div className="border-b border-gray-200 sticky top-0 bg-white z-10 overflow-x-auto scrollbar-hide w-full">
+        <nav className="flex w-max min-w-full gap-4 px-2 py-1 text-sm">
           {TABS.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`pb-2 whitespace-nowrap ${
+              className={`whitespace-nowrap pb-1 ${
                 activeTab === tab
-                  ? 'border-b-2 border-blue-600 text-blue-600 font-medium'
+                  ? 'border-b-2 border-blue-600 text-blue-600 font-semibold'
                   : 'text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -157,51 +146,39 @@ const ProductDetails = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="pt-4">
+      <div className="pt-2 text-sm text-gray-700 w-full max-w-full">
         {activeTab === 'Description' && (
-          <div className="text-gray-700 text-sm sm:text-base leading-relaxed">
+          <div className="leading-relaxed break-words">
             {description || 'No description available.'}
           </div>
         )}
-
         {activeTab === 'Variants' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {variants.length > 0 ? (
               variants.map((v, i) => (
-                <div
-                  key={i}
-                  className="p-4 bg-white rounded-lg shadow hover:shadow-md transition"
-                >
-                  <p className="text-sm text-gray-500">{v.unit}</p>
-                  <p className="text-lg font-medium text-gray-900 mt-1">₹{v.price}</p>
-                  <p
-                    className={`text-sm mt-1 ${
-                      v.stockQty > 0 ? 'text-green-600' : 'text-red-600'
-                    }`}
-                  >
+                <div key={i} className="p-3 rounded bg-white shadow-sm border w-full">
+                  <p className="text-xs text-gray-500">{v.unit}</p>
+                  <p className="text-sm font-medium">₹{v.price}</p>
+                  <p className={v.stockQty > 0 ? 'text-green-600 text-sm' : 'text-red-600 text-sm'}>
                     {v.stockQty > 0 ? `${v.stockQty} in stock` : 'Out of stock'}
                   </p>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-500 col-span-full">No variants available.</p>
+              <p>No variants available.</p>
             )}
           </div>
         )}
-
-        {activeTab === 'Reviews' && (
-          <p className="text-gray-600 text-sm">Reviews coming soon…</p>
-        )}
+        {activeTab === 'Reviews' && <p className="text-sm">Reviews coming soon…</p>}
       </div>
     </div>
   );
 };
 
-// InfoCard Component
 const InfoCard = ({ title, value, color = 'text-gray-900' }) => (
-  <div className="p-3 sm:p-4 bg-white rounded-md shadow-sm">
-    <p className="text-xs sm:text-sm text-gray-500">{title}</p>
-    <p className={`text-base sm:text-lg font-semibold mt-1 ${color}`}>{value}</p>
+  <div className="p-2 bg-white border rounded shadow-sm text-sm">
+    <p className="text-xs text-gray-500">{title}</p>
+    <p className={`text-sm font-semibold mt-1 break-words ${color}`}>{value}</p>
   </div>
 );
 

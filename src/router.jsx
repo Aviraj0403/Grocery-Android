@@ -16,7 +16,7 @@ import Myorder from "./pages/Myorder";
 import Address from "./pages/Address";
 
 // Admin related imports
-import {AdminLayout,AdminDashboard, AddProduct, AdminProducts, EditProducts, ProductDetails, CategoryManager, UserList} from "./admin";
+import {AdminLayout,AdminDashboard, AddProduct, AdminProducts, EditProducts, ProductDetails, CategoryManager, UserList ,AdminOrderManager} from "./admin";
 // import { AdminDashboard} from "./admin";
 
 const router = createBrowserRouter([
@@ -52,6 +52,7 @@ const router = createBrowserRouter([
            { path: "product-details/:id", element: <ProductDetails /> },
            { path: "categories", element: <CategoryManager /> },
            { path: "users", element: <UserList /> },
+           { path: "orders", element: <AdminOrderManager /> },
            
           //  { path: "users", element: <AdminUsers /> },
           //  { path: "orders", element: <AdminOrders /> },
