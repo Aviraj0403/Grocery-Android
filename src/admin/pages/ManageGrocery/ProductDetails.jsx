@@ -56,7 +56,7 @@ const ProductDetails = () => {
       {/* Image + Info */}
       <div className="flex flex-wrap gap-4 w-full">
         {/* Product Image (50% width even on mobile) */}
-        <div className="w-1/2 min-w-[150px] max-w-[50%] overflow-hidden">
+        <div className="w-full sm:w-1/2 overflow-hidden">
           <div className="rounded-md shadow-md bg-gray-100 overflow-hidden">
             {mainImage ? (
               <img
@@ -78,9 +78,8 @@ const ProductDetails = () => {
                 <button
                   key={idx}
                   onClick={() => setMainImage(src)}
-                  className={`w-12 h-12 flex-shrink-0 rounded border-2 ${
-                    mainImage === src ? 'border-blue-600' : 'border-gray-300'
-                  }`}
+                  className={`w-12 h-12 flex-shrink-0 rounded border-2 ${mainImage === src ? 'border-blue-600' : 'border-gray-300'
+                    }`}
                 >
                   <img src={src} alt={`thumb-${idx}`} className="w-full h-full object-cover" />
                 </button>
@@ -88,6 +87,7 @@ const ProductDetails = () => {
             </div>
           )}
         </div>
+
 
         {/* Product Info */}
         <div className="flex-1 min-w-[50%] space-y-4">
@@ -133,11 +133,10 @@ const ProductDetails = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`whitespace-nowrap pb-1 ${
-                activeTab === tab
+              className={`whitespace-nowrap pb-1 ${activeTab === tab
                   ? 'border-b-2 border-blue-600 text-blue-600 font-semibold'
                   : 'text-gray-600 hover:text-gray-800'
-              }`}
+                }`}
             >
               {tab}
             </button>
