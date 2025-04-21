@@ -1,7 +1,11 @@
 import axios from 'axios';
+const baseURL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:4001/api"
+    : "https://grocery-backend-9jjx.onrender.com/api";
 
 const Axios = axios.create({
-  baseURL: 'http://localhost:4001/api',
+  baseURL,
   withCredentials: true,
 });
 
