@@ -17,7 +17,7 @@ const Layout = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-orange-100/30">
+    <div className="flex flex-col min-h-screen bg-white-100/100">
       {/* Toast Notifications */}
       <ToastContainer />
 
@@ -25,7 +25,7 @@ const Layout = () => {
       <Header />
 
       {/* Main Content Area */}
-      <div ref={divRef} className="flex-1 px-4 py-6">
+      <div ref={divRef} className="flex-1 overflow-auto bg-white">
         <ProgressBar progressWidth={progressWidth} />
         {/* <RouterCumb /> */}
         <Outlet />

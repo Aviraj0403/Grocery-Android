@@ -23,36 +23,36 @@ const AdminLayout = () => {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden select-none">
+    <div className="flex w-full min-h-screen bg-gray-50">
       <ToastContainer />
 
       {/* Sidebar */}
       <Sidebar
-        className={`lg:fixed absolute top-0 left-0 z-30 w-64 bg-white transition-transform duration-300 ease-in-out ${
+        className={`lg:fixed absolute top-0 left-0 z-30 w-64 h-full bg-white transition-transform duration-300 ease-in-out ${
           openSidebar ? "translate-x-0" : "-translate-x-full"
         }`}
         toggleSidebar={toggleSidebar}
       />
 
-      {/* Main layout content area */}
+      {/* Main content area */}
       <div
-        className={`flex flex-col flex-grow min-h-screen transition-all duration-300 ease-in-out ${
+        className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
           openSidebar ? "lg:ml-64" : "ml-0"
         }`}
       >
         {/* Header */}
         <Header toggleSidebar={toggleSidebar} openSidebar={openSidebar} />
 
-        {/* Progress bar and breadcrumbs */}
-        <div className="mt-[10vh]">
+        {/* Breadcrumbs & progress */}
+        <div className="mt-[10vh] px-4">
           <ProgressBar progressWidth={progressWidth} />
           <RouterCumb />
         </div>
 
-        {/* Main content */}
+        {/* Main Scrollable Content */}
         <main
           ref={divRef || null}
-          className="flex-grow p-4 overflow-y-auto bg-orange-100/30"
+          className="flex-grow overflow-y-auto p-4 bg-orange-100/30"
         >
           <Outlet />
         </main>

@@ -4,7 +4,7 @@ import App from "./App";
 // Pages
 import Home from "./pages/Home/Home";
 // import Searchpage from "./pages/Searchpage";
-import Login from "./pages/Login";
+import Login from "./pages/auth/Login";
 // import Register from "./pages/Register";
 // import Forgotpassword from "./pages/Forgotpassword";
 // import Otpverifiaction from "./pages/Otpverifiaction";
