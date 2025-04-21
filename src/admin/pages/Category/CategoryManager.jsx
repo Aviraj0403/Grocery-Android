@@ -21,7 +21,7 @@ const CategoryManager = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('/api/getAllCategories');
+      const res = await axios.get('/getAllCategories');
       setCategories(res.data.categories || []);
     } catch (err) {
       toast.error('Failed to fetch categories');
@@ -50,10 +50,10 @@ const CategoryManager = () => {
         parentCategory: form.type === 'Sub' ? form.parentCategory : null
       };
       if (editingCategory) {
-        await axios.put(`/api/updateCategory/${editingCategory._id}`, payload);
+        await axios.put(`/updateCategory/${editingCategory._id}`, payload);
         toast.success('Category updated');
       } else {
-        await axios.post('/api/createCategory', payload);
+        await axios.post('/createCategory', payload);
         toast.success('Category created');
       }
       setShowModal(false);
@@ -96,7 +96,7 @@ const CategoryManager = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this category?')) return;
     try {
-      await axios.delete(`/api/deleteCategory/${id}`);
+      await axios.delete(`/deleteCategory/${id}`);
       toast.success('Deleted');
       fetchCategories();
     } catch (err) {

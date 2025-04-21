@@ -29,7 +29,7 @@ const EditProductPage = () => {
     useEffect(() => {
         async function fetchCategories() {
             try {
-                const response = await axiosInstance.get('/api/getAllCategories');
+                const response = await axiosInstance.get('/getAllCategories');
                 const all = response.data.categories || [];
 
                 setCategories(all.filter(cat => !cat.parentCategory));
@@ -53,7 +53,7 @@ const EditProductPage = () => {
     // Fetch product details
     const fetchProduct = async () => {
         try {
-            const response = await axiosInstance.get(`/api/getProduct/${id}`);
+            const response = await axiosInstance.get(`/getProduct/${id}`);
             if (response.data.success) {
                 const data = response.data.product;
                 setProduct(data);
@@ -132,7 +132,7 @@ const EditProductPage = () => {
                 updatedData.variants = [{ unit: '', price, stockQty: 0, packaging: 'Loose' }];
             }
 
-            const response = await axiosInstance.put(`/api/updateProduct/${id}`, updatedData);
+            const response = await axiosInstance.put(`/updateProduct/${id}`, updatedData);
             if (response.data.success) {
                 toast.success('Product updated successfully');
             } else {
@@ -148,7 +148,7 @@ const EditProductPage = () => {
                     // The backend endpoint should delete previous images from Cloudinary
                     // before uploading the new ones.
                     await axiosInstance.post(
-                        `/api/products/${id}/images`,
+                        `/products/${id}/images`,
                         formData,
                         { headers: { 'Content-Type': 'multipart/form-data' } }
                     );

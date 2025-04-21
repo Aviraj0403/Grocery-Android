@@ -1,51 +1,42 @@
-// src/context/AuthContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
+import { createContext, useContext, useEffect, useState } from "react";
+import { getMe, login as loginApi, logout as logoutApi } from "../services/authApi";
+import { useQueryClient } from "@tanstack/react-query";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Load user from cookie if available
-  const [user, setUser] = useState(() => {
-    const cookieUser = Cookies.get('userData');
-    return cookieUser ? JSON.parse(cookieUser) : null;
-  });
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  // Helper properties for consumers
-  const isLoggedIn = Boolean(user);
-  const userRole = user ? user.roleType : null; // roleType should be part of your API response
-  const login = (loginResponse) => {
-    if (loginResponse && loginResponse.userData) {
-      setUser(loginResponse.userData);
-      // Set a secure cookie for persistence (expires in 7 days)
-      Cookies.set('userData', JSON.stringify(loginResponse.userData), {
-        expires: 7,
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: 'strict'
-      });
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-    Cookies.remove('userData');
-  };
-
-  // Optional: Keep cookie in sync with user state changes.
   useEffect(() => {
-    if (user) {
-      Cookies.set('userData', JSON.stringify(user), {
-        expires: 7,
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: 'strict'
-      });
-    } else {
-      Cookies.remove('userData');
-    }
-  }, [user]);
+    const validateSession = async () => {
+      try {
+        const res = await getMe(); // Single point of truth
+        setUser(res.data.data);    // use .data if using { data: { ...user } } shape
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    validateSession();
+  }, []);
+
+  const login = async (credentials) => {
+    await loginApi(credentials);
+    const res = await getMe();  // immediately fetch user after login
+    setUser(res.data.data);
+  };
+
+  const logout = async () => {
+    await logoutApi();
+    setUser(null);
+    queryClient.clear();
+  };
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, userRole, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -2,10 +2,13 @@ import React from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { MdEdit, MdKey, MdOutlineLogout } from 'react-icons/md';
+import { useAuth } from '../../../context/AuthContext.jsx'; // Make sure path is correct
 
 function Profile() {
+  const { user } = useAuth();
+
   return (
-    <div className="profile-container absolute top-[10vh] right-[-50px] border shadow-md rounded-b-2xl bg-white p-8">
+    <div className="profile-container absolute top-[10vh] right-[-50px] border shadow-md rounded-b-2xl bg-white p-8 z-50">
       <div className="upper flex items-center flex-col justify-center px-3 py-2">
         <div>
           <div className="relative border-2 border-red-500 rounded-full border-dashed">
@@ -22,13 +25,13 @@ function Profile() {
         </div>
         <div className="text-center p-3">
           <h2 className="font-bold">
-            Shanu-Mart
+            {user?.userName || 'User'}
           </h2>
           <p className="text-sm font-semibold text-gray-500">
-            john.doe@example.com
+            {user?.email || 'Email not available'}
           </p>
           <p className="text-sm font-semibold text-gray-500">
-            +91 9876543210
+            +91 9876543210 {/* Replace with actual phone if available */}
           </p>
         </div>
       </div>

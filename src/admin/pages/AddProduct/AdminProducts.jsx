@@ -25,7 +25,7 @@ const AdminProducts = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get('/api/admin/products', {
+      const response = await axiosInstance.get('/admin/products', {
         params: {
           page,
           limit,
@@ -57,7 +57,7 @@ const AdminProducts = () => {
   const deleteProduct = async (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        const response = await axiosInstance.delete(`/api/deleteProduct/${productId}`);
+        const response = await axiosInstance.delete(`/deleteProduct/${productId}`);
         if (response.data && response.data.success) {
           toast.success("Product deleted successfully");
           fetchProducts();

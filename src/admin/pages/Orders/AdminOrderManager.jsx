@@ -9,7 +9,7 @@ const AdminOrderManager = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('/api/getAllOrders');
+      const res = await axios.get('/getAllOrders');
       setOrders(res.data.orders || []);
     } catch (error) {
       toast.error('Failed to fetch orders');
@@ -20,7 +20,7 @@ const AdminOrderManager = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.put(`/api/updateOrderStatus/${id}`, { orderStatus: status });
+      await axios.put(`/updateOrderStatus/${id}`, { orderStatus: status });
       toast.success('Order status updated');
       fetchOrders();
     } catch (err) {
@@ -31,7 +31,7 @@ const AdminOrderManager = () => {
   const deleteOrder = async (id) => {
     if (!window.confirm('Are you sure you want to delete this order?')) return;
     try {
-      await axios.delete(`/api/deleteOrder/${id}`);
+      await axios.delete(`/deleteOrder/${id}`);
       toast.success('Order deleted');
       setOrders(orders.filter(order => order._id !== id));
     } catch (err) {

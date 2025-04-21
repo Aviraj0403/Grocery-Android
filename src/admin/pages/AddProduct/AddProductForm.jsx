@@ -69,7 +69,7 @@ const AddProduct = () => {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await axiosInstance.get('/api/getAllCategories');
+        const response = await axiosInstance.get('/getAllCategories');
         setCategories(response.data.categories || []);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -149,7 +149,7 @@ const AddProduct = () => {
 
     try {
       // Create product without images.
-      const response = await axiosInstance.post('/api/createProduct', product);
+      const response = await axiosInstance.post('/createProduct', product);
       const createdProduct = response.data.product;
       toast.success("Product created successfully!");
 
@@ -160,7 +160,7 @@ const AddProduct = () => {
           formData.append('files', file);
         });
         await axiosInstance.post(
-          `/api/products/${createdProduct._id}/images`,
+          `/products/${createdProduct._id}/images`,
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );

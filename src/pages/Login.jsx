@@ -1,112 +1,96 @@
-import React, { useState } from 'react'
-import { FaRegEyeSlash } from "react-icons/fa6";
-import { FaRegEye } from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import toast from 'react-hot-toast';
-import Axios from '../utils/Axios';
-import summaryApi from '../common/SummeryApi';
-import { useNavigate } from 'react-router-dom';
-
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-    const[data,setdata] = useState({
-        email:"",
-        password:"",
-    })
-    const[showpassword,setshowpassword] = useState(false);
+  const [data, setData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    const handlechange = (e) =>{
-           const {name,value} = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData(prev => ({ ...prev, [name]: value }));
+  };
 
-           setdata((preve)=>{
-                 return{
-                    ...preve,
-                    [name] : value
-                 }
-           })
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await login(data); // from AuthContext
+      toast.success("Logged in successfully!");
+      navigate('/admin');
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
-    const handleregister = async(e)=>{
-        e.preventDefault();
-       
+  };
 
-        const response = await Axios({
-            ...summaryApi.login,
-            data : data
-        })
+  const valid = Object.values(data).every(Boolean);
 
-        // if(response.data.error){
-        //     toast.error("wrong password")
-        // }
-        
-        // console.log(response);
-        toast.success("Logged in successfully!");
-        navigate('/admin');
-        // <Link to={"/"} className='block ml-auto hover:text-green-600'>Forgot password</Link>
-    }
-
-   const validvalue = Object.values(data).every(el => el)
   return (
-    <section className=' w-full container mx-auto px-4'>
+    <section className='w-full container mx-auto px-4'>
       <div className='bg-green-50 my-4 w-full max-w-lg mx-auto rounded p-6'>
-          <p className='hover:text-green-600'>Login</p>
+        <p className='hover:text-green-600 text-xl font-semibold'>Login</p>
 
-          <form className='grid gap-3 py-4' onSubmit={handleregister}>
+        <form className='grid gap-3 py-4' onSubmit={handleLogin}>
+          <div className='grid gap-1'>
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={data.email}
+              onChange={handleChange}
+              className='bg-blue-50 p-2 border rounded outline-none focus:border-green-700'
+              placeholder='Enter your email address'
+              required
+            />
+          </div>
 
-            <div className='grid gap-1 '>
-                <label htmlFor="email">Email:</label>
-                <input type="email" id='email' autoFocus 
-                className='bg-blue-50 p-2 border rounded outline-none focus:border-green-700'
-                name='email'
-                value={data.email}
-                onChange={handlechange}
-                placeholder='Enter your email address'
-                />
-            </div>
-
-
-            <div className='grid gap-1'>
-                <label htmlFor="password">Password:</label>
-                <div className='bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700'>
-                <input type={showpassword ? "text":"password"} id='password' autoFocus 
-                className='w-full outline-none'
-                name='password'
+          <div className='grid gap-1'>
+            <label htmlFor="password">Password:</label>
+            <div className='bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700'>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
                 value={data.password}
-                onChange={handlechange}
+                onChange={handleChange}
+                className='w-full outline-none'
                 placeholder='Enter your password'
-                />
-                 <div onClick={()=>setshowpassword(preve => !preve)} className='cursor-pointer'>
-                    {
-                        showpassword ?(
-                            <FaRegEye/>
-                        ):(
-                            <FaRegEyeSlash/>
-                        )
-                    }
-                </div>
-                </div>
-                <Link to={"/forgot-password"} className='block ml-auto hover:text-green-600'>Forgot password</Link>
-
+                required
+              />
+              <div onClick={() => setShowPassword(prev => !prev)} className='cursor-pointer'>
+                {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+              </div>
             </div>
-           
+            <Link to="/forgot-password" className='block ml-auto text-sm text-green-600 hover:underline'>Forgot password?</Link>
+          </div>
 
+          <button
+            type="submit"
+            disabled={!valid || loading}
+            className={`${valid ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"} text-white py-2 rounded font-semibold tracking-wide`}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
 
-
-           
-           <button onClick={handleregister} disabled={!validvalue} className={`${validvalue ? "bg-green-600 hover:bg-green-700":"bg-gray-500"}  text-white py-2 rounded font-semibold my-3 tracking-wide`}>
-            Login
-            </button>
-            
-          </form>
-
-          <p>
-            Dont have account ? <Link to={"/register"} 
-            className='font-semibold text-green-600 hover:text-green-700'>Register</Link>
-          </p>
+        <p className='text-sm'>
+          Don't have an account?{" "}
+          <Link to="/register" className='font-semibold text-green-600 hover:text-green-700'>
+            Register
+          </Link>
+        </p>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

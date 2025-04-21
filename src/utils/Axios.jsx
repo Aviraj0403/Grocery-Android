@@ -1,66 +1,28 @@
-import axios from "axios";
-import summaryApi, { baseURL } from "../common/SummeryApi";
+import axios from 'axios';
 
 const Axios = axios.create({
-   baseURL : baseURL,
-   withCredentials : true
-})
-// sending access token in the header
-Axios.interceptors.request.use(
-   async(config)=>{
-     const  accessToken = localStorage.getItem('accesstoken')
+  baseURL: 'http://localhost:4001/api',
+  withCredentials: true,
+});
 
-     if(accessToken){
-      config.headers.Authorization = `Bearer ${accessToken}`
-     }
-     return config
-   },
-   (error)=>{
-       return Promise.reject(error)
-   }
-)
-
-// extend the life span ofaccess token with the help of refresh
-Axios.interceptors.request.use(
-   (response)=>{
-      return response
-   },
-   async(error)=>{
-        let originalrequest = error.config
-
-        if(error.response.status === 401 && !originalrequest.retry){
-         originalrequest.retry = true;
-
-         const refreshToken = localStorage.getItem("refreshToken")
-
-         if(refreshToken){
-             const newaccessToken = await refreshAccessToken(refreshToken)
-
-             if(newaccessToken){
-               originalrequest.headers.Authorization = `Bearer ${newaccessToken}`
-               return Axios(originalrequest)
-             }
-         }
-        }
-        return Promise.reject(error)
-   }
-);
-
-const refreshAccessToken = async(refreshToken)=>{
+Axios.interceptors.response.use(
+  (res) => res,
+  async (err) => {
+    const originalRequest = err.config;
+    if (err.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       try {
-         const response = await Axios({
-            ...summaryApi.refreshToken,
-            headers : {
-               Authorization : `Bearer ${refreshToken}`
-            }
-         })
-         const accessToken = response.data.data.accessToken
-         localStorage.setItem('accesstoken',accessToken)
-         return accessToken
-         console.log(response)
-      } catch (error) {
-         console.log(error)
+        await axios.post('/auth/refresh-token', {}, {
+          baseURL: Axios.defaults.baseURL,
+          withCredentials: true,
+        });
+        return Axios(originalRequest);
+      } catch (refreshErr) {
+        console.error('Refresh token expired');
       }
-}
+    }
+    return Promise.reject(err);
+  }
+);
 
 export default Axios;

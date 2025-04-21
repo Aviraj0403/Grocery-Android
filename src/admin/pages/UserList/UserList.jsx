@@ -10,7 +10,7 @@ const UserList = ({ role = 'customer' }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const USERS_PER_PAGE = 10;
-  const endpoint = role === 'admin' ? '/api/admins' : '/api/customers';
+  const endpoint = role === 'admin' ? '/admins' : '/customers';
 
   useEffect(() => {
     const fetchUsers = async () => {

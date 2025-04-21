@@ -15,7 +15,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await axiosInstance.get(`/api/getProduct/${id}`);
+        const { data } = await axiosInstance.get(`/getProduct/${id}`);
         if (data.success) {
           setProduct(data.product);
           setMainImage(data.product.images?.[0] || '');
