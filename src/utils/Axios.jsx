@@ -1,14 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 
-// const baseURL = "http://localhost:4001/api";
-const baseURL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4001/api"
-    : "https://grocery-backend-9jjx.onrender.com/api";
+const baseURL = "https://grocery-backend-9jjx.onrender.com/api";
 
 const Axios = axios.create({
   baseURL,
-  withCredentials: true, // required to send cookies
+  withCredentials: true, // send cookies
 });
 
 Axios.interceptors.response.use(
@@ -16,33 +12,32 @@ Axios.interceptors.response.use(
   async (err) => {
     const originalRequest = err.config;
 
-    // If 401, and not retried yet — try refreshing token
-    if (err.response?.status === 401 && !originalRequest._retry) {
+    // 👉 Skip refresh logic if the failing endpoint is /me
+    const isMeRoute = originalRequest.url?.includes("/me");
+
+    if (err.response?.status === 401 && !originalRequest._retry && !isMeRoute) {
       originalRequest._retry = true;
+
       try {
         await axios.post(
-          "/auth/refresh-token",
+          `${baseURL}/auth/refresh-token`,
           {},
           {
-            baseURL: Axios.defaults.baseURL,
             withCredentials: true,
           }
         );
+
         return Axios(originalRequest); // Retry the original request
       } catch (refreshErr) {
-        console.error("❌ Refresh token expired. Redirecting to login.");
+        console.error("❌ Refresh token failed. Redirecting to login.");
 
-        // ✅ Optional: clear any local/sessionStorage items
         localStorage.removeItem("user");
         sessionStorage.clear();
-
-        // ✅ Redirect to login or show message
         window.location.href = "/login";
         return Promise.reject(refreshErr);
       }
     }
 
-    // If already retried, just reject
     return Promise.reject(err);
   }
 );
