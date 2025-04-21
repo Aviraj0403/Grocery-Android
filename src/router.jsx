@@ -26,6 +26,7 @@ import {
   UserList,
   AdminOrderManager,
 } from "./admin";
+import CartPage from "./pages/cart/cartPage";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
           { index: true, element: <Home /> }, // Home page at "/"
           // { path: "search", element: <Searchpage /> }, // Search page
           { path: "login", element: <Login /> }, // Login page
+          { path: "dashboard/cart", element: <CartPage /> },
 
           // Uncomment and use these when needed
           // { path: "register", element: <Register /> },

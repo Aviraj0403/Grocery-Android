@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ProductGrid from "../Product/ProductGrid.jsx";
 
 const Home = () => {
   return (
@@ -21,6 +22,7 @@ const Home = () => {
 
       {/* Categories Preview */}
       <section className="max-w-7xl mx-auto px-4 py-12">
+        <h1>Tiwari ji add here catogiroies section </h1>
         <h2 className="text-2xl font-bold text-green-800 mb-6 text-center">Browse Categories</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
           {[
@@ -39,7 +41,15 @@ const Home = () => {
           ))}
         </div>
       </section>
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        Tiwari ji add here product section
+        <h2 className="text-2xl font-bold text-green-800 mb-6 text-center">Featured Products</h2>
 
+       <ProductGrid />
+      </section>
+      <h1>add here some banner attractive</h1>
+
+   
       {/* Call to Action */}
       <section className="text-center py-12 bg-white">
         <h3 className="text-xl font-semibold text-green-700 mb-4">Stay Updated with Our Offers</h3>
