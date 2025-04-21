@@ -1,15 +1,13 @@
 import axios from 'axios';
 
 // const baseURL = "http://localhost:4001/api";
-const baseURL = "https://grocery-backend-9jjx.onrender.com/api";
-// const baseURL =
-//   process.env.NODE_ENV === "development"
-//     ? "http://localhost:4001/api"
-//     : "https://grocery-backend-9jjx.onrender.com/api";
+const baseURL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:4001/api"
+    : "https://grocery-backend-9jjx.onrender.com/api";
 
 const Axios = axios.create({
   baseURL,
-  // prodURL,
   withCredentials: true, // required to send cookies
 });
 
