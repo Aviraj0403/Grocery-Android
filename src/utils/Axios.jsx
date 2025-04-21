@@ -1,37 +1,48 @@
 import axios from 'axios';
 
 const baseURL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:4001/api'
-    : 'https://grocery-backend-9jjx.onrender.com/api';
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:4001/api"
+    : "https://grocery-backend-9jjx.onrender.com/api";
 
 const Axios = axios.create({
   baseURL,
-  withCredentials: true, // ✅ includes cookies on every request
+  withCredentials: true, // required to send cookies
 });
 
-// Intercept 401s to attempt token refresh
 Axios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  (res) => res,
+  async (err) => {
+    const originalRequest = err.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // If 401, and not retried yet — try refreshing token
+    if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       try {
-        // Refresh the access token
-        await Axios.post('/auth/refresh-token');
+        await axios.post(
+          "/auth/refresh-token",
+          {},
+          {
+            baseURL: Axios.defaults.baseURL,
+            withCredentials: true,
+          }
+        );
+        return Axios(originalRequest); // Retry the original request
+      } catch (refreshErr) {
+        console.error("❌ Refresh token expired. Redirecting to login.");
 
-        // Retry original request
-        return Axios(originalRequest);
-      } catch (refreshError) {
-        console.error('❌ Refresh token expired. Redirecting to login.');
-        window.location.href = '/login'; // force re-authentication
+        // ✅ Optional: clear any local/sessionStorage items
+        localStorage.removeItem("user");
+        sessionStorage.clear();
+
+        // ✅ Redirect to login or show message
+        window.location.href = "/login";
+        return Promise.reject(refreshErr);
       }
     }
 
-    return Promise.reject(error);
+    // If already retried, just reject
+    return Promise.reject(err);
   }
 );
 
