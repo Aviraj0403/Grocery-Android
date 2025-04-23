@@ -24,7 +24,7 @@ const Header = () => {
             <input
               type="text"
               placeholder="Search groceries..."
-              className="w-full px-4 py-2 border rounded-full outline-none focus:ring-2 focus:ring-green-500 transition"
+              className="w-full px-4 py-2 border rounded-full outline-none focus:ring-2 focus:ring-green-500 transition-10s"
             />
           </div>
         )}
@@ -33,7 +33,7 @@ const Header = () => {
         <div className="flex items-center gap-5">
           {/* Cart Icon */}
           <Link to="/dashboard/cart" className="relative text-green-600 hover:text-green-700">
-            <FaShoppingCart size={22} />
+            <FaShoppingCart size={30} />
             {items.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
                 {items.length}
@@ -62,7 +62,9 @@ const Header = () => {
       className="w-8 h-8 rounded-full object-cover border border-green-500"
     />
   ) : (
-    <FaUserCircle size={24} />
+    <div className='font-semibold'>
+      Login
+    </div>
   )}
   {user?.userName && (
     <span className="hidden sm:inline text-sm font-medium">{user.userName}</span>
