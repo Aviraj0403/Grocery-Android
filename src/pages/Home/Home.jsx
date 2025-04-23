@@ -45,44 +45,9 @@ const Home = () => {
 
       {/* grab first offer*/}
       {/* relative bg-green-100 text-center py-16 px-4 rounded-b-3xl */}
-      <section className="relative  text-center py-16 px-4 rounded-b-3xl">
-  <div className="max-w-8xl mx-auto">
-    <Slide direction="down">
-      <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col lg:flex-row items-center text-center lg:text-left space-y-6 lg:space-y-0 lg:space-x-10 w-full max-w-6xl mx-auto">
-        {/* Image */}
-        <div className="flex-shrink-0">
-          <img
-            src={aboutImage}
-            alt="about-icon"
-            className="w-32 h-32 object-contain mx-auto lg:mx-0"
-          />
-        </div>
+   
 
-        {/* Text + Button */}
-        <div className="flex flex-col justify-center items-center lg:items-start space-y-4">
-          <div>
-            <h1 className="text-4xl font-bold text-green-800 mb-2 animate-fade-in-up">
-              Welcome to Shanu-Mart
-            </h1>
-            <p className="text-lg text-green-700 max-w-xl animate-fade-in-up delay-100">
-              Download the app and get free food &{" "}
-              <span className="text-green-600 font-semibold">₹50</span>{" "}
-              off on your first order.
-            </p>
-          </div>
-
-          <Link to="#">
-            <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200">
-              Grab Your First Offer
-            </button>
-          </Link>
-        </div>
-      </div>
-    </Slide>
-  </div>
-</section>
-
-      <section className="py-16 px-4 rounded-b-3xl">
+      <section className="pt-2 py-16 px-4 rounded-b-3xl">
         <div className="max-w-8xl">
           <Slide direction="down">
             <div className="bg-neutral-200 rounded-xl shadow p-6 flex flex-col lg:flex-row items-center lg:items-center text-center lg:text-left space-y-0 lg:space-x-10 w-80 sm:w-[22rem] md:w-[26rem] lg:w-[90%] lg:h-75 mx-auto">
@@ -121,7 +86,7 @@ const Home = () => {
       </section>
 
       {/* cashback and offer section */}
-      <section className="mt-8 px-4 max-w-7xl mx-auto">
+      <section className=" px-4 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Banner 1 */}
 
