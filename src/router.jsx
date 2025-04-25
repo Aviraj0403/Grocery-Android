@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
+// import Axios from "./utils/Axios";
 
 // Pages
 import Home from "./pages/Home/Home";
@@ -27,6 +28,9 @@ import {
   AdminOrderManager,
 } from "./admin";
 import CartPage from "./pages/cart/cartPage";
+import OneDayReturn from "./pages/OneDayReturn";
+import CashOnDelivery from "./pages/CashOnDelivery";
+// import Register from "./pages/auth/Register";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +52,8 @@ const router = createBrowserRouter([
           // { path: "verification-otp", element: <Otpverifiaction /> },
           // { path: "reset-password", element: <Resetpassword /> },
           // { path: "user", element: <Usermenumobile /> },
+          {path : "onedayreturn", element:<OneDayReturn/>},
+          {path : "cashondelivery", element:<CashOnDelivery/>},
 
           {
             path: "dashboard",

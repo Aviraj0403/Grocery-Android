@@ -26,13 +26,13 @@ const Footer = () => {
           </p>
           <div className="mt-4 flex gap-4">
             <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-              <FaFacebookF size={18} className="hover:text-green-500 transition-all" />
+              <FaFacebookF size={18} className="hover:text-blue-700 transition-all" />
             </a>
             <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-              <FaInstagram size={18} className="hover:text-green-500 transition-all" />
+              <FaInstagram size={18} className="hover:text-red-400 transition-all" />
             </a>
             <a href="https://twitter.com" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
-              <FaTwitter size={18} className="hover:text-green-500 transition-all" />
+              <FaTwitter size={18} className="hover:text-black transition-all" />
             </a>
           </div>
         </div>
@@ -54,15 +54,15 @@ const Footer = () => {
           <ul className="space-y-3 text-sm">
             <li className="flex items-start gap-2">
               <FaMapMarkerAlt className="mt-1" />
-              <span>123 Green Street, FreshTown, NY 10001</span>
+              <span>845106 ,Bhagat singh chowk, Ramnager, Bihar</span>
             </li>
             <li className="flex items-center gap-2">
               <FaPhoneAlt />
-              <a href="tel:+1234567890" className="hover:underline">+1 234 567 890</a>
+              <a href="tel:+91-8757561623" className="hover:underline">+91-8757561623</a>
             </li>
             <li className="flex items-center gap-2">
               <FaEnvelope />
-              <a href="mailto:support@grocerymart.com" className="hover:underline">support@grocerymart.com</a>
+              <a href="mailto:support@grocerymart.com" className="hover:underline">support@shanumart.com</a>
             </li>
           </ul>
         </div>
