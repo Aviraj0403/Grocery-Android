@@ -30,6 +30,11 @@ import {
 import CartPage from "./pages/cart/cartPage";
 import OneDayReturn from "./pages/OneDayReturn";
 import CashOnDelivery from "./pages/CashOnDelivery";
+import AboutUs from "./QuickLinks.jsx/AboutUs";
+import AboutDeveloper from "./QuickLinks.jsx/AboutDeveloper";
+import Contact from "./QuickLinks.jsx/Contact";
+import TermandConditions from "./QuickLinks.jsx/TermandConditions";
+import Privacy from "./QuickLinks.jsx/Privacy";
 // import Register from "./pages/auth/Register";
 
 const router = createBrowserRouter([
@@ -45,6 +50,7 @@ const router = createBrowserRouter([
           // { path: "search", element: <Searchpage /> }, // Search page
           { path: "login", element: <Login /> }, // Login page
           { path: "dashboard/cart", element: <CartPage /> },
+          
 
           // Uncomment and use these when needed
           // { path: "register", element: <Register /> },
@@ -54,6 +60,11 @@ const router = createBrowserRouter([
           // { path: "user", element: <Usermenumobile /> },
           {path : "onedayreturn", element:<OneDayReturn/>},
           {path : "cashondelivery", element:<CashOnDelivery/>},
+          {path : "aboutus", element : <AboutUs/>},
+          {path : "aboutdeveloper", element : <AboutDeveloper/>},
+          {path : "contactus", element : <Contact/>},
+          {path : "termandconditons", element : <TermandConditions/>},
+          {path : "privacy", element : <Privacy/>},
 
           {
             path: "dashboard",

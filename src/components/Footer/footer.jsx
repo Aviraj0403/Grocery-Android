@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaFacebookF,
   FaInstagram,
@@ -7,13 +7,20 @@ import {
   FaPhoneAlt,
   FaEnvelope,
 } from "react-icons/fa";
+import { useState } from "react";
 
 const Footer = () => {
+  const navigate = useNavigate();
+  
+  const [email, setEmail] = useState("");
   const handleSubscribe = (e) => {
     e.preventDefault();
     // Handle newsletter logic here
-    alert("Subscribed! 🎉");
+    alert("Subscribed! 🎉",email);
+    setEmail("");
   };
+  
+  
 
   return (
     <footer className="bg-white text-green-700 pt-10 pb-6 animate-fade-in">
@@ -41,10 +48,11 @@ const Footer = () => {
         <div>
           <h3 className="font-semibold text-lg mb-3">Quick Links</h3>
           <ul className="space-y-2 text-sm">
-            <li><Link to="/about" className="hover:underline">About Us</Link></li>
-            <li><Link to="/contact" className="hover:underline">Contact</Link></li>
-            <li><Link to="/terms" className="hover:underline">Terms & Conditions</Link></li>
-            <li><Link to="/privacy" className="hover:underline">Privacy Policy</Link></li>
+            <li><Link to="/aboutus" className="hover:underline" onClick={() => navigate("aboutus")}>About Us</Link></li>
+            <li><Link to="/aboutdeveloper" className="hover:underline" onClick={()=>navigate("aboutdeveloper")}>About Developer</Link></li>
+            <li><Link to="/contactus" className="hover:underline" onClick={()=>navigate("contactus")}>Contact</Link></li>
+            <li><Link to="/termandconditons" className="hover:underline" onClick={()=>navigate("termandconditons")}>Terms & Conditions</Link></li>
+            <li><Link to="/privacy" className="hover:underline" onClick={()=>navigate("privacy")}>Privacy Policy</Link></li>
           </ul>
         </div>
 
@@ -69,25 +77,28 @@ const Footer = () => {
 
         {/* Newsletter */}
         <div>
-          <h3 className="font-semibold text-lg mb-3">Subscribe</h3>
-          <p className="text-sm mb-3">
-            Get exclusive deals and the latest updates right in your inbox.
-          </p>
-          <form className="flex flex-col sm:flex-row gap-2" onSubmit={handleSubscribe}>
-            <input
-              type="email"
-              placeholder="Your email"
-              className="p-2 rounded border border-green-400 text-black w-full sm:w-auto flex-1 focus:outline-none focus:ring-2 focus:ring-green-300"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-green-600 text-white font-semibold px-4 py-2 rounded hover:bg-green-700 transition"
-            >
-              Subscribe
-            </button>
-          </form>
-        </div>
+      <h3 className="font-semibold text-lg mb-3">Subscribe</h3>
+      <p className="text-sm mb-3">
+        Get exclusive deals and the latest updates right in your inbox.
+      </p>
+      <form className="flex flex-col sm:flex-row gap-2" onSubmit={handleSubscribe}>
+        <input
+          type="email"
+          placeholder="Your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="p-2 rounded border border-green-400 text-black w-full sm:w-auto flex-1 focus:outline-none focus:ring-2 focus:ring-green-300"
+          required
+        />
+        <button
+          type="submit"
+          className="bg-green-600 text-white font-semibold px-4 py-2 rounded hover:bg-green-700 transition"
+        >
+          Subscribe
+        </button>
+      </form>
+    </div>
+
       </div>
 
       <div className="text-center text-sm mt-10 border-t border-green-200 pt-4">

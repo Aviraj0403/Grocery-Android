@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { useAuth } from '../../context/AuthContext';
@@ -28,6 +28,10 @@ const Header = () => {
             />
           </div>
         )}
+        {/* {
+          location.pathname !== "/aboutdeveloper" && "/aboutus"
+        }
+        <Outlet/> */}
 
         {/* Right-side icons */}
         <div className="flex items-center gap-5">

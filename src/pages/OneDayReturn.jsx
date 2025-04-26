@@ -1,16 +1,18 @@
-import { Link } from "@mui/material";
+
 import React from "react";
 import { TbTruckReturn } from "react-icons/tb";
+import { Link } from "react-router-dom";
 
 const OneDayReturn = () => {
   return (
     <div className="p-6 sm:p-8 border border-green-200 rounded-xl bg-green-50 shadow-sm max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-4">
        
-      
+      <Link to={"/"}>
         <h1 className="text-2xl sm:text-3xl font-bold text-green-800 transition-transform duration-300 hover:scale-105 md:hover:scale-100">
         1 Day Easy Return
         </h1>
+        </Link>
         
 
         <TbTruckReturn className="text-green-600 text-3xl transition-transform duration-300 hover:scale-120 md:hover:scale-100 animate-bounce" />
