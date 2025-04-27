@@ -263,7 +263,7 @@ const AdminProducts = () => {
       <div className="flex items-center justify-between mb-6 flex-wrap">
         <h4 className="text-2xl font-semibold text-gray-800">Products List</h4>
         <NavLink
-          to="/admin/add-product"
+          to="/admin/addProduct"
           className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors mt-4 sm:mt-0"
         >
           <svg

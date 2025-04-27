@@ -6,10 +6,10 @@ import App from "./App";
 import Home from "./pages/Home/Home";
 // import Searchpage from "./pages/Searchpage";
 import Login from "./pages/auth/Login";
-// import Register from "./pages/Register";
-// import Forgotpassword from "./pages/Forgotpassword";
-// import Otpverifiaction from "./pages/Otpverifiaction";
-// import Resetpassword from "./pages/Resetpassword";
+import Register from "./pages/auth/Register";
+import Forgotpassword from "./pages/auth/Forgotpassword";
+import Otpverifiaction from "./pages/auth/Otpverifiaction";
+import Resetpassword from "./pages/auth/Resetpassword";
 // import Usermenumobile from "./pages/Usermenumobile";
 
 import Address from "./pages/Address";
@@ -30,11 +30,11 @@ import {
 import CartPage from "./pages/cart/cartPage";
 import OneDayReturn from "./pages/OneDayReturn";
 import CashOnDelivery from "./pages/CashOnDelivery";
-import AboutUs from "./QuickLinks.jsx/AboutUs";
-import AboutDeveloper from "./QuickLinks.jsx/AboutDeveloper";
-import Contact from "./QuickLinks.jsx/Contact";
-import TermandConditions from "./QuickLinks.jsx/TermandConditions";
-import Privacy from "./QuickLinks.jsx/Privacy";
+import AboutUs from "./QuickLinks/AboutUs";
+import AboutDeveloper from "./QuickLinks/AboutDeveloper";
+import Contact from "./QuickLinks/Contact";
+import TermandConditions from "./QuickLinks/TermandConditions";
+import Privacy from "./QuickLinks/Privacy";
 // import Register from "./pages/auth/Register";
 
 const router = createBrowserRouter([
@@ -53,10 +53,10 @@ const router = createBrowserRouter([
           
 
           // Uncomment and use these when needed
-          // { path: "register", element: <Register /> },
-          // { path: "forgot-password", element: <Forgotpassword /> },
-          // { path: "verification-otp", element: <Otpverifiaction /> },
-          // { path: "reset-password", element: <Resetpassword /> },
+          { path: "register", element: <Register /> },
+          { path: "forgot-password", element: <Forgotpassword /> },
+          { path: "verification-otp", element: <Otpverifiaction /> },
+          { path: "reset-password", element: <Resetpassword /> },
           // { path: "user", element: <Usermenumobile /> },
           {path : "onedayreturn", element:<OneDayReturn/>},
           {path : "cashondelivery", element:<CashOnDelivery/>},

@@ -1,141 +1,131 @@
-// import React, { useEffect, useState } from "react";
-// import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
-// import { Link, useLocation, useNavigate } from "react-router-dom";
-// import summaryApi from "../common/SummeryApi";
-// import toast from "react-hot-toast";
-// import Axios from "../utils/Axios";
+import React, { useEffect, useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { resetPassword } from "../../services/authApi"; // Updated import for API calls
 
-// const Resetpassword = () => {
-//   const location = useLocation();
-//   const navigate = useNavigate();
-//   const [data, setdata] = useState({
-//     email: "",
-//     newPassword: "",
-//     confirmPassword: "",
-//   });
+const Resetpassword = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [data, setData] = useState({
+    email: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const validValue = Object.values(data).every((el) => el);
 
-//   const [showpassword, setshowpassword] = useState(false);
-//   const [showconfirmpassword,setshowconfirmpassword] = useState(false);
-//   const validvalue = Object.values(data).every((el) => el);
+  useEffect(() => {
+    if (!location?.state?.data?.success) {
+      navigate("/");
+    }
+    if (location?.state?.email) {
+      setData((prev) => ({
+        ...prev,
+        email: location?.state?.email,
+      }));
+    }
+  }, [location, navigate]);
 
-//   useEffect(() => {
-//     if (!location?.state?.data?.success) {
-//       navigate("/");
-//     }
-//     if (location?.state?.email) {
-//       setdata((preve) => {
-//         return {
-//           ...preve,
-//           email: location?.state?.email,
-//         };
-//       });
-//     }
-//   }, []);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-//   const handlechange = (e) => {
-//     const { name, value } = e.target;
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
 
-//     setdata((preve) => {
-//       return {
-//         ...preve,
-//         [name]: value,
-//       };
-//     });
-//   };
-//   console.log("data", data);
+    if (data.newPassword !== data.confirmPassword) {
+      toast.error("New password and confirm password must be the same");
+      return;
+    }
 
-//   const handleregister = async (e) => {
-//     e.preventDefault();
+    try {
+      const response = await resetPassword(data); // Using updated resetPassword API
+      console.log(response);
+      toast.success("Password successfully updated");
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong, please try again.");
+    }
+  };
 
-//     // optional part
-//     if(data.newPassword !== data.confirmPassword){
-//         toast.error("New password and confirm password must be same");
-//     }
+  return (
+    <section className="w-full container mx-auto px-4">
+      <div className="bg-green-50 my-4 w-full max-w-lg mx-auto rounded p-6">
+        <p className="hover:text-green-600 font-bold mb-2 text-slate-700">
+          Enter your New Password
+        </p>
 
-//     const response = await Axios({
-//       ...summaryApi.resetPassword,
-//       data: data,
-//     });
+        <form className="grid gap-3 py-4" onSubmit={handlePasswordReset}>
+          <div className="grid gap-1">
+            <label htmlFor="newpassword">New Password:</label>
+            <div className="bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="newpassword"
+                autoFocus
+                className="w-full outline-none"
+                name="newPassword"
+                value={data.newPassword}
+                onChange={handleChange}
+                placeholder="Enter your new password"
+              />
+              <div
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="cursor-pointer"
+              >
+                {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+              </div>
+            </div>
+          </div>
 
-//     console.log(response);
-//   };
+          <div className="grid gap-1">
+            <label htmlFor="confirmpassword">Confirm Password:</label>
+            <div className="bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                className="w-full outline-none"
+                name="confirmPassword"
+                value={data.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm your new password"
+              />
+              <div
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="cursor-pointer"
+              >
+                {showConfirmPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+              </div>
+            </div>
+          </div>
 
-//   return (
-//     <section className=" w-full container mx-auto px-4">
-//       <div className="bg-green-50 my-4 w-full max-w-lg mx-auto rounded p-6">
-//         <p className="hover:text-green-600 font-bold  mb-2 text-slate-700">
-//           Enter your New Password
-//         </p>
+          <button
+            type="submit"
+            disabled={!validValue}
+            className={`${
+              validValue ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"
+            } text-white py-2 rounded font-semibold my-3 tracking-wide`}
+          >
+            Change Password
+          </button>
+        </form>
 
-//         <form className="grid gap-3 py-4" onSubmit={handleregister}>
-//           <div className="grid gap-1 ">
-//             <label htmlFor="newpassword">New password:</label>
-//             <div className="bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700">
-//               <input
-//                 type={showpassword ? "text" : "password"}
-//                 id="password"
-//                 autoFocus
-//                 className="w-full outline-none"
-//                 name="newPassword"
-//                 value={data.newPassword}
-//                 onChange={handlechange}
-//                 placeholder="Enter your new password"
-//               />
-//               <div
-//                 onClick={() => setshowpassword((preve) => !preve)}
-//                 className="cursor-pointer">
-              
-//                 {showpassword ? <FaRegEye /> : <FaRegEyeSlash />}
-//               </div>
-//             </div>
-//           </div>
+        <p>
+          Already have an account?{" "}
+          <Link to={"/login"} className="font-semibold text-green-600 hover:text-green-700">
+            Login
+          </Link>
+        </p>
+      </div>
+    </section>
+  );
+};
 
-
-//           <div className="grid gap-1 ">
-//             <label htmlFor="confirmpassword">Confirm Password:</label>
-//             <div className="bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700">
-//               <input
-//                 type={showconfirmpassword ? "text" : "password"}
-//                 id="confirmPassword"
-//                 autoFocus
-//                 className="w-full outline-none"
-//                 name="confirmPassword"
-//                 value={data.confirmPassword}
-//                 onChange={handlechange}
-//                 placeholder="Enter your confirm password"
-//               />
-//               <div
-//                 onClick={() => setshowconfirmpassword((preve) => !preve)}
-//                 className="cursor-pointer">
-              
-//                 {showconfirmpassword ? <FaRegEye /> : <FaRegEyeSlash />}
-//               </div>
-//             </div>
-//           </div>
-
-//           <button
-//             onClick={handleregister}
-//             disabled={!validvalue}
-//             className={`${
-//               validvalue ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"
-//             }  text-white py-2 rounded font-semibold my-3 tracking-wide`}
-//           >
-//             Change Password
-//           </button>
-//         </form>
-
-//         <p>
-//           Already have an account ?{" "}
-//           <Link
-//             to={"/login"}
-//             className="font-semibold text-green-600 hover:text-green-700"
-//           >
-//             Login
-//           </Link>
-//         </p>
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default Resetpassword;
+export default Resetpassword;

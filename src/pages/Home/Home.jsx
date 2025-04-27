@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import ProductGrid from "../Product/ProductGrid.jsx";
+import CategoriesSection from "../category/CategoriesSection.jsx";
 import { Slide, Zoom } from "react-awesome-reveal";
 // import abouticon from "../assets/about.svg";
 import aboutImage from "../../assets/about.svg";
@@ -243,42 +245,7 @@ const Home = () => {
 
       {/* Categories Preview */}
 
-      <section className="max-w-7xl mx-auto px-5 py-9">
-        {/* <h1>Tiwari ji add here catogiroies section </h1> */}
-        <h2 className="text-2xl font-bold text-green-800 mb-6 text-center cursor-pointer hover:text-green-400">
-          Browse Categories
-        </h2>
-        <Zoom>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3 ">
-            {[
-              { name: "Aata,Rice & Dal", img: "/assets/logo2.png" },
-              { name: "instant Food", img: "/images/vegetables.png" },
-              { name: "Dairy & Bread", img: "/images/dairy.png" },
-              { name: "Tea & coffee", img: "/images/bakery.png" },
-              { name: "baby-care", img: "../../images/fruits.png" },
-              { name: "snack & Munchies", img: "/images/vegetables.png" },
-              { name: "Cleaning Essentials", img: "/images/vegetables.png" },
-              { name: "Bakery & Biscuits", img: "/images/vegetables.png" },
-              { name: "Bath & skin-care", img: "/images/vegetables.png" },
-              { name: "Bath & skin-care", img: "/images/vegetables.png" },
-            ].map((cat, i) => (
-              <div
-                key={i}
-                className="min-w-[140px] bg-slate-200 rounded-lg shadow hover:shadow-lg transition-all duration-300 transform hover:scale-105 p-4 flex flex-col items-center flex-shrink-0"
-              >
-                <img
-                  src={cat.img}
-                  alt={cat.name}
-                  className="w-22 h-20 object-contain mb-1 cursor-pointer"
-                />
-                <span className="text-green-700 font-medium cursor-pointer">
-                  {cat.name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Zoom>
-      </section>
+      <CategoriesSection />
 
       {/* extra feature */}
 

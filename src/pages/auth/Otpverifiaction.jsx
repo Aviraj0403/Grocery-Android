@@ -1,98 +1,94 @@
-// import React, { useEffect, useRef, useState } from 'react'
-// import { FaRegEyeSlash } from "react-icons/fa6";
-// import { FaRegEye } from "react-icons/fa";
-// import toast from 'react-hot-toast';
-// import Axios from '../utils/Axios';
-// import summaryApi from '../common/SummeryApi';
-// import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { resetPassword } from '../../services/authApi';
 
-// const Otpverifiaction = () => {
-//     const[data,setdata] = useState(["","","","","",""])
-//     const inputref = useRef([])
-//     const location = useLocation();
-//     const navigate = useNavigate();
-//     // console.log("location",location);
+const Otpverifiaction = () => {
+  const [data, setData] = useState(["", "", "", "", "", ""]);
+  const inputRef = useRef([]);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-//     // useEffect(() => {
-//     //   if(!location?.state?.email){
-//     //     Navigate("/forgot-password")
-//     //   }
-//     // }, [])
-    
+  // 🔒 Redirect if no email in state
+  useEffect(() => {
+    if (!location?.state?.email) {
+      navigate("/forgot-password");
+    }
+  }, [location, navigate]);
 
-//     const handleregister = async(e)=>{
-//         e.preventDefault();
-       
+  const handleOtpChange = (e, index) => {
+    const value = e.target.value;
+    if (!/^\d?$/.test(value)) return; // only digits
 
-//         const response = await Axios({
-//             ...summaryApi.forgot_password_otp_verification,
-//             data : {
-//               otp : data.join(""),
-//               email : location?.state?.email
-//             }  
-//         })
+    const newData = [...data];
+    newData[index] = value;
+    setData(newData);
 
-//         console.log(response);
-//         navigate("/reset-password")
+    if (value && index < 5) {
+      inputRef.current[index + 1].focus();
+    }
+  };
 
-//     }
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await resetPassword({
+        otp: data.join(""),
+        email: location?.state?.email,
+      });
 
-//    const validvalue = data.every(el => el)
+      console.log(response);
+      toast.success("OTP Verified!");
+      navigate("/reset-password");
+    } catch (err) {
+      console.error(err);
+      toast.error("Invalid OTP");
+    }
+  };
 
-//   return (
-//     <section className=' w-full container mx-auto px-4'>
-//       <div className='bg-green-50 my-4 w-full max-w-lg mx-auto rounded p-6 hover:bg-green-100'>
-//           <p className='hover:text-green-600 font-bold  mb-2 text-slate-700'>Enter OTP</p>
+  const isValid = data.every((el) => el);
 
-//           <form className='grid gap-3 py-4' onSubmit={handleregister}>
+  return (
+    <section className='w-full container mx-auto px-4'>
+      <div className='bg-green-50 my-4 w-full max-w-lg mx-auto rounded p-6 hover:bg-green-100'>
+        <p className='hover:text-green-600 font-bold mb-2 text-slate-700'>Enter OTP</p>
 
-//             <div className='grid gap-1 '>
-//                 <label htmlFor="otp">Enter Your OTP:</label>
-//                 <div className='flex items-center gap-1 justify-between mt-3'>
-//                     {
-//                         data.map((Element,index)=>{
-//                             return(
-//                                 <input key={"otp" + index} 
-//                                 type="text" id='otp'
-//                                  ref={(ref)=>{inputref.current[index]=ref  
-//                                   return ref
-//                                 }} 
-//                                   autoFocus
-//                                   maxLength={1}
-//                                   value={data[index]} 
-//                                   onChange={(e)=>{const value = e.target.value
-//                                    const newdata = [...data]
-//                                    newdata[index] = value
-//                                    setdata(newdata);
-//                                    console.log("value is",value)
-                            
-//                                    if(value && index < 5){
-//                                          inputref.current[index+1].focus()
-//                                    }
-                                  
-//                                   }}
-//                                 className='bg-blue-50 w-full max-w-16 p-2 border rounded outline-none focus:border-green-700 text-center font-semibold'
-//                                 // placeholder='Enter your OTP'
-//                                 />
-//                             )
-//                         })
-//                     }
-//                 </div>
-//             </div>
+        <form className='grid gap-3 py-4' onSubmit={handleVerify}>
+          <div className='grid gap-1'>
+            <label htmlFor="otp">Enter Your OTP:</label>
+            <div className='flex items-center gap-1 justify-between mt-3'>
+              {data.map((digit, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  maxLength={1}
+                  ref={(ref) => (inputRef.current[index] = ref)}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(e, index)}
+                  className='bg-blue-50 w-full max-w-16 p-2 border rounded outline-none focus:border-green-700 text-center font-semibold'
+                />
+              ))}
+            </div>
+          </div>
 
-//            <button onClick={handleregister} disabled={!validvalue} className={`${validvalue ? "bg-green-600 hover:bg-green-700":"bg-gray-500"}  text-white py-2 rounded font-semibold my-3 tracking-wide`}>
-//             Verify OTP
-//             </button>
-            
-//           </form>
+          <button
+            type="submit"
+            disabled={!isValid}
+            className={`${
+              isValid ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"
+            } text-white py-2 rounded font-semibold my-3 tracking-wide`}
+          >
+            Verify OTP
+          </button>
+        </form>
 
-//           <p>
-//             Already have an account ? <Link to={"/login"} 
-//             className='font-semibold text-green-600 hover:text-green-700'>Login</Link>
-//           </p>
-//       </div>
-//     </section>
-//   )
-// }
+        <p>
+          Already have an account?{" "}
+          <Link to={"/login"} className='font-semibold text-green-600 hover:text-green-700'>Login</Link>
+        </p>
+      </div>
+    </section>
+  );
+};
 
-// export default Otpverifiaction;
+export default Otpverifiaction;

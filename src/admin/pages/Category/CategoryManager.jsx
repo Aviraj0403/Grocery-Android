@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../../utils/Axios';
 import toast from 'react-hot-toast';
+import slugify from 'slugify';
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState([]);
@@ -10,7 +11,7 @@ const CategoryManager = () => {
     description: '',
     type: 'Main',
     parentCategory: '',
-    image: '',
+    image: null,
     displayOrder: 0,
     isActive: true
   });
@@ -35,29 +36,55 @@ const CategoryManager = () => {
   }, []);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    const { name, value, type, checked, files } = e.target;
+    if (name === 'image') {
+      setForm(prev => ({ ...prev, image: files[0] }));
+    } else {
+      setForm(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      }));
+    }
+
+    if (name === 'name') {
+      setForm(prev => ({
+        ...prev,
+        slug: slugify(value || '', { lower: true, strict: true })
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        ...form,
-        parentCategory: form.type === 'Sub' ? form.parentCategory : null
-      };
+      const formData = new FormData();
+      for (const key in form) {
+        if (form[key] !== null && form[key] !== '') {
+          formData.append(key, form[key]);
+        }
+      }
+
+      if (form.type === 'Sub') {
+        formData.set('parentCategory', form.parentCategory);
+      } else {
+        formData.delete('parentCategory'); // <- this is the key fix
+      }
+      
+
       if (editingCategory) {
-        await axios.put(`/updateCategory/${editingCategory._id}`, payload);
+        await axios.put(`/updateCategory/${editingCategory._id}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         toast.success('Category updated');
       } else {
-        await axios.post('/createCategory', payload);
+        await axios.post('/createCategory', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         toast.success('Category created');
       }
-      setShowModal(false);
+
       resetForm();
+      setShowModal(false);
       fetchCategories();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error occurred');
@@ -71,7 +98,7 @@ const CategoryManager = () => {
       description: '',
       type: 'Main',
       parentCategory: '',
-      image: '',
+      image: null,
       displayOrder: 0,
       isActive: true
     });
@@ -84,8 +111,8 @@ const CategoryManager = () => {
       slug: cat.slug,
       description: cat.description || '',
       type: cat.type,
-      parentCategory: cat.parentCategory || '',
-      image: cat.image || '',
+      parentCategory: cat.parentCategory?._id || '',
+      image: null, // reset file input
       displayOrder: cat.displayOrder,
       isActive: cat.isActive
     });
@@ -157,24 +184,13 @@ const CategoryManager = () => {
                       onClick={() => handleEdit(cat)}
                       className="text-blue-600 hover:text-blue-800"
                     >
-                      <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24"
-                        strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-                        <path d="m15 5 4 4"></path>
-                      </svg>
+                      ✎
                     </button>
                     <button
                       onClick={() => handleDelete(cat._id)}
                       className="text-red-600 hover:text-red-800"
                     >
-                      <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24"
-                        strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                        <line x1="10" x2="10" y1="11" y2="17"></line>
-                        <line x1="14" x2="14" y1="11" y2="17"></line>
-                      </svg>
+                      🗑
                     </button>
                   </td>
                 </tr>
@@ -198,7 +214,7 @@ const CategoryManager = () => {
             <h3 className="text-lg font-semibold">
               {editingCategory ? 'Edit Category' : 'Add Category'}
             </h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
               <input name="name" value={form.name} onChange={handleInputChange} placeholder="Name" required className="w-full border px-3 py-2 rounded" />
               <input name="slug" value={form.slug} onChange={handleInputChange} placeholder="Slug" required className="w-full border px-3 py-2 rounded" />
               <textarea name="description" value={form.description} onChange={handleInputChange} placeholder="Description" rows="2" className="w-full border px-3 py-2 rounded" />
@@ -216,7 +232,7 @@ const CategoryManager = () => {
                     ))}
                 </select>
               )}
-              <input name="image" value={form.image} onChange={handleInputChange} placeholder="Image URL" className="w-full border px-3 py-2 rounded" />
+              <input type="file" name="image" accept="image/*" onChange={handleInputChange} className="w-full border px-3 py-2 rounded" />
               <input type="number" name="displayOrder" value={form.displayOrder} onChange={handleInputChange} placeholder="Display Order" className="w-full border px-3 py-2 rounded" />
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="isActive" checked={form.isActive} onChange={handleInputChange} />

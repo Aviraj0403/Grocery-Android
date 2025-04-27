@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { FaRegEyeSlash } from "react-icons/fa6";
 import { FaRegEye } from "react-icons/fa";
 import toast from 'react-hot-toast';
-import Axios from '../utils/Axios';
+import Axios from '../../utils/Axios';
 // import summaryApi from '../common/SummeryApi';
-import authApi from '../../services/authApi';
+import { register } from "../../services/authApi"; // Updated import for API calls
+
 import { Link, useNavigate } from 'react-router-dom';
-import AxiosToastError from '../utils/AxiosToastError';
+import AxiosToastError from '../../utils/AxiosToastError';
 
 const Register = () => {
     const[data,setdata] = useState({
