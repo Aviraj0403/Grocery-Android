@@ -1,21 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-// import Axios from "./utils/Axios";
 
 // Pages
 import Home from "./pages/Home/Home";
-// import Searchpage from "./pages/Searchpage";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Forgotpassword from "./pages/auth/Forgotpassword";
 import Otpverifiaction from "./pages/auth/Otpverifiaction";
 import Resetpassword from "./pages/auth/Resetpassword";
-// import Usermenumobile from "./pages/Usermenumobile";
-
 import Address from "./pages/Address";
 
 // Layouts
 import Layout from "./Layout";
+import UserDashboard from "./pages/users/UserDashboard"; // 🆕 User Dashboard Layout
+
+// Admin
 import {
   AdminLayout,
   AdminDashboard,
@@ -27,6 +26,8 @@ import {
   UserList,
   AdminOrderManager,
 } from "./admin";
+
+// Other Pages
 import CartPage from "./pages/cart/cartPage";
 import OneDayReturn from "./pages/OneDayReturn";
 import CashOnDelivery from "./pages/CashOnDelivery";
@@ -35,50 +36,52 @@ import AboutDeveloper from "./QuickLinks/AboutDeveloper";
 import Contact from "./QuickLinks/Contact";
 import TermandConditions from "./QuickLinks/TermandConditions";
 import Privacy from "./QuickLinks/Privacy";
-// import Register from "./pages/auth/Register";
+
+// 🆕 User Dashboard Pages (make sure these exist)
+// import Profile from "./pages/Profile";
+// import Myorder from "./pages/Myorder";
+// import ChangePassword from "./pages/ChangePassword";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // Root of the app
+    element: <App />,
     children: [
       {
         path: "",
-        element: <Layout />, // Main layout with Header, Footer, etc.
+        element: <Layout />,
         children: [
-          { index: true, element: <Home /> }, // Home page at "/"
-          // { path: "search", element: <Searchpage /> }, // Search page
-          { path: "login", element: <Login /> }, // Login page
-          { path: "dashboard/cart", element: <CartPage /> },
-          
-
-          // Uncomment and use these when needed
+          { index: true, element: <Home /> },
+          { path: "login", element: <Login /> },
           { path: "register", element: <Register /> },
           { path: "forgot-password", element: <Forgotpassword /> },
           { path: "verification-otp", element: <Otpverifiaction /> },
           { path: "reset-password", element: <Resetpassword /> },
-          // { path: "user", element: <Usermenumobile /> },
-          {path : "onedayreturn", element:<OneDayReturn/>},
-          {path : "cashondelivery", element:<CashOnDelivery/>},
-          {path : "aboutus", element : <AboutUs/>},
-          {path : "aboutdeveloper", element : <AboutDeveloper/>},
-          {path : "contactus", element : <Contact/>},
-          {path : "termandconditons", element : <TermandConditions/>},
-          {path : "privacy", element : <Privacy/>},
+          { path: "dashboard/cart", element: <CartPage /> },
+          { path: "onedayreturn", element: <OneDayReturn /> },
+          { path: "cashondelivery", element: <CashOnDelivery /> },
+          { path: "aboutus", element: <AboutUs /> },
+          { path: "aboutdeveloper", element: <AboutDeveloper /> },
+          { path: "contactus", element: <Contact /> },
+          { path: "termandconditons", element: <TermandConditions /> },
+          { path: "privacy", element: <Privacy /> },
+          
 
+          // 🆕 User Dashboard with nested routes
           {
-            path: "dashboard",
-            element: <Home />, // You can replace this with a Dashboard layout
+            path: "dashboard/profile",
+            element: <UserDashboard />,
             children: [
               // { path: "profile", element: <Profile /> },
-              // { path: "myorders", element: <Myorder /> },
+              // { path: "orders", element: <Myorder /> },
+              // { path: "change-password", element: <ChangePassword /> },
               { path: "address", element: <Address /> },
             ],
           },
         ],
       },
 
-      // Admin Section with separate AdminLayout
+      // Admin Panel
       {
         path: "admin",
         element: <AdminLayout />,
@@ -91,10 +94,6 @@ const router = createBrowserRouter([
           { path: "categories", element: <CategoryManager /> },
           { path: "users", element: <UserList /> },
           { path: "orders", element: <AdminOrderManager /> },
-
-          // Future admin routes
-          // { path: "users", element: <AdminUsers /> },
-          // { path: "orders", element: <AdminOrders /> },
         ],
       },
     ],
