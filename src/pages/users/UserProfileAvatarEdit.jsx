@@ -10,12 +10,7 @@ const Profile = () => {
   const user = useSelector((state) => state.user);
   const [openProfileEdit, setOpenProfileEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    mobile: "",
-  });
+  const [userData, setUserData] = useState({ name: "", email: "", mobile: "", avatar: "" });
 
   useEffect(() => {
     if (user) {
@@ -23,23 +18,19 @@ const Profile = () => {
         name: user.name || "",
         email: user.email || "",
         mobile: user.mobile || "",
+        avatar: user.avatar || "",
       });
     }
   }, [user]);
 
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleOnChange = (e) => setUserData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
       const response = await updateProfile(userData);
-      if (response.data.success) {
-        toast.success("Profile updated successfully!");
-      }
+      if (response.data.success) toast.success("Profile updated successfully!");
     } catch (error) {
       AxiosToastError(error);
     } finally {
@@ -47,39 +38,38 @@ const Profile = () => {
     }
   };
 
+  const handleAvatarChange = (newAvatarUrl) => setUserData((prev) => ({ ...prev, avatar: newAvatarUrl }));
+
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
       {/* Avatar Section */}
       <div className="flex flex-col items-center">
         <div className="w-20 h-20 rounded-full overflow-hidden shadow">
-          {user.avatar ? (
-            <img
-              src={user.avatar}
-              alt="User Avatar"
-              className="w-full h-full object-cover"
-            />
+          {userData.avatar ? (
+            <img src={userData.avatar} alt="User Avatar" className="w-full h-full object-cover" />
           ) : (
             <FaRegUserCircle size={80} className="text-gray-500" />
           )}
         </div>
-        <button
-          onClick={() => setOpenProfileEdit(true)}
-          className="text-sm text-green-600 mt-2 hover:underline"
-        >
+        <button onClick={() => setOpenProfileEdit(true)} className="text-sm text-green-600 mt-2 hover:underline">
           Change Avatar
         </button>
       </div>
 
       {openProfileEdit && (
-        <UserProfileAvatarEdit close={() => setOpenProfileEdit(false)} />
+        <UserProfileAvatarEdit
+          close={() => setOpenProfileEdit(false)}
+          onAvatarChange={(newAvatar) => {
+            handleAvatarChange(newAvatar);
+            setOpenProfileEdit(false);
+          }}
+        />
       )}
 
       {/* Form Section */}
       <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
         <div>
-          <label htmlFor="name" className="block text-sm text-gray-600">
-            Full Name
-          </label>
+          <label htmlFor="name" className="block text-sm text-gray-600">Full Name</label>
           <input
             type="text"
             id="name"
@@ -90,11 +80,8 @@ const Profile = () => {
             required
           />
         </div>
-
         <div>
-          <label htmlFor="email" className="block text-sm text-gray-600">
-            Email
-          </label>
+          <label htmlFor="email" className="block text-sm text-gray-600">Email</label>
           <input
             type="email"
             id="email"
@@ -105,11 +92,8 @@ const Profile = () => {
             required
           />
         </div>
-
         <div>
-          <label htmlFor="mobile" className="block text-sm text-gray-600">
-            Mobile Number
-          </label>
+          <label htmlFor="mobile" className="block text-sm text-gray-600">Mobile Number</label>
           <input
             type="text"
             id="mobile"
@@ -120,7 +104,6 @@ const Profile = () => {
             required
           />
         </div>
-
         <button
           type="submit"
           className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded shadow"

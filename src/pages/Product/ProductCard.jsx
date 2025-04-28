@@ -7,11 +7,11 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const [imgError, setImgError] = useState(false);
 
-  // Ensure product.variants exists and is not empty
   const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
   const defaultVariant = hasVariants ? product.variants[0] : null;
 
   const [selectedUnit, setSelectedUnit] = useState(product.activeVariant || defaultVariant?.unit || "");
+  const [quantity, setQuantity] = useState(1); // 🆕 quantity state
 
   const activeVariant =
     hasVariants && product.variants.find((v) => v.unit === selectedUnit) || defaultVariant;
@@ -34,15 +34,31 @@ const ProductCard = ({ product }) => {
             price: activeVariant.price,
             packaging: activeVariant.packaging,
           },
-          quantity: 1,
+          quantity: quantity, // Use selected quantity
         })
       ).unwrap();
       toast.success("Added to cart!");
+      setQuantity(1); // Reset after adding
     } catch (error) {
       toast.error(error?.message || "Add to cart failed.");
     } finally {
       setIsAdding(false);
     }
+  };
+
+  const handleQuantityChange = (type) => {
+    setQuantity((prev) => {
+      if (type === "increment") {
+        if (activeVariant.stock && prev < activeVariant.stock) {
+          return prev + 1;
+        } else {
+          toast.error("Reached maximum stock limit!");
+          return prev;
+        }
+      } else {
+        return prev > 1 ? prev - 1 : 1;
+      }
+    });
   };
 
   if (!product || !hasVariants) {
@@ -70,7 +86,10 @@ const ProductCard = ({ product }) => {
       <div className="mb-2">
         <select
           value={selectedUnit}
-          onChange={(e) => setSelectedUnit(e.target.value)}
+          onChange={(e) => {
+            setSelectedUnit(e.target.value);
+            setQuantity(1); // Reset quantity when unit changes
+          }}
           className="text-sm border rounded px-2 py-1 w-full mb-2"
           aria-label="Select variant"
         >
@@ -101,6 +120,26 @@ const ProductCard = ({ product }) => {
         )}
       </div>
 
+      {/* Quantity Selector */}
+      <div className="flex items-center justify-center gap-3 mb-3">
+        <button
+          type="button"
+          onClick={() => handleQuantityChange("decrement")}
+          className="bg-gray-200 hover:bg-gray-300 rounded-full w-8 h-8 text-xl font-bold"
+        >
+          -
+        </button>
+        <span className="text-lg font-semibold">{quantity}</span>
+        <button
+          type="button"
+          onClick={() => handleQuantityChange("increment")}
+          className="bg-gray-200 hover:bg-gray-300 rounded-full w-8 h-8 text-xl font-bold"
+        >
+          +
+        </button>
+      </div>
+
+      {/* Add to Cart Button */}
       <button
         onClick={handleAddToCart}
         className="w-full bg-green-600 text-white text-sm py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
