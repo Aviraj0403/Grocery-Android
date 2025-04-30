@@ -1,177 +1,178 @@
-import React, { useState } from 'react'
-import { FaRegEyeSlash } from "react-icons/fa6";
-import { FaRegEye } from "react-icons/fa";
+// components/Register.jsx
+import React, { useState } from 'react';
+import { FaRegEyeSlash } from 'react-icons/fa6';
+import { FaRegEye } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import Axios from '../../utils/Axios';
-// import summaryApi from '../common/SummeryApi';
-import { register } from "../../services/authApi"; // Updated import for API calls
-
+import { register } from '../../services/authApi';
 import { Link, useNavigate } from 'react-router-dom';
 import AxiosToastError from '../../utils/AxiosToastError';
 
 const Register = () => {
-    const[data,setdata] = useState({
-        userName:"",
-        email:"",
-        phoneNumber:"",
-        password:"",
-        confirmPassword:""
-    })
-    const[showpassword,setshowpassword] = useState(false);
-    const[showconfirmpassword,setshowconfirmpassword] = useState(false);
-    const navigate = useNavigate();
-    const handlechange = (e) =>{
-           const {name,value} = e.target;
+  const [data, setData] = useState({
+    userName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
-           setdata((preve)=>{
-                 return{
-                    ...preve,
-                    [name] : value
-                 }
-           })
-    }
-    const handleregister = async(e)=>{
-        e.preventDefault();
-        if(data.password !== data.confirmPassword){
-            toast.error(
-                "password and confirm password must be same"
-            )  
-            return 
-        }
-       try {
-        const response = await Axios({
-            ...authApi.register,
-           data : data
-        })
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData(prev => ({ ...prev, [name]: value }));
+  };
 
-        if(response.data.error){
-            toast.error(response.data.message)
-        }
-         
-        if(response.data.success){
-            toast.success(response.data.message)
-            setdata({
-                userName:"",
-                email:"",
-                phoneNumber:"",
-                password:"",
-                confirmPassword:""
-            })
-            navigate("/login")
-        }
-
-       } catch (error) {
-        AxiosToastError(error)
-       }
-
-        
-
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (data.password !== data.confirmPassword) {
+      toast.error('Password and confirm password must match');
+      return;
     }
 
-   const validvalue = Object.values(data).every(el => el)
+    try {
+      const res = await register({
+        userName: data.userName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        password: data.password
+      });
+
+      // backend returns 201 on success
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        setData({
+          userName: '',
+          email: '',
+          phoneNumber: '',
+          password: '',
+          confirmPassword: ''
+        });
+        navigate('/login');
+      }
+    } catch (err) {
+      const status = err.response?.status;
+      const msg = err.response?.data?.message || 'Something went wrong';
+      if (status === 400 || status === 409) {
+        toast.error(msg);
+      } else {
+        AxiosToastError(err);
+      }
+    }
+  };
+
+  const isValid = Object.values(data).every(Boolean);
+
   return (
-    <section className=' w-full container mx-auto px-4'>
-      <div className='bg-green-50 my-4 w-full max-w-lg mx-auto rounded p-6'>
-          <p className='bg-green-600 hover:bg-green-700 text-white flex justify-center py-2 rounded font-semibold'>Welcome to shanu's Mart</p>
+    <section className="w-full container mx-auto px-4">
+      <div className="bg-green-50 my-4 w-full max-w-lg mx-auto rounded p-6">
+        <p className="bg-green-600 hover:bg-green-700 text-white flex justify-center py-2 rounded font-semibold">
+          Welcome to shanu&apos;s Mart
+        </p>
 
-          <form className='grid gap-3 mt-6' onSubmit={handleregister}>
-            <div className='grid gap-1'>
-                <label htmlFor="name">Name:</label>
-                <input type="text" id='userName' autoFocus 
-                className='bg-blue-50 p-2 border rounded outline-none focus:border-green-700'
-                name='userName'
-                value={data.userName}
-                onChange={handlechange}
-                placeholder='Enter your name...'
-                />
-            </div>
+        <form className="grid gap-3 mt-6" onSubmit={handleRegister}>
+          {/* Name */}
+          <div className="grid gap-1">
+            <label htmlFor="userName">Name:</label>
+            <input
+              id="userName"
+              name="userName"
+              value={data.userName}
+              onChange={handleChange}
+              placeholder="Enter your name..."
+              className="bg-blue-50 p-2 border rounded outline-none focus:border-green-700"
+              autoFocus
+            />
+          </div>
 
-            <div className='grid gap-1 '>
-                <label htmlFor="email">Email:</label>
-                <input type="email" id='email' autoFocus 
-                className='bg-blue-50 p-2 border rounded outline-none focus:border-green-700'
-                name='email'
-                value={data.email}
-                onChange={handlechange}
-                placeholder='Enter your email...'
-                />
-            </div>
+          {/* Email */}
+          <div className="grid gap-1">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={data.email}
+              onChange={handleChange}
+              placeholder="Enter your email..."
+              className="bg-blue-50 p-2 border rounded outline-none focus:border-green-700"
+            />
+          </div>
 
+          {/* Phone */}
+          <div className="grid gap-1">
+            <label htmlFor="phoneNumber">Number:</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={data.phoneNumber}
+              onChange={handleChange}
+              placeholder="Enter your number"
+              className="bg-blue-50 p-2 border rounded outline-none focus:border-green-700"
+            />
+          </div>
 
-            <div className='grid gap-1 '>
-                <label htmlFor="number">Number:</label>
-                <input type="number" id='phoneNumber' autoFocus 
-                className='bg-blue-50 p-2 border rounded outline-none focus:border-green-700'
-                name='phoneNumber'
-                value={data.phoneNumber}
-                onChange={handlechange}
-                placeholder='Enter your number'
-                />
-            </div>
-
-
-            <div className='grid gap-1'>
-                <label htmlFor="password">Password:</label>
-                <div className='bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700'>
-                <input type={showpassword ? "text":"password"} id='password' autoFocus 
-                className='w-full outline-none bg-blue-50'
-                name='password'
+          {/* Password */}
+          <div className="grid gap-1">
+            <label htmlFor="password">Password:</label>
+            <div className="bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
                 value={data.password}
-                onChange={handlechange}
-                placeholder='Enter your password'
-                />
-                 <div onClick={()=>setshowpassword(preve => !preve)} className='cursor-pointer'>
-                    {
-                        showpassword ?(
-                            <FaRegEye/>
-                        ):(
-                            <FaRegEyeSlash/>
-                        )
-                    }
-                </div>
-                </div>
-
+                onChange={handleChange}
+                placeholder="Enter your password"
+                className="w-full outline-none bg-blue-50"
+              />
+              <div onClick={() => setShowPassword(p => !p)} className="cursor-pointer">
+                {showPassword ? <FaRegEye/> : <FaRegEyeSlash/>}
+              </div>
             </div>
-             
-            <div className='grid gap-1'>
-                <label htmlFor="confirmPassword">Confirm Password:</label>
-                <div className='bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700'>
-                <input type={showconfirmpassword ? "text":"password"} id='confirmPassword' autoFocus 
-                className='w-full outline-none bg-blue-50'
-                name='confirmPassword'
+          </div>
+
+          {/* Confirm Password */}
+          <div className="grid gap-1">
+            <label htmlFor="confirmPassword">Confirm Password:</label>
+            <div className="bg-blue-50 p-2 border rounded flex items-center focus-within:border-green-700">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                id="confirmPassword"
+                name="confirmPassword"
                 value={data.confirmPassword}
-                onChange={handlechange}
-                placeholder='Enter your Confirm password...'
-                />
-                 <div onClick={()=>setshowconfirmpassword(preve => !preve)} className='cursor-pointer'>
-                    {
-                        showconfirmpassword ?(
-                            <FaRegEye/>
-                        ):(
-                            <FaRegEyeSlash/>
-                        )
-                    }
-                </div>
-                </div>
-
+                onChange={handleChange}
+                placeholder="Confirm your password"
+                className="w-full outline-none bg-blue-50"
+              />
+              <div onClick={() => setShowConfirmPassword(p => !p)} className="cursor-pointer">
+                {showConfirmPassword ? <FaRegEye/> : <FaRegEyeSlash/>}
+              </div>
             </div>
+          </div>
 
-
-
-           
-           <button onClick={handleregister} disabled={!validvalue} className={`${validvalue ? "bg-green-600 hover:bg-green-700":"bg-gray-500"}  text-white py-2 rounded font-semibold my-3 tracking-wide`}>
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={!isValid}
+            className={`text-white py-2 rounded font-semibold my-3 tracking-wide ${
+              isValid ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-500'
+            }`}
+          >
             Register
-            </button>
-            
-          </form>
+          </button>
+        </form>
 
-          <p>
-            Already have an account ? <Link to={"/login"} 
-            className='font-semibold text-green-600 hover:text-green-700'>Login</Link>
-          </p>
+        <p>
+          Already have an account?{' '}
+          <Link to="/login" className="font-semibold text-green-600 hover:text-green-700">
+            Login
+          </Link>
+        </p>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/cartSlice";
 import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [imgError, setImgError] = useState(false);
 
   const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
@@ -18,7 +20,8 @@ const ProductCard = ({ product }) => {
 
   const [isAdding, setIsAdding] = useState(false);
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.stopPropagation(); // stop click going to detail page
     if (!activeVariant) {
       toast.error("Product variant not available.");
       return;
@@ -70,7 +73,10 @@ const ProductCard = ({ product }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 p-4">
+    <div
+      onClick={handleCardClick}
+      className="bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 p-4 cursor-pointer"
+    >
       <img
         src={!imgError ? (product.images?.[0] || "/images/placeholder.png") : "/images/placeholder.png"}
         alt={product.name}
@@ -109,13 +115,13 @@ const ProductCard = ({ product }) => {
           )}
         </div>
 
-        {"stock" in activeVariant && (
+        {"stockQty" in activeVariant && (
           <p
             className={`text-xs mt-1 ${
-              activeVariant.stock > 0 ? "text-green-600" : "text-red-500"
+              activeVariant.stockQty > 0 ? "text-green-600" : "text-red-500"
             }`}
           >
-            {activeVariant.stock > 0 ? "In Stock" : "Out of Stock"}
+            {activeVariant.stockQty > 0 ? "In Stock" : "Out of Stock"}
           </p>
         )}
       </div>
@@ -143,7 +149,7 @@ const ProductCard = ({ product }) => {
       <button
         onClick={handleAddToCart}
         className="w-full bg-green-600 text-white text-sm py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
-        disabled={isAdding || activeVariant.stock === 0}
+        disabled={isAdding || activeVariant.stockQty === 0}
         aria-label="Add to cart"
       >
         {isAdding ? "Adding..." : "Add to Cart"}

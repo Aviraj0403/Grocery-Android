@@ -36,6 +36,7 @@ import AboutDeveloper from "./QuickLinks/AboutDeveloper";
 import Contact from "./QuickLinks/Contact";
 import TermandConditions from "./QuickLinks/TermandConditions";
 import Privacy from "./QuickLinks/Privacy";
+import ProductDetail from "./pages/Product/ProductDetail";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
           { path: "contactus", element: <Contact /> },
           { path: "termandconditons", element: <TermandConditions /> },
           { path: "privacy", element: <Privacy /> },
+          { path: "product/:id" ,element : <ProductDetail/>},
           
 
           // 🆕 User Dashboard with nested routes
