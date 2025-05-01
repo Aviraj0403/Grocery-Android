@@ -22,8 +22,9 @@ import returnn from "../../assets/returns.svg";
 import mobile from "../../assets/mobile.svg";
 import price from "../../assets/price.svg";
 import time from "../../assets/time.svg";
-import banner from "../../assets/banner-mobile.jpg";
-import doner from "../../assets/banner.jpg";
+import mobileBanner from "../../assets/banner-mobile.jpg";
+import desktopBanner from "../../assets/banner.jpg";
+
 
 // import logo from '..\assets\logo2.png'
 
@@ -492,17 +493,26 @@ const Home = () => {
       </section>
 
       {/* <h1>add here some banner attractive</h1> */}
-      <Slide direction="right">
-        <section className="relative w-full overflow-hidden">
-          <div className="relative">
-            <img
-              src={banner}
-              alt="Promotional Banner"
-              className="w-full h-auto object-cover max-h-[400px] sm:max-h-[500px] rounded-xl"
-            />
-          </div>
-        </section>
-      </Slide>
+     
+<Slide direction="right">
+  <section className="relative w-full overflow-hidden">
+    <div className="relative">
+      {/* Mobile Banner */}
+      <img
+        src={mobileBanner}
+        alt="Mobile Banner"
+        className="w-full h-auto object-cover max-h-[400px] sm:hidden rounded-xl"
+      />
+      
+      {/* Desktop Banner */}
+      <img
+        src={desktopBanner}
+        alt="Desktop Banner"
+        className="w-full h-auto object-cover max-h-[500px] hidden sm:block rounded-xl"
+      />
+    </div>
+  </section>
+</Slide>
 
       {/* <div className="scroll-to-top bg-green-500">
     <button className="scroll-to-top-button show">↑</button>
