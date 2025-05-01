@@ -8,6 +8,8 @@ export {
   Header,
   RouterCumb,
   ProgressBar,
+  ProtectedRoute,
+  Unauthorized,
 } from "./component/index.js";
 export {
   AddProduct,
