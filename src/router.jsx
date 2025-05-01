@@ -36,6 +36,9 @@ import AboutDeveloper from "./QuickLinks/AboutDeveloper";
 import Contact from "./QuickLinks/Contact";
 import TermandConditions from "./QuickLinks/TermandConditions";
 import Privacy from "./QuickLinks/Privacy";
+import Deo from "./pages/ShopingSection/Deo";
+import Cleaning from "./pages/ShopingSection/Cleaning";
+import TeaCoffe from "./pages/ShopingSection/TeaCoffe";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -65,6 +68,9 @@ const router = createBrowserRouter([
           { path: "contactus", element: <Contact /> },
           { path: "termandconditons", element: <TermandConditions /> },
           { path: "privacy", element: <Privacy /> },
+          {path : "deo", element: <Deo/>},
+          {path:"cleaning", element:<Cleaning/>},
+          {path:"Coofe", element:<TeaCoffe/>},
           
 
           // 🆕 User Dashboard with nested routes
