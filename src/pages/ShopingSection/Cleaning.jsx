@@ -140,7 +140,7 @@ const Cleaning = () => {
   return (
     <>
      <marquee className="text-sm text-white bg-slate-500 py-2 font-semibold tracking-wide">
-      🎉 Get 2% discount on every deodorant! Limited time offer 🎉
+      🎉 Get 2% on selected skin-care ! Limited time offer 🎉
     </marquee>
     <div className="px-4 py-6 max-w-6xl mx-auto">
         <Link to={"/"}>
