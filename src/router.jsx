@@ -36,11 +36,27 @@ import {
   CategoryManager,
   UserList,
   AdminOrderManager,
-  Unauthorized,
-  ProtectedRoute
-} from './admin'
+} from "./admin";
 
-export default createBrowserRouter([
+// Other Pages
+import CartPage from "./pages/cart/cartPage";
+import OneDayReturn from "./pages/OneDayReturn";
+import CashOnDelivery from "./pages/CashOnDelivery";
+import AboutUs from "./QuickLinks/AboutUs";
+import AboutDeveloper from "./QuickLinks/AboutDeveloper";
+import Contact from "./QuickLinks/Contact";
+import TermandConditions from "./QuickLinks/TermandConditions";
+import Privacy from "./QuickLinks/Privacy";
+import Deo from "./pages/ShopingSection/Deo";
+import Cleaning from "./pages/ShopingSection/Cleaning";
+import TeaCoffe from "./pages/ShopingSection/TeaCoffe";
+
+// 🆕 User Dashboard Pages (make sure these exist)
+// import Profile from "./pages/Profile";
+// import Myorder from "./pages/Myorder";
+// import ChangePassword from "./pages/ChangePassword";
+
+const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
@@ -51,25 +67,28 @@ export default createBrowserRouter([
         children: [
           // Public
           { index: true, element: <Home /> },
-          { path: 'login',           element: <Login /> },
-          { path: 'register',        element: <Register /> },
-          { path: 'forgot-password', element: <Forgotpassword /> },
-          { path: 'verification-otp',element: <Otpverifiaction /> },
-          { path: 'reset-password',  element: <Resetpassword /> },
-          { path: 'aboutus',         element: <AboutUs /> },
-          { path: 'aboutdeveloper',  element: <AboutDeveloper /> },
-          { path: 'contactus',       element: <Contact /> },
-          { path: 'termandconditions', element: <TermandConditions /> },
-          { path: 'privacy',         element: <Privacy /> },
-          { path: 'product/:id',     element: <ProductDetail /> },
-          { path: 'onedayreturn',    element: <OneDayReturn /> },
-          { path: 'cashondelivery',  element: <CashOnDelivery /> },
-          { path: 'dashboard/cart',  element: <CartPage /> },
-          { path: 'unauthorized',    element: <Unauthorized /> },
+          { path: "login", element: <Login /> },
+          { path: "register", element: <Register /> },
+          { path: "forgot-password", element: <Forgotpassword /> },
+          { path: "verification-otp", element: <Otpverifiaction /> },
+          { path: "reset-password", element: <Resetpassword /> },
+          { path: "dashboard/cart", element: <CartPage /> },
+          { path: "onedayreturn", element: <OneDayReturn /> },
+          { path: "cashondelivery", element: <CashOnDelivery /> },
+          { path: "aboutus", element: <AboutUs /> },
+          { path: "aboutdeveloper", element: <AboutDeveloper /> },
+          { path: "contactus", element: <Contact /> },
+          { path: "termandconditons", element: <TermandConditions /> },
+          { path: "privacy", element: <Privacy /> },
+          {path : "deo", element: <Deo/>},
+          {path:"cleaning", element:<Cleaning/>},
+          {path:"Coofe", element:<TeaCoffe/>},
+          
 
-          // Customer‐only
+          // 🆕 User Dashboard with nested routes
           {
-            element: <ProtectedRoute allowedRoles={['customer']} />,
+            path: "dashboard/profile",
+            element: <UserDashboard />,
             children: [
               { path: 'dashboard/profile',         element: <UserDashboard /> },
               { path: 'dashboard/profile/address', element: <Address /> },
