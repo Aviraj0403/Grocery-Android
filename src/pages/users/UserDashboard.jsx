@@ -22,6 +22,7 @@ const Dashboard = () => {
     email: "shanu@example.com",
     phone: "+91-9876543210",
   });
+  console.log("test purpose of git")
   const [draftProfile, setDraftProfile] = useState(profile);
 
   const handleInputChange = (e) => {
