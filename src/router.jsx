@@ -37,6 +37,10 @@ import Contact from "./QuickLinks/Contact";
 import TermandConditions from "./QuickLinks/TermandConditions";
 import Privacy from "./QuickLinks/Privacy";
 import ProductDetail from "./pages/Product/ProductDetail";
+import Deo from "./pages/ShopingSection/Deo";
+import Cleaning from "./pages/ShopingSection/Cleaning";
+import TeaCoffe from "./pages/ShopingSection/TeaCoffe";
+import ShopNow from "./pages/ShopingSection/ShopNow";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -67,6 +71,10 @@ const router = createBrowserRouter([
           { path: "termandconditons", element: <TermandConditions /> },
           { path: "privacy", element: <Privacy /> },
           { path: "product/:id" ,element : <ProductDetail/>},
+          {path: "deo",element : <Deo/>},
+          {path:"cleaning", element:<Cleaning/>},
+          {path: "Coofe", element: <TeaCoffe/>},
+          {path : "shopnow", element: <ShopNow/>},
           
 
           // 🆕 User Dashboard with nested routes
@@ -102,4 +110,4 @@ const router = createBrowserRouter([
   },
 ]);
 
-export default router;
+export default router;    

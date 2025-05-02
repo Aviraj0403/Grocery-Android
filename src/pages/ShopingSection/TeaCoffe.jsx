@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaPlus, FaMinus } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { ImCancelCircle } from "react-icons/im";
 
 const data = {
   Tea: [
@@ -53,10 +55,17 @@ const TeaCoffe = () => {
     });
 
   return (
+    
     <div className="bg-slate-100 min-h-screen px-4 py-6 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-teal-500">
-        Tea, Coffee & Drinks
-      </h1>
+      <Link to={"/"}>
+              <div className="relative">
+                <ImCancelCircle className="absolute top-2 right-0 text-xl text-gray-600 hover:text-red-500 cursor-pointer transition-all text-red-500" />
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-red-500 drop-shadow-lg mb-6">
+                Tea, Coffee & Drinks
+                </h1>
+              </div>
+            </Link>
+
       {Object.entries(data).map(([category, items]) => (
         <section key={category} className="mb-8">
           <h2 className="text-xl font-bold text-gray-800 mb-3">{category}</h2>

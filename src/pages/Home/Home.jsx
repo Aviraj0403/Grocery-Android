@@ -52,8 +52,8 @@ const Home = () => {
           Discover fresh groceries, daily deals, and quick delivery — all at
           your fingertips!
         </p>
-        <Link to="/shop">
-          <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200">
+        <Link to="/shopnow">
+          <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200" onClick={()=>navigate("shopnow")}>
             Shop Now
           </button>
         </Link>
@@ -333,100 +333,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      {/* featured products */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-green-800 mb-6 text-center">
-          Featured Products
-        </h2>
-
-        <ProductGrid />
-      </section>
-
-      {/* chat gpt code */}
-
-      <section className="py-12 bg-white">
-        <h1 className="text-3xl font-bold text-center mb-10 relative">
-          Popular Products
-          <span className="block w-16 h-1 bg-orange-500 mx-auto mt-2 rounded-full"></span>
-        </h1>
-
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ">
-          {Array.isArray(products) &&
-            products.map((product) => (
-              <div
-                key={product.id}
-                className={`relative w-full border p-4 bg-white transition-all duration-300 transform hover:scale-98 hover:-translate-y-1 hover:shadow-1xl hover:rounded-2xl border hover:border-green-500
-          ${
-            product.highlight
-              ? "hover:border-green-500 shadow-md"
-              : "border-yellow-200 rounded-lg"
-          }`}
-              >
-                {/* Badge */}
-                {product.label && (
-                  <span className="absolute top-2 left-2 text-xs font-semibold px-2 py-1 bg-red-500 text-white rounded-full">
-                    {product.label}
-                  </span>
-                )}
-
-                {/* Image */}
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-32 object-contain mb-3"
-                />
-
-                {/* Category */}
-                <p className="text-sm text-gray-500">
-                  {product.category || "Category"}
-                </p>
-
-                {/* Name */}
-                <h3 className="font-semibold text-base mb-1">
-                  {product.name || "Product Name"}
-                </h3>
-
-                {/* Rating */}
-                <div className="flex items-center text-yellow-500 text-sm mb-2">
-                  {Number.isFinite(product.rating) &&
-                    [...Array(Math.floor(product.rating))].map((_, i) => (
-                      <FaStar key={i} />
-                    ))}
-                  <span className="text-gray-600 ml-2">
-                    {product.rating ?? 0} ({product.reviews ?? 0})
-                  </span>
-                </div>
-
-                {/* Price */}
-                <div className="flex items-center space-x-2 mb-3">
-                  <span className="font-bold text-lg text-gray-800">
-                    {product.price ?? 0}
-                  </span>
-                  {product.originalPrice && (
-                    <span className="line-through text-sm text-gray-400">
-                      {product.originalPrice}
-                    </span>
-                  )}
-                </div>
-
-                {/* Action Icons */}
-                {/* {product.highlight && (
-                  <div className="absolute top-2 right-2 flex flex-col space-y-2 bg-white p-2 rounded shadow">
-                    <FaEye className="text-black-600 hover:text-blue-500 cursor-pointer" />
-                    <FaHeart className="text-gray-600 hover:text-red-500 cursor-pointer" />
-                  </div>
-                )} */}
-
-                {/* Add Button */}
-                <button className="w-full mt-auto bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
-                  Add to cart
-                </button>
-              </div>
-            ))}
-        </div>
-      </section>
-
+      
       {/* return critaria */}
 
       <section className="my-8 lg:my-14 ">
