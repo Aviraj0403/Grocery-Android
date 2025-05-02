@@ -1,195 +1,132 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAllProducts } from '../../services/productApi';
-import { getCategories }  from '../../services/categoryApi';
-import ProductCard        from './ProductCard';
-import Skeleton           from 'react-loading-skeleton';
+import { getCategories } from '../../services/categoryApi';
+import ProductCard from './ProductCard';
+import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 const ProductGrid = () => {
-  // Data
-  const [products, setProducts]     = useState([]);
+  const [products, setProducts] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [categories, setCategories] = useState([]);
-
-  // Filters & UI state
   const [selectedCat, setSelectedCat] = useState('All');
-  const [search, setSearch]           = useState('');
-  const [sortBy, setSortBy]           = useState('');
-  const [page, setPage]               = useState(1);
-
-  // Loading
+  const [sortBy, setSortBy] = useState('');
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const [page, setPage] = useState(1);
   const perPage = 8;
 
-  // Fetch products + categories once
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const [prodData, catData] = await Promise.all([
-          getAllProducts(),
-          getCategories(),
-        ]);
-        setProducts(prodData);
-        setCategories(catData);
-      } catch (e) {
-        console.error('Failed to load:', e);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    const fetchData = async () => {
+      setLoading(true);
+      const [prodData, catData] = await Promise.all([
+        getAllProducts(),
+        getCategories(),
+      ]);
+      setProducts(prodData);
+      setCategories(catData);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
-  // Compute filtered & sorted list
-  const filtered = useMemo(() => {
+  useEffect(() => {
     let result = [...products];
 
-    // Category filter (by _id)
     if (selectedCat !== 'All') {
-      result = result.filter(p =>
-        p.category?._id === selectedCat ||
-        p.subCategory?._id === selectedCat
-      );
+      result = result.filter((item) => item.category?.name === selectedCat);
     }
 
-    // Text search
     if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(p =>
-        p.name.toLowerCase().includes(q)
+      result = result.filter((item) =>
+        item.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    // Sorting
     if (sortBy === 'priceLow') {
-      result.sort((a, b) => 
-        (a.variants.find(v => v.unit === a.activeVariant)?.price || 0) -
-        (b.variants.find(v => v.unit === b.activeVariant)?.price || 0)
-      );
+      result.sort((a, b) => a.variants[0]?.price - b.variants[0]?.price);
     } else if (sortBy === 'priceHigh') {
-      result.sort((a, b) => 
-        (b.variants.find(v => v.unit === b.activeVariant)?.price || 0) -
-        (a.variants.find(v => v.unit === a.activeVariant)?.price || 0)
-      );
+      result.sort((a, b) => b.variants[0]?.price - a.variants[0]?.price);
     } else if (sortBy === 'rating') {
       result.sort((a, b) => b.rating - a.rating);
     }
 
-    return result;
-  }, [products, selectedCat, search, sortBy]);
-
-  // Reset page if filtered list changes
-  useEffect(() => {
+    setFiltered(result);
     setPage(1);
-  }, [filtered]);
+  }, [products, selectedCat, sortBy, search]);
 
-  // Pagination
+  const paginated = filtered.slice((page - 1) * perPage, page * perPage);
   const totalPages = Math.ceil(filtered.length / perPage);
-  const paginated  = filtered.slice((page - 1) * perPage, page * perPage);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
-
-      {/* Category Chips */}
-      <div className="flex space-x-3 overflow-x-auto pb-2 mb-4">
-        <button
-          onClick={() => setSelectedCat('All')}
-          className={
-            `flex-shrink-0 px-4 py-2 rounded-full border 
-             ${selectedCat === 'All'
-               ? 'bg-green-600 text-white border-green-600'
-               : 'bg-white text-gray-700 border-gray-300 hover:bg-green-50'}`
-          }
-        >
-          All
-        </button>
-
-        {loading
-          ? Array(5).fill().map((_, i) => (
-              <Skeleton
-                key={i}
-                circle={true}
-                height={32}
-                width={32}
-                className="flex-shrink-0"
-              />
-            ))
-          : categories.map(cat => (
-              <button
-                key={cat._id}
-                onClick={() => setSelectedCat(cat._id)}
-                className={
-                  `flex-shrink-0 px-4 py-2 rounded-full border 
-                   ${selectedCat === cat._id
-                     ? 'bg-green-600 text-white border-green-600'
-                     : 'bg-white text-gray-700 border-gray-300 hover:bg-green-50'}`
-                }
-              >
-                {cat.name}
-              </button>
-            ))
-        }
-      </div>
-
-      {/* Search & Sort Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Filter + Search */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <input
           type="text"
-          placeholder="Search products…"
+          className="border border-gray-300 px-4 py-2 rounded w-full md:w-1/3"
+          placeholder="Search product..."
           value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full md:w-1/3 border border-gray-300 rounded px-3 py-2"
+          onChange={(e) => setSearch(e.target.value)}
         />
+
         <select
           value={sortBy}
-          onChange={e => setSortBy(e.target.value)}
-          className="w-full md:w-1/4 border border-gray-300 rounded px-3 py-2"
+          onChange={(e) => setSortBy(e.target.value)}
+          className="border border-gray-300 px-4 py-2 rounded w-full md:w-1/4"
         >
           <option value="">Sort By</option>
           <option value="priceLow">Price: Low → High</option>
           <option value="priceHigh">Price: High → Low</option>
           <option value="rating">Rating</option>
         </select>
+
+        <select
+          value={selectedCat}
+          onChange={(e) => setSelectedCat(e.target.value)}
+          className="border border-gray-300 px-4 py-2 rounded w-full md:w-1/4"
+        >
+          <option value="All">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat._id} value={cat.name}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
       </div>
 
-      {/* Product Grid */}
-      {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          {Array(perPage).fill().map((_, i) => (
-            <Skeleton key={i} height={250} className="rounded-lg" />
-          ))}
-        </div>
-      ) : paginated.length ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          {paginated.map(product => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      ) : (
-        <p className="text-center text-gray-500">No products found.</p>
-      )}
+      {/* Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        {loading
+          ? Array(8)
+              .fill(0)
+              .map((_, i) => (
+                <Skeleton key={i} height={250} className="rounded-lg" />
+              ))
+          : paginated.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+      </div>
 
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center space-x-4 mt-6">
-          <button
-            onClick={() => setPage(p => Math.max(p - 1, 1))}
-            disabled={page === 1}
-            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-          >
-            Prev
-          </button>
-          <span>{page} / {totalPages}</span>
-          <button
-            onClick={() => setPage(p => Math.min(p + 1, totalPages))}
-            disabled={page === totalPages}
-            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      )}
-
+      {/* Pagination */}
+      <div className="flex justify-center gap-3 mt-8">
+        <button
+          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+        >
+          Prev
+        </button>
+        <span className="px-4 py-2">{page} / {totalPages}</span>
+        <button
+          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

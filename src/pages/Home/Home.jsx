@@ -1,4 +1,4 @@
-import React , { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import ProductGrid from "../Product/ProductGrid.jsx";
@@ -40,7 +40,6 @@ const products = [
 
 const Home = () => {
   const navigate = useNavigate();
-  const [selectedCatId, setSelectedCatId] = useState("All");
   return (
     <div className="bg-gray-50">
       {/* Hero Banner */}
@@ -246,10 +245,7 @@ const Home = () => {
 
       {/* Categories Preview */}
 
-      {/* <CategoriesSection
-        selectedCatId={selectedCatId}
-        onSelectCategory={setSelectedCatId}
-      /> */}
+      <CategoriesSection />
 
       {/* extra feature */}
 

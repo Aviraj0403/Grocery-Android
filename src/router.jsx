@@ -1,31 +1,20 @@
-// src/router.jsx
-import React from 'react'
-import { createBrowserRouter } from 'react-router-dom'
-import App      from './App'
-import Layout   from './Layout'
+import { createBrowserRouter } from "react-router-dom";
+import App from "./App";
 
-// Public pages
-import Home             from './pages/Home/Home'
-import Login            from './pages/auth/Login'
-import Register         from './pages/auth/Register'
-import Forgotpassword   from './pages/auth/Forgotpassword'
-import Otpverifiaction  from './pages/auth/Otpverifiaction'
-import Resetpassword    from './pages/auth/Resetpassword'
-import AboutUs          from './QuickLinks/AboutUs'
-import AboutDeveloper   from './QuickLinks/AboutDeveloper'
-import Contact          from './QuickLinks/Contact'
-import TermandConditions from './QuickLinks/TermandConditions'
-import Privacy          from './QuickLinks/Privacy'
-import ProductDetail    from './pages/Product/ProductDetail'
-import OneDayReturn     from './pages/OneDayReturn'
-import CashOnDelivery   from './pages/CashOnDelivery'
-import CartPage         from './pages/cart/cartPage'
+// Pages
+import Home from "./pages/Home/Home";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import Forgotpassword from "./pages/auth/Forgotpassword";
+import Otpverifiaction from "./pages/auth/Otpverifiaction";
+import Resetpassword from "./pages/auth/Resetpassword";
+import Address from "./pages/Address";
 
-// Customer pages
-import UserDashboard    from './pages/users/UserDashboard'
-import Address          from './pages/Address'
+// Layouts
+import Layout from "./Layout";
+import UserDashboard from "./pages/users/UserDashboard"; // 🆕 User Dashboard Layout
 
-// Admin panel
+// Admin
 import {
   AdminLayout,
   AdminDashboard,
@@ -47,9 +36,7 @@ import AboutDeveloper from "./QuickLinks/AboutDeveloper";
 import Contact from "./QuickLinks/Contact";
 import TermandConditions from "./QuickLinks/TermandConditions";
 import Privacy from "./QuickLinks/Privacy";
-import Deo from "./pages/ShopingSection/Deo";
-import Cleaning from "./pages/ShopingSection/Cleaning";
-import TeaCoffe from "./pages/ShopingSection/TeaCoffe";
+import ProductDetail from "./pages/Product/ProductDetail";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -58,14 +45,13 @@ import TeaCoffe from "./pages/ShopingSection/TeaCoffe";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
     children: [
-      // ── Public & Customer use the main Layout ────────────────────────────
       {
+        path: "",
         element: <Layout />,
         children: [
-          // Public
           { index: true, element: <Home /> },
           { path: "login", element: <Login /> },
           { path: "register", element: <Register /> },
@@ -80,9 +66,7 @@ const router = createBrowserRouter([
           { path: "contactus", element: <Contact /> },
           { path: "termandconditons", element: <TermandConditions /> },
           { path: "privacy", element: <Privacy /> },
-          {path : "deo", element: <Deo/>},
-          {path:"cleaning", element:<Cleaning/>},
-          {path:"Coofe", element:<TeaCoffe/>},
+          { path: "product/:id" ,element : <ProductDetail/>},
           
 
           // 🆕 User Dashboard with nested routes
@@ -90,33 +74,32 @@ const router = createBrowserRouter([
             path: "dashboard/profile",
             element: <UserDashboard />,
             children: [
-              { path: 'dashboard/profile',         element: <UserDashboard /> },
-              { path: 'dashboard/profile/address', element: <Address /> },
-            ]
+              // { path: "profile", element: <Profile /> },
+              // { path: "orders", element: <Myorder /> },
+              // { path: "change-password", element: <ChangePassword /> },
+              { path: "address", element: <Address /> },
+            ],
           },
-        ]
+        ],
       },
 
-      // ── Admin routes sit at the same level as Layout, **not** inside it ──
+      // Admin Panel
       {
-        element: <ProtectedRoute allowedRoles={['admin']} />,
+        path: "admin",
+        element: <AdminLayout />,
         children: [
-          {
-            path: 'admin',
-            element: <AdminLayout />,
-            children: [
-              { index: true,               element: <AdminDashboard /> },
-              { path: 'addProduct',        element: <AddProduct /> },
-              { path: 'adminProducts',     element: <AdminProducts /> },
-              { path: 'edit-product/:id',  element: <EditProducts /> },
-              { path: 'product-details/:id', element: <ProductDetails /> },
-              { path: 'categories',        element: <CategoryManager /> },
-              { path: 'users',             element: <UserList /> },
-              { path: 'orders',            element: <AdminOrderManager /> },
-            ]
-          }
-        ]
-      }
-    ]
-  }
-])
+          { index: true, element: <AdminDashboard /> },
+          { path: "addProduct", element: <AddProduct /> },
+          { path: "adminProducts", element: <AdminProducts /> },
+          { path: "edit-product/:id", element: <EditProducts /> },
+          { path: "product-details/:id", element: <ProductDetails /> },
+          { path: "categories", element: <CategoryManager /> },
+          { path: "users", element: <UserList /> },
+          { path: "orders", element: <AdminOrderManager /> },
+        ],
+      },
+    ],
+  },
+]);
+
+export default router;
