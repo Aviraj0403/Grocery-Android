@@ -6,3 +6,4 @@ export { default as RouterCumb } from "./router/RouterCumb.jsx";
 export { default as ProgressBar } from "./progressbar/ProgressBar.jsx";
 export { default as Sidebar } from "./Sidebar.jsx";
 export { default as ProtectedRoute } from "./secureRoute/ProtectedRoute.jsx";
+export { default as Unauthorized } from "./secureRoute/ProtectedRoute.jsx"
