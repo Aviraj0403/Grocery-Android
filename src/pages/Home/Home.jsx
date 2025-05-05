@@ -44,13 +44,13 @@ const Home = () => {
     <div className="bg-gray-50">
       {/* Hero Banner */}
 
-      <section className="relative bg-green-100 text-center py-16 px-4 rounded-b-3xl">
+      <section className="relative bg-green-200 text-center py-16 px-4 rounded-b-3xl">
         <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-green-800 mb-4 animate-fade-in-up whitespace-nowrap overflow-hidden text-ellipsis">
           <Slide direction="right">Welcome to Shanu-Mart</Slide>
         </h1>
         <p className="text-lg md:text-xl text-green-700 max-w-2xl mx-auto mb-6 animate-fade-in-up delay-100">
           Discover fresh groceries, daily deals, and quick delivery — all at
-          your fingertips!
+          your footstep!
         </p>
         <Link to="/shopnow">
           <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200" onClick={()=>navigate("shopnow")}>
@@ -96,7 +96,7 @@ const Home = () => {
           <Slide direction="down">
             <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col lg:flex-row items-center text-center lg:text-left space-y-6 lg:space-y-0 lg:space-x-10 w-full max-w-6xl mx-auto">
               {/* Image */}
-              <div className="flex-shrink-0 animate-pulse">
+              <div className="flex-shrink-0 animate-bounce">
                 <img
                   src={aboutImage}
                   alt="about-icon"
@@ -111,15 +111,15 @@ const Home = () => {
                     Welcome to Shanu-Mart
                   </h1>
                   <p className="text-lg text-green-700 max-w-xl animate-fade-in-up delay-100">
-                    Download the app and get free food &{" "}
-                    <span className="text-green-600 font-semibold">₹50</span>{" "}
-                    off on your first order.
+                     Grab Your First Order From Shanu Mart &{" "}
+                    <span className="text-green-600 font-semibold">₹</span>{" "}
+                    And Get <strong>₹50</strong> Maff.
                   </p>
                 </div>
 
                 <Link to="#">
-                  <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200">
-                    Grab Your First Offer
+                  <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200" onClick={()=>navigate("grab")}>
+                    Grab Your First Order Here
                   </button>
                 </Link>
               </div>
@@ -264,12 +264,12 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-5">
             {/* Fruits & Vegetables Banner */}
-            <div className="w-full lg:w-1/2 bg-green-400 rounded">
+            <div className="w-full lg:w-1/2 bg-orange-400 rounded">
               <Slide direction="right">
                 <div className="rounded-2xl h-full flex flex-col sm:flex-row lg:flex-row p-0">
                   {/* Image - Centered */}
                   <div
-                    className="w-full sm:w-1/2 h-40 flex justify-center items-center"
+                    className="w-full sm:w-1/2 h-35 flex justify-center items-center animate-bounce"
                     style={{
                       background: `url(${aboutImage}) no-repeat center`,
                       backgroundSize: "contain",
@@ -277,17 +277,18 @@ const Home = () => {
                   ></div>
 
                   {/* Text - Centered */}
+                  
                   <div className="w-full sm:w-1/2 p-4 flex justify-center items-center">
                     <div className="text-black max-w-sm text-center">
-                      <h3 className="text-2xl font-bold mb-2">
-                        Baby Care & Essiential
+                      <h3 className="text-2xl font-bold mb-0">
+                        Teeth cleaning Essiential
                       </h3>
-                      <p className="mb-4 text-lg">
-                        Get Upto <span className="font-semibold">20%</span> Off
+                      <p className="mb-4 text-lg mb-0">
+                        Get Upto <span className="font-semibold">2%</span> Off
                       </p>
                       <Link
                         to="#"
-                        className="inline-block bg-gray-900 text-white px-5 py-2 rounded-md font-medium hover:bg-gray-800 transition"
+                        className="inline-block bg-gray-900 text-white px-5 py-2 rounded-md font-medium hover:bg-gray-800 transition" onClick={()=>navigate("toothpaste")}
                       >
                         Shop Now
                       </Link>
@@ -314,14 +315,14 @@ const Home = () => {
                   <div className="w-full sm:w-1/2 p-4 flex justify-center items-center">
                     <div className="text-black max-w-sm text-center">
                       <h3 className="text-2xl font-bold mb-2">
-                        FreshBaked & Bunes
+                       Detergent & Bleach
                       </h3>
                       <p className="mb-4 text-lg">
-                        Get Upto <span className="font-semibold">30%</span> Off
+                        Get Upto <span className="font-semibold">2%</span> Off
                       </p>
                       <Link
                         to="#"
-                        className="inline-block bg-gray-900 text-white px-5 py-2 rounded-md font-medium hover:bg-gray-800 transition"
+                        className="inline-block bg-gray-900 text-white px-5 py-2 rounded-md font-medium hover:bg-gray-800 transition" onClick={()=>navigate("deter")}
                       >
                         Shop Now
                       </Link>

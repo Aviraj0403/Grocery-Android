@@ -41,6 +41,9 @@ import Deo from "./pages/ShopingSection/Deo";
 import Cleaning from "./pages/ShopingSection/Cleaning";
 import TeaCoffe from "./pages/ShopingSection/TeaCoffe";
 import ShopNow from "./pages/ShopingSection/ShopNow";
+import GraburFirstOrder from "./pages/ShopingSection/GraburFirstOrder";
+import Toothpaste from "./pages/ShopingSection/Toothpaste";
+import Detergent from "./pages/ShopingSection/Detergent";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -75,6 +78,9 @@ const router = createBrowserRouter([
           {path:"cleaning", element:<Cleaning/>},
           {path: "Coofe", element: <TeaCoffe/>},
           {path : "shopnow", element: <ShopNow/>},
+          {path:"grab",element:<GraburFirstOrder/>},
+          {path:"toothpaste", element:<Toothpaste/>},
+          {path:"deter", element:<Detergent/>},
           
 
           // 🆕 User Dashboard with nested routes
