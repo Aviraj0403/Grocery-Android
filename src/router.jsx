@@ -44,6 +44,9 @@ import ShopNow from "./pages/ShopingSection/ShopNow";
 import GraburFirstOrder from "./pages/ShopingSection/GraburFirstOrder";
 import Toothpaste from "./pages/ShopingSection/Toothpaste";
 import Detergent from "./pages/ShopingSection/Detergent";
+import Raksha from "./pages/ShopingSection/Raksha";
+import Gift from "./pages/ShopingSection/Moregift";
+import Moregift from "./pages/ShopingSection/Moregift";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -81,6 +84,8 @@ const router = createBrowserRouter([
           {path:"grab",element:<GraburFirstOrder/>},
           {path:"toothpaste", element:<Toothpaste/>},
           {path:"deter", element:<Detergent/>},
+          {path:"raksha", element:<Raksha/>},
+          {path:"gift",element:<Moregift/>},
           
 
           // 🆕 User Dashboard with nested routes

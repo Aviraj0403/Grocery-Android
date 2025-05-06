@@ -264,7 +264,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-5">
             {/* Fruits & Vegetables Banner */}
-            <div className="w-full lg:w-1/2 bg-orange-400 rounded">
+            <div className="w-full lg:w-1/2 bg-yellow-200 rounded">
               <Slide direction="right">
                 <div className="rounded-2xl h-full flex flex-col sm:flex-row lg:flex-row p-0">
                   {/* Image - Centered */}
@@ -299,12 +299,12 @@ const Home = () => {
             </div>
 
             {/* Freshly Baked Buns Banner */}
-            <div className="w-full lg:w-1/2 bg-slate-200 rounded">
+            <div className="w-full lg:w-1/2 bg-blue-200 rounded">
               <Slide direction="left">
                 <div className="rounded-2xl h-full flex flex-col sm:flex-row lg:flex-row p-0">
                   {/* Image - Centered */}
                   <div
-                    className="w-full sm:w-1/2 h-40 flex justify-center items-center"
+                    className="w-full sm:w-1/2 h-35 flex justify-center items-center animate-bounce"
                     style={{
                       background: `url(${aboutImage}) no-repeat center`,
                       backgroundSize: "contain",
@@ -414,7 +414,7 @@ const Home = () => {
 
       <Slide direction="right">
         <section className="relative w-full overflow-hidden">
-          <div className="relative">
+          <div className="relative" onClick={()=>navigate("raksha")}>
             {/* Mobile Banner */}
             <img
               src={mobileBanner}
