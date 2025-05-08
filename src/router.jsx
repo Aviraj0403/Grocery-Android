@@ -47,6 +47,8 @@ import Detergent from "./pages/ShopingSection/Detergent";
 import Raksha from "./pages/ShopingSection/Raksha";
 import Gift from "./pages/ShopingSection/Moregift";
 import Moregift from "./pages/ShopingSection/Moregift";
+import Exploremore from "./pages/ShopingSection/Exploremore";
+import Arrivals from "./pages/ShopingSection/Arrivals";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -86,7 +88,8 @@ const router = createBrowserRouter([
           {path:"deter", element:<Detergent/>},
           {path:"raksha", element:<Raksha/>},
           {path:"gift",element:<Moregift/>},
-          
+          {path:"expmore", element:<Exploremore/>},
+          {path:"arrivals", element:<Arrivals/>},
 
           // 🆕 User Dashboard with nested routes
           {

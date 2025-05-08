@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaHeart } from 'react-icons/fa';
-import banner from "../../assets/fashwash4.png"
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { FaHeart } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
+import { Link } from "react-router-dom";
 
-// import { Slide, Zoom } from 'react-toastify';
+// Product data
 const shampoos = [
   { id: 's1', name: 'Head & Shoulders', price: 4.99, image: '/images/hns.jpg' },
   { id: 's2', name: 'Pantene Pro-V', price: 5.49, image: '/images/pantene.jpg' },
@@ -29,28 +28,34 @@ const Cleaning = () => {
   const [wishlist, setWishlist] = useState({});
   const [shampooPage, setShampooPage] = useState(1);
   const [facewashPage, setFacewashPage] = useState(1);
+  const [loadingSection, setLoadingSection] = useState("");
 
   const shampoosPerPage = 6;
   const facewashesPerPage = 4;
 
   const handleAdd = (id) => {
-    setCart(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
+    setCart((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
   };
 
   const handleRemove = (id) => {
-    setCart(prev => {
-      const newCart = { ...prev };
-      if (newCart[id] > 1) {
-        newCart[id] -= 1;
-      } else {
-        delete newCart[id];
-      }
-      return newCart;
+    setCart((prev) => {
+      const updated = { ...prev };
+      if (updated[id] > 1) updated[id]--;
+      else delete updated[id];
+      return updated;
     });
   };
 
   const toggleWishlist = (id) => {
-    setWishlist(prev => ({ ...prev, [id]: !prev[id] }));
+    setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handlePageChange = (section, pageSetter, page) => {
+    setLoadingSection(section);
+    setTimeout(() => {
+      pageSetter(page);
+      setLoadingSection("");
+    }, 500);
   };
 
   const renderCard = (item) => (
@@ -62,64 +67,62 @@ const Cleaning = () => {
     >
       <button
         onClick={() => toggleWishlist(item.id)}
-        className={`absolute top-1 right-1 p-1 rounded-full ${wishlist[item.id] ? 'text-red-500' : 'text-gray-400'} hover:text-red-500 transition`}
+        className={`absolute top-1 right-1 p-1 rounded-full ${
+          wishlist[item.id] ? "text-red-500" : "text-gray-400"
+        } hover:text-red-500 transition`}
       >
         <FaHeart className="w-4 h-4" />
       </button>
-  
+
       <img src={item.image} alt={item.name} className="w-16 h-16 object-cover mb-1 rounded-full border" />
       <h3 className="text-xs font-semibold text-gray-800">{item.name}</h3>
       <p className="text-green-600 font-bold text-sm mb-1">${item.price.toFixed(2)}</p>
-  
+
       {cart[item.id] ? (
         <div className="flex items-center gap-1 mt-1">
-          <motion.button
-            whileTap={{ scale: 0.9 }}
+          <button
             onClick={() => handleRemove(item.id)}
-            className="px-2 py-0.5 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition"
+            className="px-2 py-0.5 bg-red-500 text-white text-xs rounded"
           >
             -
-          </motion.button>
+          </button>
           <span className="text-sm">{cart[item.id]}</span>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
+          <button
             onClick={() => handleAdd(item.id)}
-            className="px-2 py-0.5 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition"
+            className="px-2 py-0.5 bg-green-500 text-white text-xs rounded"
           >
             +
-          </motion.button>
+          </button>
         </div>
       ) : (
-        <motion.button
-          whileTap={{ scale: 0.95 }}
+        <button
           onClick={() => handleAdd(item.id)}
           className="mt-1 bg-green-600 text-white text-xs px-3 py-1 rounded-full hover:bg-red-500 transition"
         >
           Add to cart
-        </motion.button>
+        </button>
       )}
     </motion.div>
   );
 
-  const paginate = (currentPage, setPage, itemsPerPage, totalItems) => {
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-
+  const paginateControls = (page, setPage, perPage, totalItems, sectionName) => {
+    const totalPages = Math.ceil(totalItems / perPage);
     return (
-      <div className="flex justify-center mt-4 gap-4">
+      <div className="flex justify-center gap-4 mt-4">
         <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-3 py-1 text-sm border rounded disabled:opacity-50 bg-slate-500 text-white hover:bg-blue-500"
+          onClick={() => handlePageChange(sectionName, setPage, Math.max(page - 1, 1))}
+          disabled={page === 1 || loadingSection === sectionName}
+          className="px-4 py-1 bg-slate-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
         >
-          Prev
+          Previous
         </button>
-        <span className="text-sm font-medium text-gray-600">
-          Page {currentPage} of {totalPages}
+        <span className="text-sm font-semibold">
+          Page {page} of {totalPages}
         </span>
         <button
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 text-sm border rounded disabled:opacity-50 bg-slate-500 text-white hover:bg-blue-500"
+          onClick={() => handlePageChange(sectionName, setPage, Math.min(page + 1, totalPages))}
+          disabled={page === totalPages || loadingSection === sectionName}
+          className="px-4 py-1 bg-slate-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
         >
           Next
         </button>
@@ -139,34 +142,44 @@ const Cleaning = () => {
 
   return (
     <>
-     <marquee className="text-sm text-white bg-slate-500 py-2 font-semibold tracking-wide">
-      🎉 Get 2% on selected skin-care ! Limited time offer 🎉
-    </marquee>
-    <div className="px-4 py-6 max-w-6xl mx-auto">
-        <Link to={"/"}>
-       <div className="relative">
-                <ImCancelCircle className="absolute top-2 right-2 text-xl text-gray-600 hover:text-red-500 cursor-pointer transition-all text-red-500" />
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-red-500 drop-shadow-lg mb-6">
-                  Body & Skin Care
-                </h1>
-              </div>
-      </Link>
-      <section className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-700 mb-4">Shampoos</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {paginatedShampoos.map(renderCard)}
-        </div>
-        {paginate(shampooPage, setShampooPage, shampoosPerPage, shampoos.length)}
-      </section>
+      <marquee className="text-sm text-white bg-slate-500 py-2 font-semibold tracking-wide">
+        🎉 Get 2% on selected skin-care! Limited time offer 🎉
+      </marquee>
 
-      <section>
-        <h2 className="text-2xl font-bold text-gray-700 mb-4">Facewashes</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {paginatedFacewashes.map(renderCard)}
-        </div>
-        {paginate(facewashPage, setFacewashPage, facewashesPerPage, facewashes.length)}
-      </section>
-    </div>
+      <div className="px-4 py-6 max-w-6xl mx-auto">
+        <Link to="/">
+          <div className="relative">
+            <ImCancelCircle className="absolute top-2 right-2 text-xl text-red-500 hover:text-red-600 cursor-pointer transition-all" />
+            <h1 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-red-500 drop-shadow-lg mb-6">
+              Body & Skin Care
+            </h1>
+          </div>
+        </Link>
+
+        <section className="mb-10">
+          <h2 className="text-2xl font-bold text-gray-700 mb-4">Shampoos</h2>
+          {loadingSection === "shampoo" ? (
+            <div className="text-center text-blue-600 font-semibold animate-pulse">Loading Shampoos...</div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              {paginatedShampoos.map(renderCard)}
+            </div>
+          )}
+          {paginateControls(shampooPage, setShampooPage, shampoosPerPage, shampoos.length, "shampoo")}
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-gray-700 mb-4">Facewashes</h2>
+          {loadingSection === "facewash" ? (
+            <div className="text-center text-blue-600 font-semibold animate-pulse">Loading Facewashes...</div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              {paginatedFacewashes.map(renderCard)}
+            </div>
+          )}
+          {paginateControls(facewashPage, setFacewashPage, facewashesPerPage, facewashes.length, "facewash")}
+        </section>
+      </div>
     </>
   );
 };

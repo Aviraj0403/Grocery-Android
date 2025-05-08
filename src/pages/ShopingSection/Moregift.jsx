@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -25,6 +25,8 @@ const giftItems = [
 const ITEMS_PER_PAGE = 8
 
 const Moregift = () => {
+  const navigate = useNavigate();
+  const handleNavigate = () => { setLoading(true); setTimeout(() => navigate("/expmore"), 2000); };
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(false)
 
@@ -97,7 +99,7 @@ const Moregift = () => {
       </div>
 
       <ToastContainer position="top-right" />
-      <button className="fixed bottom-6 right-6 bg-white text-[#800000] border border-pink-[#800000] px-4 py-2 rounded-full shadow-md hover:bg-[#800000] hover:text-white hover:shadow-lg transition-all duration-300 z-50">
+      <button onClick={handleNavigate} className="fixed bottom-6 right-6 bg-white text-[#800000] border border-pink-[#800000] px-4 py-2 rounded-full shadow-md hover:bg-[#800000] hover:text-white hover:shadow-lg transition-all duration-300 z-50">
         Explore More
       </button>
     </div>

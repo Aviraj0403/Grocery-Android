@@ -40,6 +40,8 @@ const products = [
 
 const Home = () => {
   const navigate = useNavigate();
+  const handleNavigate = () => { setLoading(true); setTimeout(() => navigate("/arrivals"), 500); };
+
   return (
     <div className="bg-gray-50">
       {/* Hero Banner */}
@@ -53,7 +55,10 @@ const Home = () => {
           your footstep!
         </p>
         <Link to="/shopnow">
-          <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200" onClick={()=>navigate("shopnow")}>
+          <button
+            className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200"
+            onClick={() => navigate("shopnow")}
+          >
             Shop Now
           </button>
         </Link>
@@ -111,14 +116,17 @@ const Home = () => {
                     Welcome to Shanu-Mart
                   </h1>
                   <p className="text-lg text-green-700 max-w-xl animate-fade-in-up delay-100">
-                     Grab Your First Order From Shanu Mart &{" "}
-                    <span className="text-green-600 font-semibold">₹</span>{" "}
-                    And Get <strong>₹50</strong> Maff.
+                    Grab Your First Order From Shanu Mart &{" "}
+                    <span className="text-green-600 font-semibold">₹</span> And
+                    Get <strong>₹50</strong> Maff.
                   </p>
                 </div>
 
                 <Link to="#">
-                  <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200" onClick={()=>navigate("grab")}>
+                  <button
+                    className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200"
+                    onClick={() => navigate("grab")}
+                  >
                     Grab Your First Order Here
                   </button>
                 </Link>
@@ -138,7 +146,8 @@ const Home = () => {
               {/* Text Content */}
               <div className=" absolute bottom-2 left-2 lg:static lg:flex-1 p-4 text-left flex flex-col justify-center items-start z-10">
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
-                  2% cashback on <br /> Deodorants & <br />Cleaning Essintial
+                  2% Cashback on <br /> Deodorants & <br />
+                  Cleaning Essintial
                 </h3>
                 <div className="text-xs sm:text-sm text-gray-700 mb-3">
                   <p className="mb-1 font-semibold">Max cashback: 4%</p>
@@ -151,7 +160,8 @@ const Home = () => {
                   <Link
                     to="#"
                     className="bg-slate-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded w-fit hover:bg-white hover:text-orange-300 transition-all duration-1000"
-                  onClick={()=>navigate("deo")}>
+                    onClick={() => navigate("deo")}
+                  >
                     Shop Now
                   </Link>
                 </Slide>
@@ -174,7 +184,7 @@ const Home = () => {
               {/* Text Content */}
               <div className="absolute bottom-2 left-2 lg:static lg:flex-1 p-4 text-left flex flex-col justify-center items-start z-10">
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
-                   get discount on <br/> Body & Skin Care
+                  Get discount on <br /> Body & Skin Care
                 </h3>
                 <div className="text-xs sm:text-sm text-gray-700 mb-3">
                   <p className="mb-1 font-semibold">Max cashback: 2%</p>
@@ -187,7 +197,8 @@ const Home = () => {
                   <Link
                     to="#"
                     className="bg-slate-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded w-fit hover:bg-white hover:text-orange-300 transition-all duration-1000"
-                  onClick={()=>navigate("cleaning")}>
+                    onClick={() => navigate("cleaning")}
+                  >
                     Shop Now
                   </Link>
                 </Slide>
@@ -224,7 +235,8 @@ const Home = () => {
                   <Link
                     to="#"
                     className="bg-slate-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded w-fit hover:bg-white hover:text-orange-300 transition-all duration-1000"
-                 onClick={()=>navigate("Coofe")} >
+                    onClick={() => navigate("Coofe")}
+                  >
                     Shop Now
                   </Link>
                 </Slide>
@@ -247,8 +259,6 @@ const Home = () => {
 
       <CategoriesSection />
 
-      {/* extra feature */}
-
       {/* featured products */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold text-green-800 mb-6 text-center">
@@ -259,7 +269,7 @@ const Home = () => {
       </section>
 
       {/* shop now */}
-    
+
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-5">
@@ -269,7 +279,7 @@ const Home = () => {
                 <div className="rounded-2xl h-full flex flex-col sm:flex-row lg:flex-row p-0">
                   {/* Image - Centered */}
                   <div
-                    className="w-full sm:w-1/2 h-35 flex justify-center items-center animate-bounce"
+                    className="w-full sm:w-1/2 h-35 flex justify-center items-center animate-pulse"
                     style={{
                       background: `url(${aboutImage}) no-repeat center`,
                       backgroundSize: "contain",
@@ -277,7 +287,7 @@ const Home = () => {
                   ></div>
 
                   {/* Text - Centered */}
-                  
+
                   <div className="w-full sm:w-1/2 p-4 flex justify-center items-center">
                     <div className="text-black max-w-sm text-center">
                       <h3 className="text-2xl font-bold mb-0">
@@ -288,7 +298,8 @@ const Home = () => {
                       </p>
                       <Link
                         to="#"
-                        className="inline-block bg-gray-900 text-white px-5 py-2 rounded-md font-medium hover:bg-gray-800 transition" onClick={()=>navigate("toothpaste")}
+                        className="inline-block bg-gray-900 text-white px-5 py-2 rounded-md font-medium hover:bg-gray-800 transition"
+                        onClick={() => navigate("toothpaste")}
                       >
                         Shop Now
                       </Link>
@@ -304,7 +315,7 @@ const Home = () => {
                 <div className="rounded-2xl h-full flex flex-col sm:flex-row lg:flex-row p-0">
                   {/* Image - Centered */}
                   <div
-                    className="w-full sm:w-1/2 h-35 flex justify-center items-center animate-bounce"
+                    className="w-full sm:w-1/2 h-35 flex justify-center items-center animate-pulse"
                     style={{
                       background: `url(${aboutImage}) no-repeat center`,
                       backgroundSize: "contain",
@@ -315,14 +326,15 @@ const Home = () => {
                   <div className="w-full sm:w-1/2 p-4 flex justify-center items-center">
                     <div className="text-black max-w-sm text-center">
                       <h3 className="text-2xl font-bold mb-2">
-                       Detergent & Bleach
+                        Detergent & Bleach
                       </h3>
                       <p className="mb-4 text-lg">
                         Get Upto <span className="font-semibold">2%</span> Off
                       </p>
                       <Link
                         to="#"
-                        className="inline-block bg-gray-900 text-white px-5 py-2 rounded-md font-medium hover:bg-gray-800 transition" onClick={()=>navigate("deter")}
+                        className="inline-block bg-gray-900 text-white px-5 py-2 rounded-md font-medium hover:bg-gray-800 transition"
+                        onClick={() => navigate("deter")}
                       >
                         Shop Now
                       </Link>
@@ -334,7 +346,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* return critaria */}
 
       <section className="my-8 lg:my-14 ">
@@ -414,7 +426,7 @@ const Home = () => {
 
       <Slide direction="right">
         <section className="relative w-full overflow-hidden">
-          <div className="relative" onClick={()=>navigate("raksha")}>
+          <div className="relative" onClick={() => navigate("raksha")}>
             {/* Mobile Banner */}
             <img
               src={mobileBanner}
@@ -441,11 +453,17 @@ const Home = () => {
         <h3 className="text-xl font-semibold text-green-700 mb-4">
           Stay Updated with Our Offers
         </h3>
-        <Link to="/contact">
+        <Link to="/contactus">
           <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition-all">
             Contact Us
           </button>
         </Link>
+        
+        <Link to={"/arrivals"}>
+        <button onClick={handleNavigate} className="fixed bottom-6 right-6 bg-white text-green-600 border border-green-400 px-4 py-2 rounded-full shadow-md hover:bg-green-500 hover:text-white hover:shadow-lg transition-all duration-300 z-50">
+        New Arrivals
+      </button>
+      </Link>
       </section>
     </div>
   );
