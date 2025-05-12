@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getCategories } from '../../services/categoryApi';
+import { getMainCategories } from '../../services/categoryApi';
 import CategoryCard from './CategoryCard';
-import { Slide, Zoom } from "react-awesome-reveal";
+import { Zoom } from 'react-awesome-reveal';
 
 const CategoriesSection = () => {
   const [categories, setCategories] = useState([]);
@@ -10,8 +10,8 @@ const CategoriesSection = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const all = await getCategories();
-        setCategories(all.filter(cat => cat.isActive)); // optional filter
+        const all = await getMainCategories();
+        setCategories(all.filter(cat => cat.isActive));
       } catch (e) {
         console.error('Failed to load categories', e);
       } finally {
@@ -21,23 +21,17 @@ const CategoriesSection = () => {
     load();
   }, []);
 
-  return (
-    <section className="max-w-7xl mx-auto px-5 py-9">
-      <h2 className="text-2xl font-bold text-green-800 mb-6 text-center cursor-pointer hover:text-green-400">
-        Browse Categories
-      </h2>
+  if (loading || categories.length === 0) return null;
 
-      {loading ? (
-        <p className="text-center text-gray-400">Loading categories...</p>
-      ) : (
-        <Zoom>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3">
-            {categories.map(cat => (
-              <CategoryCard key={cat._id} name={cat.name} img={cat.image} />
-            ))}
-          </div>
-        </Zoom>
-      )}
+  return (
+    <section className="max-w-7xl mx-auto px-4 py-6">
+      <Zoom>
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+          {categories.map((cat) => (
+            <CategoryCard key={cat._id} name={cat.name} img={cat.image[0]} />
+          ))}
+        </div>
+      </Zoom>
     </section>
   );
 };

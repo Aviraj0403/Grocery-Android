@@ -1,13 +1,20 @@
-const CategoryCard = ({ name, img }) => (
-    <div className="min-w-[140px] bg-slate-200 rounded-lg shadow hover:shadow-lg transition-all duration-300 transform hover:scale-105 p-4 flex flex-col items-center flex-shrink-0">
+const CategoryCard = ({ name, img, isSelected }) => (
+  <div
+    className={`w-[80px] flex flex-col items-center text-center cursor-pointer transition-transform duration-200 hover:scale-105 ${
+      isSelected ? 'text-green-700 font-semibold' : 'text-gray-700'
+    }`}
+    title={name}
+  >
+    <div className="w-[64px] h-[64px] rounded-full overflow-hidden shadow-sm mb-1 bg-gray-100">
       <img
         src={img}
         alt={name}
         loading="lazy"
-        className="w-22 h-20 object-contain mb-1 cursor-pointer"
+        className="w-full h-full object-cover"
       />
-      <span className="text-green-700 font-medium cursor-pointer">{name}</span>
     </div>
-  );
-  export default CategoryCard;
-  
+    <span className="text-[11px] truncate w-full">{name}</span>
+  </div>
+);
+
+export default CategoryCard;

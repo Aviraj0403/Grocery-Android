@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getAllProducts } from '../../services/productApi';
-import { getCategories } from '../../services/categoryApi';
+import { getMainCategories } from '../../services/categoryApi';
 import ProductCard from './ProductCard';
+import CategoryCard from '../category/CategoryCard';
 import Skeleton from 'react-loading-skeleton';
+import { Zoom } from 'react-awesome-reveal';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 const ProductGrid = () => {
@@ -22,10 +24,10 @@ const ProductGrid = () => {
       setLoading(true);
       const [prodData, catData] = await Promise.all([
         getAllProducts(),
-        getCategories(),
+        getMainCategories(),
       ]);
       setProducts(prodData);
-      setCategories(catData);
+      setCategories(catData.filter(c => c.isActive));
       setLoading(false);
     };
     fetchData();
@@ -61,6 +63,38 @@ const ProductGrid = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Categories List */}
+<section className="mb-2">
+  {loading ? (
+    <p className="text-center text-gray-400">Loading categories...</p>
+  ) : (
+    <Zoom>
+      <div className="flex flex-wrap gap-4 justify-center">
+        {/* ALL Category */}
+        <div onClick={() => setSelectedCat('All')}>
+          <CategoryCard
+            name="All"
+            img="/path/to/default-all-icon.png" // replace with actual fallback icon
+            isSelected={selectedCat === 'All'}
+          />
+        </div>
+
+        {/* Other categories */}
+        {categories.map((cat) => (
+          <div key={cat._id} onClick={() => setSelectedCat(cat.name)}>
+            <CategoryCard
+              name={cat.name}
+              img={cat.image[0]} // ✅ Correct usage here
+              isSelected={selectedCat === cat.name}
+            />
+          </div>
+        ))}
+      </div>
+    </Zoom>
+  )}
+</section>
+
+
       {/* Filter + Search */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <input
@@ -81,22 +115,9 @@ const ProductGrid = () => {
           <option value="priceHigh">Price: High → Low</option>
           <option value="rating">Rating</option>
         </select>
-
-        <select
-          value={selectedCat}
-          onChange={(e) => setSelectedCat(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded w-full md:w-1/4"
-        >
-          <option value="All">All Categories</option>
-          {categories.map((cat) => (
-            <option key={cat._id} value={cat.name}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
       </div>
 
-      {/* Grid */}
+      {/* Product Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {loading
           ? Array(8)

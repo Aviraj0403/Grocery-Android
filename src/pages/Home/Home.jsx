@@ -257,7 +257,7 @@ const Home = () => {
 
       {/* Categories Preview */}
 
-      <CategoriesSection />
+      {/* <CategoriesSection /> */}
 
       {/* featured products */}
       <section className="max-w-7xl mx-auto px-4 py-12">
