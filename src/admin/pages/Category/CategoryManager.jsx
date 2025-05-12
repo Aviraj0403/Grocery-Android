@@ -153,56 +153,51 @@ const CategoryManager = () => {
       ) : (
         <div className="overflow-auto rounded shadow bg-white">
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3 hidden sm:table-cell">Slug</th>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3 hidden sm:table-cell">Parent</th>
-                <th className="px-4 py-3 hidden sm:table-cell">Order</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
+            <thead className="bg-gray-100 text-left text-sm text-gray-600">
+  <tr>
+    <th className="px-4 py-3">Name</th>
+    <th className="px-4 py-3 hidden sm:table-cell">Slug</th>
+    <th className="px-4 py-3">Type</th>
+    <th className="px-4 py-3 hidden sm:table-cell">Parent</th>
+    <th className="px-4 py-3 hidden sm:table-cell">Order</th>
+    <th className="px-4 py-3">Status</th>
+    <th className="px-4 py-3 text-right">Actions</th>
+  </tr>
+</thead>
+
             <tbody>
-              {categories.map(cat => (
-                <tr key={cat._id} className="border-t">
-                  <td className="px-4 py-2">{cat.name}</td>
-                  <td className="px-4 py-2 hidden sm:table-cell">{cat.slug}</td>
-                  <td className="px-4 py-2">{cat.type}</td>
-                  <td className="px-4 py-2 hidden sm:table-cell">{cat.parentCategory?.name || '—'}</td>
-                  <td className="px-4 py-2 hidden sm:table-cell">{cat.displayOrder}</td>
-                  <td className="px-4 py-2">
-                    {cat.isActive ? (
-                      <span className="text-green-600">Active</span>
-                    ) : (
-                      <span className="text-red-600">Inactive</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-2 text-right space-x-3 flex justify-end">
-                    <button
-                      onClick={() => handleEdit(cat)}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      ✎
-                    </button>
-                    <button
-                      onClick={() => handleDelete(cat._id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      🗑
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {!categories.length && (
-                <tr>
-                  <td colSpan="7" className="text-center py-4 text-gray-400">
-                    No categories found
-                  </td>
-                </tr>
-              )}
-            </tbody>
+  {categories.map(cat => (
+    <tr key={cat._id} className="border-t text-sm text-gray-800">
+      <td className="px-4 py-3 align-middle">{cat.name}</td>
+      <td className="px-4 py-3 align-middle hidden sm:table-cell">{cat.slug}</td>
+      <td className="px-4 py-3 align-middle">{cat.type}</td>
+      <td className="px-4 py-3 align-middle hidden sm:table-cell">{cat.parentCategory?.name || '—'}</td>
+      <td className="px-4 py-3 align-middle hidden sm:table-cell">{cat.displayOrder}</td>
+      <td className="px-4 py-3 align-middle">
+        {cat.isActive ? (
+          <span className="text-green-600 font-medium">Active</span>
+        ) : (
+          <span className="text-red-600 font-medium">Inactive</span>
+        )}
+      </td>
+      <td className="px-4 py-3 align-middle text-right flex justify-end gap-3">
+        <button
+          onClick={() => handleEdit(cat)}
+          className="text-blue-600 hover:text-blue-800"
+        >
+          ✎
+        </button>
+        <button
+          onClick={() => handleDelete(cat._id)}
+          className="text-red-600 hover:text-red-800"
+        >
+          🗑
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
       )}
