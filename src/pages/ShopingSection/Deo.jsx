@@ -3,22 +3,23 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
+import deoimg from "../../assets/deo1.png"
 
 const sampleDeos = [
-  { id: 1, name: "Axe Dark Temptation", price: 100, image: "/images/axe.jpg" },
-  { id: 2, name: "Nivea Fresh Active", price: 150, image: "/images/nivea.jpg" },
-  { id: 3, name: "Dove Men+Care", price: 6.25, image: "/images/dove.jpg" },
-  { id: 4, name: "Park Avenue Good Morning", price: 5.25, image: "/images/parkavenue.jpg" },
-  { id: 5, name: "Denver Hamilton", price: 4.99, image: "/images/denver.jpg" },
-  { id: 6, name: "Fogg Xtremo", price: 6.49, image: "/images/fogg.jpg" },
-  { id: 7, name: "Wild Stone Hydra Energy", price: 5.75, image: "/images/wildstone.jpg" },
-  { id: 8, name: "Set Wet Cool Avatar", price: 4.79, image: "/images/setwet.jpg" },
-  { id: 9, name: "Engage M1", price: 6.1, image: "/images/engage.jpg" },
-  { id: 10, name: "Old Spice Original", price: 5.99, image: "/images/oldspice.jpg" },
-  { id: 11, name: "Axe Fresh", price: 5.99, image: "/images/axe_fresh.jpg" },
-  { id: 12, name: "Nivea Men", price: 4.99, image: "/images/nivea_men.jpg" },
-  { id: 13, name: "Dove Men", price: 5.99, image: "/images/dove_men.jpg" },
-  { id: 14, name: "Park Avenue Classic", price: 4.99, image: "/images/parkavenue_classic.jpg" },
+  { id: 1, name: "Axe Dark Temptation", price: 100, image:deoimg },
+  { id: 2, name: "Nivea Fresh Active", price: 150, image: deoimg },
+  { id: 3, name: "Dove Men+Care", price: 6.25, image: deoimg },
+  { id: 4, name: "Park Avenue Good Morning", price: 5.25, image: deoimg },
+  { id: 5, name: "Denver Hamilton", price: 4.99, image: deoimg },
+  { id: 6, name: "Fogg Xtremo", price: 6.49, image: deoimg },
+  { id: 7, name: "Wild Stone Hydra Energy", price: 5.75, image: deoimg },
+  { id: 8, name: "Set Wet Cool Avatar", price: 4.79, image:deoimg },
+  { id: 9, name: "Engage M1", price: 6.1, image: deoimg },
+  { id: 10, name: "Old Spice Original", price: 5.99, image: deoimg },
+  { id: 11, name: "Axe Fresh", price: 5.99, image: deoimg },
+  { id: 12, name: "Nivea Men", price: 4.99, image: deoimg },
+  { id: 13, name: "Dove Men", price: 5.99, image: deoimg },
+  { id: 14, name: "Park Avenue Classic", price: 4.99, image: deoimg },
 ];
 
 const Deo = () => {

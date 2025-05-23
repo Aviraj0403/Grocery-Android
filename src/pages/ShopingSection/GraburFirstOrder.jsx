@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ImCancelCircle } from "react-icons/im";
-
+import chipsimg from "../../assets/kurkure1.png"
+import sauceimg from "../../assets/sauces1.jpg"
+import noodles from "../../assets/you1.png"
 const PRODUCTS_PER_PAGE = 7;
 
 const GraburFirstOrder = () => {
@@ -12,8 +14,7 @@ const GraburFirstOrder = () => {
       category: "Kurkure & Chips",
       name: "Kurkure Masala Munch",
       price: "₹10",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40075566_5-kurkure-masala-munch.jpg",
+      image:chipsimg,
     },
     {
       id: 2,
@@ -21,39 +22,35 @@ const GraburFirstOrder = () => {
       name: "Kurkure Green Chutney Rajasthani Style",
       price: "₹10",
       image:
-        "https://www.bigbasket.com/media/uploads/p/l/40023601_2-kurkure-green-chutney-rajasthani-style.jpg",
+        chipsimg,
     },
     {
       id: 3,
       category: "Kurkure & Chips",
       name: "Lay's Classic Salted Chips",
       price: "₹20",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40028279_5-lays-potato-chips-classic-salted.jpg",
+      image:chipsimg,
     },
     {
       id: 4,
       category: "Kurkure & Chips",
       name: "Lay's Magic Masala Chips",
       price: "₹20",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40027903_5-lays-potato-chips-indias-magic-masala.jpg",
+      image:chipsimg,
     },
     {
       id: 5,
       category: "Kurkure & Chips",
       name: "Bingo Mad Angles Masala",
       price: "₹10",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40001929_4-bingo-mad-angles-achari-masti.jpg",
+      image:chipsimg,
     },
     {
       id: 6,
       category: "Kurkure & Chips",
       name: "Haldiram’s Aloo Bhujia",
       price: "₹25",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/1200394_3-haldirams-namkeen-aloo-bhujia.jpg",
+      image:chipsimg
     },
 
     // Breads
@@ -62,48 +59,42 @@ const GraburFirstOrder = () => {
       category: "Breads",
       name: "Harvest Gold White Bread",
       price: "₹30",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40004433_5-harvest-gold-bread-white.jpg",
+      image:chipsimg
     },
     {
       id: 8,
       category: "Breads",
       name: "Britannia Brown Bread",
       price: "₹40",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/1203473_2-britannia-bread-brown.jpg",
+      image:chipsimg
     },
     {
       id: 9,
       category: "Breads",
       name: "Modern Milk Bread",
       price: "₹35",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/1223597_1-modern-milk-bread.jpg",
+      image: chipsimg
     },
     {
       id: 10,
       category: "Breads",
       name: "English Oven Multigrain Bread",
       price: "₹45",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40017582_4-english-oven-bread-multigrain.jpg",
+      image:chipsimg
     },
     {
       id: 11,
       category: "Breads",
       name: "Amul Garlic Bread Spread",
       price: "₹20",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/1203484_1-amul-garlic-butter-spread.jpg",
+      image:chipsimg
     },
     {
       id: 12,
       category: "Breads",
       name: "Harvest Gold Sandwich Bread",
       price: "₹35",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40093277_1-harvest-gold-sandwich-bread.jpg",
+      image:chipsimg
     },
 
     // Sauces
@@ -112,48 +103,42 @@ const GraburFirstOrder = () => {
       category: "Sauces",
       name: "Kissan Tomato Ketchup",
       price: "₹55",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/1201032_4-kissan-fresh-tomato-ketchup.jpg",
+      image:sauceimg,
     },
     {
       id: 14,
       category: "Sauces",
       name: "Maggi Hot & Sweet Sauce",
       price: "₹65",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/264875_9-maggi-hot-sweet-tomato-chilli-sauce.jpg",
+      image:sauceimg
     },
     {
       id: 15,
       category: "Sauces",
       name: "Funfoods Veg Mayonnaise",
       price: "₹89",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/272038_8-dr-oetker-fun-foods-veg-mayonnaise.jpg",
+      image:sauceimg
     },
     {
       id: 16,
       category: "Sauces",
       name: "Del Monte Green Chilli Sauce",
       price: "₹45",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/263925_4-del-monte-green-chilli-sauce.jpg",
+      image:sauceimg
     },
     {
       id: 17,
       category: "Sauces",
       name: "Ching's Red Chilli Sauce",
       price: "₹60",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/264074_7-chings-secret-sauce-red-chilli.jpg",
+      image:sauceimg
     },
     {
       id: 18,
       category: "Sauces",
       name: "Veeba Burger Mayo",
       price: "₹75",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40121363_4-veeba-sauce-burger-mayo.jpg",
+      image:sauceimg
     },
 
     // Noodles
@@ -162,48 +147,42 @@ const GraburFirstOrder = () => {
       category: "Noodles",
       name: "Maggi 2-Minute Noodles",
       price: "₹14",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/241600_11-maggi-2-minute-instant-noodles.jpg",
+      image: noodles
     },
     {
       id: 20,
       category: "Noodles",
       name: "Yippee Noodles Magic Masala",
       price: "₹15",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/263624_6-sunfeast-yippee-noodles-magic-masala.jpg",
+      image: noodles
     },
     {
       id: 21,
       category: "Noodles",
       name: "Top Ramen Curry Noodles",
       price: "₹12",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/274056_6-nissin-top-ramen-noodles-curry.jpg",
+      image: noodles
     },
     {
       id: 22,
       category: "Noodles",
       name: "Ching’s Schezwan Noodles",
       price: "₹20",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40061940_3-chings-secret-schezwan-instant-noodles.jpg",
+      image: noodles
     },
     {
       id: 23,
       category: "Noodles",
       name: "Knorr Soupy Noodles",
       price: "₹18",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/1203442_2-knorr-soupy-noodles-masala.jpg",
+      image: noodles
     },
     {
       id: 24,
       category: "Noodles",
       name: "Maggi Nutri-Licious Noodles",
       price: "₹25",
-      image:
-        "https://www.bigbasket.com/media/uploads/p/l/40025960_4-maggi-nutrilicious-noodles.jpg",
+      image:noodles
     },
 
     // Popcorn

@@ -6,6 +6,8 @@ const Arrivals = () => {
   const navigate = useNavigate();
 
   return (
+    <>
+    <marquee  behavior="" direction="left" className="text-green-500">New Arrival Comeing soon ,we wiil notify you !!! </marquee>
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex flex-col items-center justify-center px-4 py-16 relative">
       
       {/* Firecrackers GIF */}
@@ -68,6 +70,7 @@ const Arrivals = () => {
         ← Go Back
       </button>
     </div>
+    </>
   );
 };
 
