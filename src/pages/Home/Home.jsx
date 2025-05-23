@@ -141,18 +141,17 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Banner 1 */}
 
-          <Slide direction="left">
+          <Zoom>
             <div className="relative bg-orange-200 rounded shadow overflow-hidden w-[90%] max-w-sm mx-auto lg:max-w-full h-53 lg:h-auto flex lg:flex-row items-stretch">
               {/* Text Content */}
-              <div className=" absolute bottom-2 left-2 lg:static lg:flex-1 p-4 text-left flex flex-col justify-center items-start z-10">
+              <div className="absolute bottom-2 left-2 lg:static lg:flex-1 p-4 text-left flex flex-col justify-center items-start z-10">
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
-                  2% Cashback on <br /> Deodorants & <br />
-                  Cleaning Essintial
+                  Get discount on <br /> Body Spray & Deodrant's
                 </h3>
                 <div className="text-xs sm:text-sm text-gray-700 mb-3">
-                  <p className="mb-1 font-semibold">Max cashback: 4%</p>
+                  <p className="mb-1 font-semibold">Max cashback: 2%</p>
                   <span>
-                    <span className="font-semibold text-black">CARE01</span>
+                    <span className="font-semibold text-black">CARE02</span>
                   </span>
                 </div>
 
@@ -176,7 +175,7 @@ const Home = () => {
                 />
               </div>
             </div>
-          </Slide>
+          </Zoom>
 
           {/* banner 2 */}
           <Zoom>
