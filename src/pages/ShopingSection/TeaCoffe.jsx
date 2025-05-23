@@ -3,17 +3,21 @@ import { motion } from "framer-motion";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
 import { Link } from "react-router-dom";
-
+import tata from "../../assets/tatatea.png"
+import wagh from "../../assets/wagh.png"
+import socity from "../../assets/socity.png"
+import green from "../../assets/greentea.png"
+import coffe from "../../assets/coffe.png"
 const teaCoffeeData = {
   Tea: [
-    { id: "t1", name: "Tata Tea Gold", price: 2.99, image: "/images/tata.jpg" },
+    { id: "t1", name: "Tata Tea Gold", price: 2.99, image: tata },
     { id: "t2", name: "Brooke Bond", price: 3.49, image: "/images/brooke.jpg" },
-    { id: "t3", name: "Wagh Bakri", price: 3.19, image: "/images/waghbakri.jpg" },
-    { id: "t4", name: "Society Tea", price: 3.89, image: "/images/society.jpg" },
-    { id: "t5", name: "Green Tea", price: 4.59, image: "/images/greentea.jpg" },
+    { id: "t3", name: "Wagh Bakri", price: 3.19, image: wagh },
+    { id: "t4", name: "Society Tea", price: 3.89, image: socity },
+    { id: "t5", name: "Green Tea", price: 4.59, image: green },
   ],
   Coffee: [
-    { id: "c1", name: "Nescafe", price: 4.99, image: "/images/nescafe.jpg" },
+    { id: "c1", name: "Nescafe", price: 4.99, image: coffe },
     { id: "c2", name: "Bru Coffee", price: 5.25, image: "/images/bru.jpg" },
     { id: "c3", name: "Rage Coffee", price: 6.25, image: "/images/rage.jpg" },
     { id: "c4", name: "Continental", price: 4.75, image: "/images/continental.jpg" },
@@ -70,7 +74,7 @@ const TeaCoffe = () => {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen px-4 py-6 max-w-5xl mx-auto">
+    <div className="bg-white min-h-screen px-4 py-6 max-w-5xl mx-auto">
       <Link to="/" className="block relative mb-6">
         <ImCancelCircle className="absolute top-2 right-0 text-xl text-gray-600 hover:text-red-500 transition cursor-pointer" />
         <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-red-500">
