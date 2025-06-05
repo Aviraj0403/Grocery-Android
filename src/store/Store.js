@@ -5,6 +5,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 import cartReducer from '../features/cartSlice';
+import authReducer from '../features/authSlice';
 // import productReducer from '../features/productSlice';
 import orderReducer from '../features/orderSlice';
 import categoryReducer from '../features/categorySlice';
@@ -14,10 +15,11 @@ const persistConfig = {
   storage,
   version: 1,
   stateReconciler: autoMergeLevel2,
-  whitelist: ['cart'], // persist only cart for guest users
+  whitelist: ['cart','auth'], // persist only cart for guest users
 };
 
 const rootReducer = combineReducers({
+  auth: authReducer, 
   cart: cartReducer,
   // product: productReducer,
   // order: orderReducer,

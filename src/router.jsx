@@ -29,6 +29,8 @@ import {
 
 // Other Pages
 import CartPage from "./pages/cart/cartPage";
+import CheckoutPage from "./pages/checkout/CheckoutPage";
+import OrderConfirmation from "./pages/checkout/OrderConfirmation";
 import OneDayReturn from "./pages/OneDayReturn";
 import CashOnDelivery from "./pages/CashOnDelivery";
 import AboutUs from "./QuickLinks/AboutUs";
@@ -71,6 +73,8 @@ const router = createBrowserRouter([
           { path: "verification-otp", element: <Otpverifiaction /> },
           { path: "reset-password", element: <Resetpassword /> },
           { path: "dashboard/cart", element: <CartPage /> },
+          { path: "checkout", element: <CheckoutPage /> },
+          { path: "order-confirmation", element: <OrderConfirmation /> },
           { path: "onedayreturn", element: <OneDayReturn /> },
           { path: "cashondelivery", element: <CashOnDelivery /> },
           { path: "aboutus", element: <AboutUs /> },
@@ -90,6 +94,8 @@ const router = createBrowserRouter([
           {path:"gift",element:<Moregift/>},
           {path:"expmore", element:<Exploremore/>},
           {path:"arrivals", element:<Arrivals/>},
+          
+
 
           // 🆕 User Dashboard with nested routes
           {

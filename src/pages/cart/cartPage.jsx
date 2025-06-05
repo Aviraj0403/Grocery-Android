@@ -1,11 +1,10 @@
 // src/pages/CartPage.jsx
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchCart,
-  updateCartItem,
-  removeCartItem,
-} from "../../features/cartSlice";
+  updateItemQuantity,
+  removeItem,
+} from "../../features/cartSlice"; // ✅ Updated actions
 import { Link } from "react-router-dom";
 import CartItem from "./CartItem";
 import Skeleton from "react-loading-skeleton";
@@ -13,18 +12,27 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const CartPage = () => {
   const dispatch = useDispatch();
-  const { items, totalQuantity, totalAmount, loading } = useSelector((state) => state.cart);
-
-  useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+  const { items, totalQuantity, totalAmount, loading } = useSelector(
+    (state) => state.cart
+  );
 
   const handleQtyChange = (productId, variant, qty) => {
-    dispatch(updateCartItem({ productId, selectedVariant: variant, quantity: qty }));
+    dispatch(
+      updateItemQuantity({
+        id: productId,
+        variantId: variant.id || variant.unit,
+        quantity: qty,
+      })
+    );
   };
 
   const handleRemove = (productId, variant) => {
-    dispatch(removeCartItem({ productId, selectedVariant: variant }));
+    dispatch(
+      removeItem({
+        id: productId,
+        variantId: variant.id || variant.unit,
+      })
+    );
   };
 
   return (

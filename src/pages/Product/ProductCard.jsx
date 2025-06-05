@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../features/cartSlice";
+import { addItem } from "../../features/cartSlice"; // ✅ use new frontend action
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -13,10 +13,8 @@ const ProductCard = ({ product }) => {
     Array.isArray(product?.variants) && product.variants.length > 0;
   const defaultVariant = hasVariants ? product.variants[0] : null;
 
-  // If no product or no variants, render nothing
   if (!product || !hasVariants) return null;
 
-  // CLICK → navigate to detail
   const handleCardClick = () => navigate(`/product/${product._id}`);
 
   const [selectedUnit, setSelectedUnit] = useState(
@@ -30,28 +28,34 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
-    if (!activeVariant) {
-      toast.error("Product variant not available.");
+    if (!activeVariant || activeVariant.stockQty === 0) {
+      toast.error("Product variant not available or out of stock.");
       return;
     }
 
     try {
       setIsAdding(true);
-      await dispatch(
-        addToCart({
-          productId: product._id,
+      dispatch(
+        addItem({
+          product,
+          // id: product._id,
+          // name: product.name,
+          // brand: product.brand,
+          // image: product.images?.[0] || "/images/placeholder.png",
           selectedVariant: {
+            id: activeVariant.id || activeVariant.unit,
             unit: activeVariant.unit,
             price: activeVariant.price,
             packaging: activeVariant.packaging,
+            stockQty: activeVariant.stockQty,
           },
           quantity,
         })
-      ).unwrap();
+      );
       toast.success("Added to cart!");
       setQuantity(1);
     } catch (err) {
-      toast.error(err.message || "Add to cart failed.");
+      toast.error("Failed to add item.");
     } finally {
       setIsAdding(false);
     }
