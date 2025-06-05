@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
     await loginApi(credentials);
     const res = await getMe();  // immediately fetch user after login
     setUser(res.data.data);
+    return res.data.data;
   };
 
   const logout = async () => {

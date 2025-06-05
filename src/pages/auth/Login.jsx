@@ -17,19 +17,26 @@ const Login = () => {
     setData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await login(data); // from AuthContext
-      toast.success("Logged in successfully!");
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    const user = await login(data); // 👈 now returns user
+    toast.success("Logged in successfully!");
+
+    if (user.roleType === "admin") {
       navigate('/admin');
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
+    } else {
+      navigate('/'); // or navigate to /dashboard, etc.
     }
-  };
+
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Login failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const valid = Object.values(data).every(Boolean);
 

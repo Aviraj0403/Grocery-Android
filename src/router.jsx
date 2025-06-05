@@ -78,7 +78,7 @@ const router = createBrowserRouter([
           { path: "contactus", element: <Contact /> },
           { path: "termandconditons", element: <TermandConditions /> },
           { path: "privacy", element: <Privacy /> },
-          { path: "product/:id" ,element : <ProductDetail/>},
+          { path: "product/:id" , element : <ProductDetail/>},
           {path: "deo",element : <Deo/>},
           {path:"cleaning", element:<Cleaning/>},
           {path: "Coofe", element: <TeaCoffe/>},
