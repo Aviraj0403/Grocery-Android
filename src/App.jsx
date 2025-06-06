@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { useCartAutoSync } from '../src/hooks/useCartAutoSync'; // Custom hook for cart auto-sync
 
 const App = () => {
-  useCartAutoSync()
+  // useCartAutoSync()
   return (
     <>
       <main className="min-h-[78vh]">

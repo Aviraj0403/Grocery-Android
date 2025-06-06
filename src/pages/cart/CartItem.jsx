@@ -9,10 +9,11 @@ const CartItem = ({ item }) => {
   const variantId = variant.id || variant.unit;
 
   // Fallback for nested image if flat `item.image` not available
-  const image =
-    item.image ||
-    item.product?.images?.[0] ||
-    '/placeholder.jpg';
+  // const image =
+  //   item.image ||
+  //   item.product?.images?.[0] ||
+  //   '/placeholder.jpg';
+const image = item.images && item.images.length > 0 ? item.images[0] : '/placeholder.jpg';
 
   const increaseQty = () => {
     dispatch(updateItemQuantity({ id: item.id, variantId, quantity: item.quantity + 1 }));
