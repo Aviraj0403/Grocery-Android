@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useParams, Link } from "react-router-dom";
 import {
   FaShoppingCart,
@@ -9,11 +10,16 @@ import {
   FaClock,
   FaBoxOpen,
 } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem } from "../../features/cartSlice"; // adjust path as needed
+
 import axios from "../../utils/Axios";
 
 const tabs = ["Description", "Variants", "Reviews"];
 
+
 const ProductDetail = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -22,6 +28,8 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState("Variants");
   const [quantity, setQuantity] = useState(1);
   const [activeVariantUnit, setActiveVariantUnit] = useState(null);
+  const cartItems = useSelector((state) => state.cart.items);
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -123,9 +131,8 @@ const ProductDetail = () => {
                 src={img}
                 onClick={() => setActiveImage(i)}
                 alt={`Thumbnail ${i + 1}`}
-                className={`w-20 h-20 object-contain border rounded-md cursor-pointer flex-shrink-0 ${
-                  i === activeImage ? "border-green-600" : "border-gray-300"
-                }`}
+                className={`w-20 h-20 object-contain border rounded-md cursor-pointer flex-shrink-0 ${i === activeImage ? "border-green-600" : "border-gray-300"
+                  }`}
               />
             ))}
           </div>
@@ -196,9 +203,8 @@ const ProductDetail = () => {
             </div>
 
             <p
-              className={`mt-2 font-semibold ${
-                activeVariant.stockQty > 0 ? "text-green-600" : "text-red-600"
-              }`}
+              className={`mt-2 font-semibold ${activeVariant.stockQty > 0 ? "text-green-600" : "text-red-600"
+                }`}
             >
               {activeVariant.stockQty > 0
                 ? `In Stock (${activeVariant.stockQty} available)`
@@ -224,15 +230,48 @@ const ProductDetail = () => {
             )}
 
             <button
-              className={`flex items-center justify-center gap-2 mt-6 w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition ${
-                activeVariant.stockQty === 0 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`flex items-center justify-center gap-2 mt-6 w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition ${activeVariant.stockQty === 0 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               disabled={activeVariant.stockQty === 0}
-              onClick={() => alert(`Added ${quantity} items to cart (demo)`)}
-              aria-disabled={activeVariant.stockQty === 0}
+              onClick={() => {
+                const existingItem = cartItems.find(
+                  (item) =>
+                    item.id === product._id &&
+                    item.selectedVariant.unit === activeVariant.unit
+                );
+
+                const newQuantity = existingItem
+                  ? existingItem.quantity + quantity
+                  : quantity;
+
+                if (newQuantity > activeVariant.stockQty) {
+                  toast.error("Cannot add more than available stock.");
+                  return;
+                }
+
+                const cartItem = {
+                  id: product._id,
+                  name: product.name,
+                  image: images[0],
+                  selectedVariant: activeVariant,
+                  quantity,
+                  brand: product.brand,
+                };
+
+                dispatch(addItem(cartItem));
+
+                toast.success(
+                  existingItem
+                    ? `Updated ${product.name} quantity to ${newQuantity}`
+                    : `${quantity} ${product.name} added to cart`
+                );
+              }}
+              
+
             >
               <FaShoppingCart /> Add to Cart
             </button>
+
           </div>
         </div>
       </div>
@@ -245,11 +284,10 @@ const ProductDetail = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-3 px-6 whitespace-nowrap font-semibold border-b-4 transition ${
-                activeTab === tab
-                  ? "border-green-600 text-green-700"
-                  : "border-transparent text-gray-600 hover:text-green-600"
-              }`}
+              className={`py-3 px-6 whitespace-nowrap font-semibold border-b-4 transition ${activeTab === tab
+                ? "border-green-600 text-green-700"
+                : "border-transparent text-gray-600 hover:text-green-600"
+                }`}
               role="tab"
               aria-selected={activeTab === tab}
               aria-controls={`tab-panel-${tab}`}
@@ -315,9 +353,8 @@ const ProductDetail = () => {
                     <tr
                       key={v.unit}
                       onClick={() => setActiveVariantUnit(v.unit)}
-                      className={`cursor-pointer hover:bg-green-50 ${
-                        v.unit === activeVariantUnit ? "bg-green-200 font-semibold" : ""
-                      }`}
+                      className={`cursor-pointer hover:bg-green-50 ${v.unit === activeVariantUnit ? "bg-green-200 font-semibold" : ""
+                        }`}
                       title="Click to select this variant"
                     >
                       <td className="border border-gray-300 px-3 py-2">{v.unit || "N/A"}</td>
