@@ -9,11 +9,14 @@ const EditProductPage = () => {
 
     // Local state fields for editing (derived from product)
     const [name, setName] = useState('');
+
+
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
     const [category, setCategory] = useState('');
     const [subCategory, setSubCategory] = useState('');
     const [productCode, setProductCode] = useState('');
+    const [stockQty, setStockQty] = useState(0);
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [brand, setBrand] = useState('');
@@ -69,8 +72,10 @@ const EditProductPage = () => {
                 // Assume that product price is in the first variant if available.
                 if (data.variants && data.variants.length > 0) {
                     setPrice(data.variants[0].price);
+                    setStockQty(data.variants[0].stockQty || 0);
                 } else {
                     setPrice('');
+                    setStockQty(0);
                 }
             } else {
                 toast.error(response.data.message || 'Error fetching product details');
@@ -126,7 +131,10 @@ const EditProductPage = () => {
 
             if (product?.variants && product.variants.length > 0) {
                 const updatedVariants = [...product.variants];
-                updatedVariants[0] = { ...updatedVariants[0], price };
+                updatedVariants[0] = {
+                    ...updatedVariants[0], price: Number(price),
+                    stockQty: Number(stockQty), packaging: 'Loose'
+                };
                 updatedData.variants = updatedVariants;
             } else {
                 updatedData.variants = [{ unit: '', price, stockQty: 0, packaging: 'Loose' }];
@@ -296,6 +304,16 @@ const EditProductPage = () => {
                     />
                 </div>
 
+                <div>
+                    <label className="block text-gray-700">Stock Quantity:</label>
+                    <input
+                        type="number"
+                        value={stockQty}
+                        onChange={(e) => setStockQty(e.target.value)}
+                        className="w-full p-3 border border-gray-300 rounded-md"
+                        required
+                    />
+                </div>
                 {/* Description */}
                 <div className="mb-4">
                     <label className="block text-gray-700">Description:</label>

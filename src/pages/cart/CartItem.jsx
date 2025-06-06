@@ -1,72 +1,60 @@
-// src/components/Cart/CartItem.jsx
-import React from "react";
-import { FaTrash } from "react-icons/fa";
-import { MdOutlineRemove, MdOutlineAdd } from "react-icons/md";
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { updateItemQuantity, removeItem } from '../../features/cartSlice';
 
-const CartItem = ({ item, onQtyChange, onRemove }) => {
-  const { product, selectedVariant, quantity } = item;
+const CartItem = ({ item }) => {
+  const dispatch = useDispatch();
 
-  const handleIncrease = () => {
-    onQtyChange(product._id, selectedVariant, quantity + 1);
+  const variant = item.selectedVariant || {};
+  const variantId = variant.id || variant.unit;
+
+  // Fallback for nested image if flat `item.image` not available
+  const image =
+    item.image ||
+    item.product?.images?.[0] ||
+    '/placeholder.jpg';
+
+  const increaseQty = () => {
+    dispatch(updateItemQuantity({ id: item.id, variantId, quantity: item.quantity + 1 }));
   };
 
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      onQtyChange(product._id, selectedVariant, quantity - 1);
+  const decreaseQty = () => {
+    if (item.quantity > 1) {
+      dispatch(updateItemQuantity({ id: item.id, variantId, quantity: item.quantity - 1 }));
+    } else {
+      dispatch(removeItem({ id: item.id, variantId }));
     }
   };
 
-  const handleRemove = () => {
-    onRemove(product._id, selectedVariant);
-  };
-
   return (
-    <div className="flex items-start gap-4 border rounded-lg p-4 bg-white shadow-sm">
+    <div className="flex items-center justify-between border p-4 rounded-md shadow-sm bg-white">
       {/* Image */}
-      <img
-  src={product?.images?.[0] || "/images/placeholder.png"}
-  alt={product?.name || 'Product'}
-  className="w-24 h-24 object-cover rounded-md"
-/>
-
+      <div className="w-20 h-20 rounded overflow-hidden mr-4">
+        <img
+          src={image}
+          alt={item.name || item.product?.name || 'Product'}
+          className="object-cover w-full h-full"
+        />
+      </div>
 
       {/* Info */}
       <div className="flex-1">
-        <h3 className="text-lg font-semibold text-gray-800">
-          {product.name}
-        </h3>
-        <p className="text-sm text-gray-600">{selectedVariant.unit} - {selectedVariant.packaging}</p>
-        <p className="text-green-600 font-bold mt-1">
-          ₹{selectedVariant.price} × {quantity} = ₹
-          {(selectedVariant.price * quantity).toFixed(2)}
-        </p>
-
-        {/* Quantity controls */}
-        <div className="flex items-center mt-3 gap-2">
-          <button
-            onClick={handleDecrease}
-            className="bg-gray-200 p-1 rounded-full hover:bg-gray-300"
-          >
-            <MdOutlineRemove size={20} />
-          </button>
-          <span className="px-2 text-sm font-medium">{quantity}</span>
-          <button
-            onClick={handleIncrease}
-            className="bg-gray-200 p-1 rounded-full hover:bg-gray-300"
-          >
-            <MdOutlineAdd size={20} />
-          </button>
-        </div>
+        <h3 className="text-lg font-medium">{item.name || item.product?.name}</h3>
+        <p className="text-sm text-gray-500">{variant.unit}</p>
+        <p className="text-sm font-semibold mt-1">₹{variant.price?.toFixed(2)}</p>
       </div>
 
-      {/* Remove button */}
-      <button
-        onClick={handleRemove}
-        className="text-red-500 hover:text-red-600 ml-auto"
-        title="Remove Item"
-      >
-        <FaTrash />
-      </button>
+      {/* Quantity Control */}
+      <div className="flex items-center gap-2">
+        <button onClick={decreaseQty} className="w-7 h-7 text-xl font-bold bg-gray-200 rounded">−</button>
+        <span className="w-6 text-center">{item.quantity}</span>
+        <button onClick={increaseQty} className="w-7 h-7 text-xl font-bold bg-gray-200 rounded">+</button>
+      </div>
+
+      {/* Total */}
+      <div className="text-right w-20 font-bold text-lg text-green-600">
+        ₹{(variant.price * item.quantity).toFixed(2)}
+      </div>
     </div>
   );
 };
