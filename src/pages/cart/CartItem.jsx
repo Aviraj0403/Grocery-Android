@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { updateCartItemThunk, removeFromCartThunk } from "../../features/cart/cartThunks";
+import {
+  updateCartItemThunk,
+  removeFromCartThunk,
+} from "../../features/cart/cartThunks";
 import debounce from "lodash.debounce";
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
-
   const variant = item.selectedVariant || {};
   const variantId = variant.id || variant.unit;
   const image =
-  item.image || (item.images?.length > 0 ? item.images[0] : "/placeholder.jpg");
+    item.image ||
+    (item.images?.length > 0 ? item.images[0] : "/placeholder.jpg");
 
   const [localQty, setLocalQty] = useState(item.quantity);
 
@@ -43,7 +46,6 @@ const CartItem = ({ item }) => {
       setLocalQty(newQty);
       debouncedUpdate(newQty);
     } else {
-      // Use productId here instead of id to match thunk expectations
       dispatch(removeFromCartThunk({ id: item.id, variantId }));
     }
   };
@@ -53,52 +55,61 @@ const CartItem = ({ item }) => {
   };
 
   return (
-    <div className="flex items-center gap-6 p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
-      <div className="w-24 h-24 flex-shrink-0 rounded-md overflow-hidden border">
+    <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+      {/* Product Image */}
+      <div className="w-20 h-20 rounded border overflow-hidden flex-shrink-0">
         <img
           src={image}
           alt={item.name || item.product?.name || "Product"}
-          className="object-cover w-full h-full"
+          className="w-full h-full object-cover"
         />
       </div>
 
-      <div className="flex-1">
-        <h3 className="text-xl font-semibold text-gray-900">{item.name || item.product?.name}</h3>
-        <p className="text-gray-500 mt-1">{variant.unit}</p>
-        <p className="mt-2 text-green-700 font-semibold text-lg">₹{variant.price?.toFixed(2)}</p>
+      {/* Product Details */}
+      <div className="flex-1 min-w-[150px]">
+        <h3 className="text-sm font-semibold text-gray-900 truncate">
+          {item.name || item.product?.name}
+        </h3>
+        <p className="text-xs text-gray-500">{variant.unit}</p>
+        <p className="mt-1 text-green-700 font-semibold text-sm">
+          ₹{variant.price?.toFixed(2)}
+        </p>
       </div>
 
-      <div className="flex items-center space-x-3">
+      {/* Quantity Controls */}
+      <div className="flex items-center space-x-2 border rounded-full px-2 py-1">
         <button
           onClick={decreaseQty}
-          className="w-9 h-9 flex justify-center items-center rounded-full bg-gray-200 hover:bg-gray-300 text-lg font-bold transition"
+          className="w-6 h-6 flex justify-center items-center rounded-full bg-gray-100 hover:bg-gray-200 text-base font-bold"
           aria-label="Decrease quantity"
         >
           −
         </button>
-        <span className="w-8 text-center font-medium text-gray-800">{localQty}</span>
+        <span className="w-6 text-center text-sm text-gray-800">{localQty}</span>
         <button
           onClick={increaseQty}
-          className="w-9 h-9 flex justify-center items-center rounded-full bg-gray-200 hover:bg-gray-300 text-lg font-bold transition"
+          className="w-6 h-6 flex justify-center items-center rounded-full bg-gray-100 hover:bg-gray-200 text-base font-bold"
           aria-label="Increase quantity"
         >
           +
         </button>
       </div>
 
-      <div className="text-right font-bold text-lg text-green-600 w-24">
+      {/* Price */}
+      <div className="text-green-700 font-semibold text-sm w-20 text-right">
         ₹{(variant.price * localQty).toFixed(2)}
       </div>
 
+      {/* Remove Button */}
       <button
         onClick={removeItem}
-        className="ml-4 text-red-600 hover:text-red-800 transition"
+        className="text-red-500 hover:text-red-700 ml-auto sm:ml-2"
         aria-label="Remove item"
         title="Remove item"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
+          className="h-5 w-5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
