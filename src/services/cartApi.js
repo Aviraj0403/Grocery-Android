@@ -12,9 +12,13 @@ export const updateCartItem = (payload) => {
   return axios.put('/updateCartItem', payload);
 };
 
-export const removeCartItem = (payload) => {
-  return axios.delete('/removeCartItem', { data: payload });
+// cartApi.js
+export const removeCartItem = ({ productId, unit }) => {
+  return axios.delete('/removeCartItem', {
+    params: { productId, unit }, // ✅ send via query string
+  });
 };
+
 
 export const clearCart = () => {
   return axios.delete('/clearCart');

@@ -26,6 +26,7 @@ const normalizeItem = (item) => ({
   },
   name: item.product?.name || item.name || '',
   images: Array.isArray(item.product?.images) ? item.product.images : [],
+  image: item.image || null,
 });
 
 const cartSlice = createSlice({

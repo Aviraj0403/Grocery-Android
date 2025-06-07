@@ -8,7 +8,12 @@ export const resetPassword = (data) => Axios.post('/user/resetPassword', data);
 export const googleLogin = (data) => Axios.post('/user/googleLogin', data);
 
 // 🔐 Protected Routes (require token)
-export const logout = () => Axios.post('/user/logout'); // Axios should attach token via interceptors
+// export const logout = () => Axios.post('/user/logout'); // Axios should attach token via interceptors
+export const logout = async () => {
+  await Axios.post('/user/logout');                      // ✅ send request with correct Axios instance
+  localStorage.removeItem('authToken');                  // ✅ remove stored token
+  delete Axios.defaults.headers.common['Authorization']; // ✅ clean up auth headers
+};
 export const getProfile = () => Axios.get('/user/profile');
 export const updateProfile = (data) => Axios.patch('/user/updateProfile', data);
 export const uploadAvatar = (formData) => Axios.post('/user/uploadAvatar', formData, {

@@ -1,69 +1,167 @@
-import { getUserCart, addToCart } from '../../services/cartApi';
-import { mergeCart, setCart } from './cartSlice';
+// src/features/cart/cartThunks.js
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  getUserCart,
+  addToCart,
+  removeCartItem as removeFromCart,
+  updateCartItem,
+  clearCart as clearCartBackend,
+} from '../../services/cartApi';
 
-// 🔁 Used on manual login to merge guest cart with backend
-export const syncCartOnLogin = () => async (dispatch, getState) => {
-  const { cart } = getState();
+import {
+  mergeCart,
+  setCart,
+  removeItem,
+  clearCart,
+  updateItemQuantity,
+} from './cartSlice';
 
-  try {
-    const response = await getUserCart();
-    const backendItems = response.data.cartItems || [];
+/**
+ * 🔁 Sync local guest cart with backend on login
+ */
+export const syncCartOnLogin = createAsyncThunk(
+  'cart/syncOnLogin',
+  async (_, { dispatch, getState }) => {
+    const { cart } = getState();
+    const localItems = cart.items || [];
 
-    const promises = [];
+    try {
+      const res = await getUserCart();
+      const backendItems = res.data.cartItems || [];
 
-    for (const item of cart.items) {
-      const variant = item.selectedVariant || {};
-      const productId = item.productId || item.id || item._id || item.product?._id;
-      const variantId = variant.id || variant.unit;
+      const promises = [];
 
-      if (!productId || !variantId || variant.unit?.trim() === '') {
-        console.warn('❌ Skipping invalid cart item:', { item });
-        continue;
-      }
+      for (const item of localItems) {
+        const productId = item.id;
+        const variant = item.selectedVariant;
+        const variantId = variant.id || variant.unit;
 
-      const exists = backendItems.find(
-        (i) =>
-          (i.id || i.product?._id || i.productId) === productId &&
-          ((i.selectedVariant?.id || i.selectedVariant?.unit) === variantId)
-      );
-
-      if (!exists) {
-        promises.push(
-          addToCart({
-            productId,
-            selectedVariant: variant,
-            quantity: item.quantity,
-          })
+        const exists = backendItems.find(
+          (i) =>
+            (i.id || i.productId) === productId &&
+            ((i.selectedVariant?.id || i.selectedVariant?.unit) === variantId)
         );
+
+        if (!exists) {
+          // Add to backend cart expects entire variant object here
+          promises.push(
+            addToCart({
+              productId,
+              selectedVariant: variant,
+              quantity: item.quantity,
+            })
+          );
+        }
       }
+
+      await Promise.all(promises);
+      const finalCart = await getUserCart();
+      dispatch(setCart({ items: finalCart.data.cartItems }));
+    } catch (err) {
+      console.error('❌ Failed to sync cart on login:', err);
     }
-
-    await Promise.all(promises);
-    const finalRes = await getUserCart();
-    dispatch(setCart({ items: finalRes.data.cartItems }));
-  } catch (err) {
-    console.error('🛠️ Cart sync error:', err);
   }
-};
+);
 
-// 📥 Used on re-login (refresh + token still valid)
-export const fetchBackendCart = () => async (dispatch) => {
-  try {
-    const response = await getUserCart();
-    dispatch(setCart({ items: response.data.cartItems }));
-  } catch (err) {
-    console.error('🛒 Failed to fetch backend cart:', err);
+/**
+ * 📥 Fetch cart from backend on refresh or token restore
+ */
+export const fetchBackendCart = createAsyncThunk(
+  'cart/fetchBackendCart',
+  async (_, { dispatch }) => {
+    try {
+      const response = await getUserCart();
+      dispatch(setCart({ items: response.data.cartItems }));
+    } catch (err) {
+      console.error('❌ Fetch backend cart error:', err);
+    }
   }
-};
+);
 
-// ➕ Add to cart thunk
-export const addToCartThunk = (payload) => async (dispatch) => {
-  try {
-    const response = await addToCart(payload);
-    dispatch(mergeCart({ items: response.data.cartItems }));
-    return response.data;
-  } catch (err) {
-    console.error('🛒 Add to cart error:', err);
-    throw err;
+/**
+ * ➕ Add item to backend + merge with Redux
+ * Note: backend expects full selectedVariant object here
+ */
+export const addToCartThunk = createAsyncThunk(
+  'cart/addToCart',
+  async (item, { dispatch }) => {
+    try {
+      const payload = {
+        productId: item.id,
+        selectedVariant: item.selectedVariant,  // full variant object here
+        quantity: item.quantity,
+      };
+
+      const res = await addToCart(payload);
+      dispatch(mergeCart({ items: res.data.cartItems }));
+      return res.data;
+    } catch (err) {
+      console.error('❌ Add to cart failed:', err);
+      throw err;
+    }
   }
-};
+);
+
+/**
+ * ➖ Remove item from backend + Redux
+ */
+export const removeFromCartThunk = createAsyncThunk(
+  'cart/removeFromCart',
+  async (item, { dispatch }) => {
+    try {
+      const payload = {
+        productId: item.id, // <- Rename from `item.productId`
+        unit: item.variantId, // <- Because your controller uses `unit`
+      };
+
+      await removeFromCart(payload);
+      dispatch(removeItem({ id: item.id, variantId: item.variantId }));
+    } catch (err) {
+      console.error('❌ Remove from cart failed:', err);
+    }
+  }
+);
+
+
+/**
+ * 🔄 Update item quantity in backend + Redux
+ * Note: backend expects productId, unit, quantity
+ */
+export const updateCartItemThunk = createAsyncThunk(
+  'cart/updateCartItem',
+  async (item, { dispatch }) => {
+    try {
+      const payload = {
+        productId: item.id,
+        unit: item.selectedVariant.unit,   // send only unit string here
+        quantity: item.quantity,
+      };
+
+      await updateCartItem(payload);
+
+      dispatch(updateItemQuantity({
+        id: item.id,
+        variantId: item.selectedVariant.id || item.selectedVariant.unit,
+        quantity: item.quantity,
+      }));
+    } catch (err) {
+      console.error('❌ Update cart item failed:', err);
+      throw err;
+    }
+  }
+);
+
+/**
+ * 🧹 Clear entire cart from backend + Redux
+ */
+export const clearCartThunk = createAsyncThunk(
+  'cart/clearCart',
+  async (_, { dispatch }) => {
+    try {
+      await clearCartBackend();
+      dispatch(clearCart());
+    } catch (err) {
+      console.error('❌ Clear cart failed:', err);
+    }
+  }
+);

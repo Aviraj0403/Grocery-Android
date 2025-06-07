@@ -10,21 +10,24 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [cartSyncing, setCartSyncing] = useState(false);  // new loading flag for cart
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
   useEffect(() => {
     const validateSession = async () => {
       try {
-        const res = await getMe(); // Check token/session
+        const res = await getMe();
         setUser(res.data.data);
 
-        // ✅ On refresh or re-login, just fetch backend cart
-        dispatch(fetchBackendCart());
+        setCartSyncing(true);
+        // Wait for backend cart to fetch fully before letting UI load
+        await dispatch(fetchBackendCart()).unwrap();
       } catch {
         setUser(null);
       } finally {
         setLoading(false);
+        setCartSyncing(false);
       }
     };
 
@@ -36,21 +39,24 @@ export const AuthProvider = ({ children }) => {
     const res = await getMe();
     setUser(res.data.data);
 
-    // ✅ On manual login, merge local guest cart
-    dispatch(syncCartOnLogin());
+    setCartSyncing(true);
+    // Wait for cart merge on login before UI updates cart display
+    await dispatch(syncCartOnLogin()).unwrap();
+    setCartSyncing(false);
 
     return res.data.data;
   };
 
   const logout = async () => {
     await logoutApi();
-    dispatch(clearCart());       // Clear cart from Redux
-    setUser(null);               // Clear user from context
-    queryClient.clear();         // Clear React Query cache
+    localStorage.removeItem('authToken');
+    dispatch(clearCart());
+    setUser(null);
+    queryClient.clear();
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, cartSyncing, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
