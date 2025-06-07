@@ -1,50 +1,69 @@
 import { getUserCart, addToCart } from '../../services/cartApi';
-import { setCart } from './cartSlice';
+import { mergeCart, setCart } from './cartSlice';
 
-// 🔁 Merge guest cart with backend after login
+// 🔁 Used on manual login to merge guest cart with backend
 export const syncCartOnLogin = () => async (dispatch, getState) => {
   const { cart } = getState();
+
   try {
-    // 1️⃣ Fetch backend cart
-    const backendRes = await getUserCart();
-    const backendItems = backendRes.data.cartItems || [];
+    const response = await getUserCart();
+    const backendItems = response.data.cartItems || [];
 
-    // 2️⃣ Prepare items to be synced (not already in backend)
-    const guestItems = cart.items;
-    const itemsToSync = [];
+    const promises = [];
 
-    for (const item of guestItems) {
+    for (const item of cart.items) {
       const variant = item.selectedVariant || {};
-      const productId = item.productId || item.id || item._id;
+      const productId = item.productId || item.id || item._id || item.product?._id;
       const variantId = variant.id || variant.unit;
 
       if (!productId || !variantId || variant.unit?.trim() === '') {
-        console.warn('⚠️ Skipping invalid cart item:', { item });
+        console.warn('❌ Skipping invalid cart item:', { item });
         continue;
       }
 
-      const existsInBackend = backendItems.find(
+      const exists = backendItems.find(
         (i) =>
-          (i.productId || i.product?._id || i.id) === productId &&
+          (i.id || i.product?._id || i.productId) === productId &&
           ((i.selectedVariant?.id || i.selectedVariant?.unit) === variantId)
       );
 
-      if (!existsInBackend) {
-        itemsToSync.push({
-          productId,
-          selectedVariant: variant,
-          quantity: item.quantity,
-        });
+      if (!exists) {
+        promises.push(
+          addToCart({
+            productId,
+            selectedVariant: variant,
+            quantity: item.quantity,
+          })
+        );
       }
     }
 
-    // 3️⃣ Add missing guest items to backend
-    await Promise.all(itemsToSync.map((item) => addToCart(item)));
-
-    // 4️⃣ Fetch updated backend cart and set in Redux
+    await Promise.all(promises);
     const finalRes = await getUserCart();
     dispatch(setCart({ items: finalRes.data.cartItems }));
   } catch (err) {
     console.error('🛠️ Cart sync error:', err);
+  }
+};
+
+// 📥 Used on re-login (refresh + token still valid)
+export const fetchBackendCart = () => async (dispatch) => {
+  try {
+    const response = await getUserCart();
+    dispatch(setCart({ items: response.data.cartItems }));
+  } catch (err) {
+    console.error('🛒 Failed to fetch backend cart:', err);
+  }
+};
+
+// ➕ Add to cart thunk
+export const addToCartThunk = (payload) => async (dispatch) => {
+  try {
+    const response = await addToCart(payload);
+    dispatch(mergeCart({ items: response.data.cartItems }));
+    return response.data;
+  } catch (err) {
+    console.error('🛒 Add to cart error:', err);
+    throw err;
   }
 };
