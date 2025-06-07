@@ -11,7 +11,7 @@ import {
   FaBoxOpen,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../../features/cartSlice"; // adjust path as needed
+import { addItem } from "../../features/cart/cartSlice"; // adjust path as needed
 
 import axios from "../../utils/Axios";
 

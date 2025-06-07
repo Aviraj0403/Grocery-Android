@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getMe, login as loginApi, logout as logoutApi } from "../services/authApi";
 import { useQueryClient } from "@tanstack/react-query";
-import { syncCartOnLogin } from '../features/cartThunks';
-import { clearCart } from '../features/cartSlice';
+import { syncCartOnLogin, fetchBackendCart } from '../features/cart/cartThunks';
+import { clearCart } from '../features/cart/cartSlice';
 import { useDispatch } from 'react-redux';
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -15,30 +16,37 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const validateSession = async () => {
       try {
-        const res = await getMe(); // Single point of truth
-        setUser(res.data.data);    // use .data if using { data: { ...user } } shape
+        const res = await getMe(); // Check token/session
+        setUser(res.data.data);
+
+        // ✅ On refresh or re-login, just fetch backend cart
+        dispatch(fetchBackendCart());
       } catch {
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
+
     validateSession();
-  }, []);
+  }, [dispatch]);
 
   const login = async (credentials) => {
     await loginApi(credentials);
-    const res = await getMe();  // immediately fetch user after login
+    const res = await getMe();
     setUser(res.data.data);
-     dispatch(syncCartOnLogin());
+
+    // ✅ On manual login, merge local guest cart
+    dispatch(syncCartOnLogin());
+
     return res.data.data;
   };
 
   const logout = async () => {
     await logoutApi();
-    dispatch(clearCart());
-    setUser(null);
-    queryClient.clear();
+    dispatch(clearCart());       // Clear cart from Redux
+    setUser(null);               // Clear user from context
+    queryClient.clear();         // Clear React Query cache
   };
 
   return (

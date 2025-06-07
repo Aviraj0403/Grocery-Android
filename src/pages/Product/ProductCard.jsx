@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addItem, removeItem } from "../../features/cartSlice";
+import { addItem, removeItem } from "../../features/cart/cartSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

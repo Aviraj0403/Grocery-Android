@@ -1,4 +1,4 @@
-import Axios from '../store/Axios';
+import Axios from '../utils/Axios';
 
 export const getAllOrders = async () => {
   const res = await Axios.get('/getAllOrders');

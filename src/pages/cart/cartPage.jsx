@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateItemQuantity,
   removeItem,
-} from "../../features/cartSlice"; // ✅ Updated actions
+} from "../../features/cart/cartSlice"; // ✅ Updated actions
 import { Link } from "react-router-dom";
 import CartItem from "./CartItem";
 import Skeleton from "react-loading-skeleton";

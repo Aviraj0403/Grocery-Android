@@ -1,29 +1,29 @@
-// src/store/Store.js
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
-import cartReducer from '../features/cartSlice';
-import authReducer from '../features/authSlice';
-// import productReducer from '../features/productSlice';
-import orderReducer from '../features/orderSlice';
-import categoryReducer from '../features/categorySlice';
-
+import authReducer from '../features/auth/authSlice';
+import cartReducer from '../features/cart/cartSlice';
+import productReducer from '../features/product/productSlice';
+import orderReducer from '../features/order/orderSlice';
+import categoryReducer from '../features/category/categorySlice';
+import addressReducer from '../features/address/addressSlice';
 const persistConfig = {
   key: 'root',
   storage,
   version: 1,
   stateReconciler: autoMergeLevel2,
-  whitelist: ['cart','auth'], // persist only cart for guest users
+  whitelist: ['auth', 'cart'],
 };
 
 const rootReducer = combineReducers({
-  auth: authReducer, 
+  auth: authReducer,
   cart: cartReducer,
-  // product: productReducer,
-  // order: orderReducer,
-  // category: categoryReducer,
+  products: productReducer,
+  orders: orderReducer,
+  categories: categoryReducer,
+  address: addressReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

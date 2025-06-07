@@ -51,6 +51,7 @@ import Gift from "./pages/ShopingSection/Moregift";
 import Moregift from "./pages/ShopingSection/Moregift";
 import Exploremore from "./pages/ShopingSection/Exploremore";
 import Arrivals from "./pages/ShopingSection/Arrivals";
+import CategoryPage from "./pages/category/CategoryPage";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -94,6 +95,7 @@ const router = createBrowserRouter([
           {path:"gift",element:<Moregift/>},
           {path:"expmore", element:<Exploremore/>},
           {path:"arrivals", element:<Arrivals/>},
+          {path:"/category/:categoryId", element:<CategoryPage/>},
           
 
 

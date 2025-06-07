@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { updateItemQuantity, removeItem } from '../../features/cartSlice';
+import { updateItemQuantity, removeItem } from '../../features/cart/cartSlice';
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
