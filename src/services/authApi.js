@@ -23,3 +23,11 @@ export const uploadAvatar = (formData) => Axios.post('/user/uploadAvatar', formD
 });
 export const getMe = () => Axios.get('/me');
 export const refreshToken = () => Axios.post('/auth/refresh-token');
+
+// ✅ New: Address management routes
+export const getAddress = () => Axios.get('/user/getaddresses');
+export const addAddress = (data) => Axios.post('/user/address', data);
+export const updateAddress = (id, data) => Axios.patch(`/user/address/${id}`, data);
+export const deleteAddress = (id) => Axios.delete(`/user/address/${id}`);
+export const setDefaultAddress = (id) =>
+  Axios.patch(`/user/address/${id}/set-default`);

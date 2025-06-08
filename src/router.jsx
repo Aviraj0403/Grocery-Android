@@ -12,7 +12,7 @@ import Address from "./pages/Address";
 
 // Layouts
 import Layout from "./Layout";
-import UserDashboard from "./pages/users/UserDashboard"; // 🆕 User Dashboard Layout
+import Dashboard from "./pages/users/Dashboard"; // 🆕 User Dashboard Layout
 
 // Admin
 import {
@@ -102,7 +102,7 @@ const router = createBrowserRouter([
           // 🆕 User Dashboard with nested routes
           {
             path: "dashboard/profile",
-            element: <UserDashboard />,
+            element: <Dashboard />,
             children: [
               // { path: "profile", element: <Profile /> },
               // { path: "orders", element: <Myorder /> },
