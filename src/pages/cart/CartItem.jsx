@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useCartActions } from "../../hooks/useCartActions"; // Adjust path if needed
+import { Link } from "react-router-dom";
 
 const CartItem = ({ item }) => {
   const { debouncedUpdateQuantity, removeItem } = useCartActions();
@@ -39,13 +40,16 @@ const CartItem = ({ item }) => {
   return (
     <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
       {/* Product Image */}
-      <div className="w-20 h-20 rounded border overflow-hidden flex-shrink-0">
+      <Link
+        to={`/product/${item.id}`}
+        className="w-20 h-20 rounded border overflow-hidden flex-shrink-0"
+      >
         <img
           src={image}
           alt={item.name || "Product"}
           className="w-full h-full object-cover"
         />
-      </div>
+      </Link>
 
       {/* Product Details */}
       <div className="flex-1 min-w-[150px]">

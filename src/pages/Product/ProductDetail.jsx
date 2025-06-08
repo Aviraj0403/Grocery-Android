@@ -378,30 +378,37 @@ const ProductDetail = () => {
       </div>
 
       {/* --- Related Products Section --- */}
-      <div>
-        <h2 className="text-2xl font-bold mb-6">Related Products</h2>
-        {relatedProducts.length === 0 && (
-          <p className="text-gray-600">No related products found.</p>
+      
+      <section aria-label="Related products">
+        <h2 className="text-2xl font-extrabold mb-4">You may also like</h2>
+        {relatedProducts.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            {relatedProducts.map((prod) => (
+              <Link
+                key={prod._id}
+                to={`/product/${prod._id}`}
+                className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center focus:outline-green-500 focus:ring-2 focus:ring-green-600"
+              >
+                <img
+                  src={prod.images?.[0] || "/images/placeholder.png"}
+                  alt={prod.name}
+                  className="h-28 w-full object-contain mb-3"
+                />
+                <h3 className="text-sm font-semibold text-gray-800 truncate w-full text-center">
+                  {prod.name}
+                </h3>
+                <p className="text-xs text-gray-500 capitalize">{prod.brand}</p>
+                <p className="text-green-700 font-semibold text-sm mt-1">
+                  ₹{prod.variants[0]?.price || "N/A"}
+                </p>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p>No suggestions available.</p>
         )}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-          {relatedProducts.map((rp) => (
-            <Link
-              key={rp._id}
-              to={`/products/${rp._id}`}
-              className="border rounded p-3 flex flex-col items-center hover:shadow-lg transition"
-            >
-              <img
-                src={rp.images?.[0] || "/images/placeholder.png"}
-                alt={rp.name}
-                className="w-full h-40 object-contain mb-2"
-              />
-              <p className="text-center font-semibold">{rp.name}</p>
-              <p className="text-green-700 font-bold">₹{rp.variants?.[0]?.price || "N/A"}</p>
-            </Link>
-          ))}
-        </div>
+      </section>
       </div>
-    </div>
   );
 };
 
