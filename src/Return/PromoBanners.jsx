@@ -1,0 +1,93 @@
+import React from "react";
+import { Slide, Zoom } from "react-awesome-reveal";
+import { Link, useNavigate } from "react-router-dom";
+import adbanner from "../assets/dio1.png";
+import adbanner1 from "../assets/skin4.png";
+import adbanner2 from "../assets/tea1.png";
+
+const banners = [
+  {
+    id: 1,
+    bgColor: "bg-orange-200",
+    title: "Get discount on Body Spray & Deodrant's",
+    cashback: "Max cashback: 2%",
+    code: "CARE02",
+    link: "deo",
+    img: adbanner,
+    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(255,115,0,0.6)]", // orange
+  },
+  {
+    id: 2,
+    bgColor: "bg-yellow-200",
+    title: "Get discount on Body & Skin Care",
+    cashback: "Max cashback: 2%",
+    code: "CARE02",
+    link: "cleaning",
+    img: adbanner1,
+    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(234,179,8,0.6)]", // yellow
+  },
+  {
+    id: 3,
+    bgColor: "bg-green-200",
+    title: "2% cashback on Tea, Coffee & Drinks",
+    cashback: "Max cashback: 40",
+    code: "CARE12",
+    link: "Coofe",
+    img: adbanner2,
+    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(34,197,94,0.6)]", // green
+  },
+];
+
+const PromoBanners = () => {
+  const navigate = useNavigate();
+
+  return (
+    <section className="px-4 max-w-7xl mx-auto py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {banners.map((banner, index) => {
+          const Wrapper = index < 2 ? Zoom : Slide;
+          const direction = index < 2 ? undefined : "right";
+
+          return (
+            <Wrapper key={banner.id} {...(direction ? { direction } : {})}>
+              <div
+                className={`relative ${banner.bgColor} rounded-xl shadow-lg overflow-hidden w-full flex flex-row items-stretch transition-all duration-500 ${banner.hoverShadow} hover:scale-[1.02]`}
+              >
+                {/* Text Content */}
+                <div className="w-1/2 p-5 flex flex-col justify-center items-start text-left">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2 leading-snug">
+                    {banner.title}
+                  </h3>
+                  <p className="text-sm text-gray-700 mb-1 font-semibold">
+                    {banner.cashback}
+                  </p>
+                  <p className="text-sm text-gray-700 mb-4">
+                    Code: <span className="font-semibold text-black">{banner.code}</span>
+                  </p>
+                  <Link
+                    to="#"
+                    onClick={() => navigate(banner.link)}
+                    className="bg-slate-700 text-white px-4 py-2 rounded hover:bg-white hover:text-orange-300 transition-all duration-700"
+                  >
+                    Shop Now
+                  </Link>
+                </div>
+
+                {/* Image Section */}
+                <div className="w-1/2 h-48 sm:h-60 lg:h-auto">
+                  <img
+                    src={banner.img}
+                    alt={`ad-banner-${banner.id}`}
+                    className="w-full h-full object-contain rounded-r-xl"
+                  />
+                </div>
+              </div>
+            </Wrapper>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+
+export default PromoBanners;
