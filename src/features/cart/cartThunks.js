@@ -83,12 +83,13 @@ export const fetchBackendCart = createAsyncThunk(
  * Note: backend expects full selectedVariant object here
  */
 export const addToCartThunk = createAsyncThunk(
-  'cart/addToCart',
+  "cart/addToCart",
   async (item, { dispatch }) => {
     try {
+      // Use productId from item (not id)
       const payload = {
-        productId: item.id,
-        selectedVariant: item.selectedVariant,  // full variant object here
+        productId: item.productId,  // fix here!
+        selectedVariant: item.selectedVariant,
         quantity: item.quantity,
       };
 
@@ -96,11 +97,12 @@ export const addToCartThunk = createAsyncThunk(
       dispatch(mergeCart({ items: res.data.cartItems }));
       return res.data;
     } catch (err) {
-      console.error('❌ Add to cart failed:', err);
+      console.error("❌ Add to cart failed:", err);
       throw err;
     }
   }
 );
+
 
 /**
  * ➖ Remove item from backend + Redux

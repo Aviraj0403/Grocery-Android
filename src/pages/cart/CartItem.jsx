@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
-import {
-  updateCartItemThunk,
-  removeFromCartThunk,
-} from "../../features/cart/cartThunks";
-import debounce from "lodash.debounce";
+import React, { useState, useEffect } from "react";
+import { useCartActions } from "../../hooks/useCartActions"; // Adjust path if needed
 
 const CartItem = ({ item }) => {
-  const dispatch = useDispatch();
+  const { debouncedUpdateQuantity, removeItem } = useCartActions();
+
   const variant = item.selectedVariant || {};
   const variantId = variant.id || variant.unit;
   const image =
@@ -16,20 +12,6 @@ const CartItem = ({ item }) => {
 
   const [localQty, setLocalQty] = useState(item.quantity);
 
-  const debouncedUpdate = useCallback(
-    debounce((qty) => {
-      if (qty < 1) return;
-      dispatch(
-        updateCartItemThunk({
-          id: item.id,
-          selectedVariant: variant,
-          quantity: qty,
-        })
-      );
-    }, 400),
-    [dispatch, item.id, variant]
-  );
-
   useEffect(() => {
     setLocalQty(item.quantity);
   }, [item.quantity]);
@@ -37,21 +19,21 @@ const CartItem = ({ item }) => {
   const increaseQty = () => {
     const newQty = localQty + 1;
     setLocalQty(newQty);
-    debouncedUpdate(newQty);
+    debouncedUpdateQuantity(item.id, variant, newQty);
   };
 
   const decreaseQty = () => {
     if (localQty > 1) {
       const newQty = localQty - 1;
       setLocalQty(newQty);
-      debouncedUpdate(newQty);
+      debouncedUpdateQuantity(item.id, variant, newQty);
     } else {
-      dispatch(removeFromCartThunk({ id: item.id, variantId }));
+      removeItem(item.id, variantId);
     }
   };
 
-  const removeItem = () => {
-    dispatch(removeFromCartThunk({ id: item.id, variantId }));
+  const handleRemove = () => {
+    removeItem(item.id, variantId);
   };
 
   return (
@@ -60,7 +42,7 @@ const CartItem = ({ item }) => {
       <div className="w-20 h-20 rounded border overflow-hidden flex-shrink-0">
         <img
           src={image}
-          alt={item.name || item.product?.name || "Product"}
+          alt={item.name || "Product"}
           className="w-full h-full object-cover"
         />
       </div>
@@ -68,7 +50,7 @@ const CartItem = ({ item }) => {
       {/* Product Details */}
       <div className="flex-1 min-w-[150px]">
         <h3 className="text-sm font-semibold text-gray-900 truncate">
-          {item.name || item.product?.name}
+          {item.name}
         </h3>
         <p className="text-xs text-gray-500">{variant.unit}</p>
         <p className="mt-1 text-green-700 font-semibold text-sm">
@@ -102,7 +84,7 @@ const CartItem = ({ item }) => {
 
       {/* Remove Button */}
       <button
-        onClick={removeItem}
+        onClick={handleRemove}
         className="text-red-500 hover:text-red-700 ml-auto sm:ml-2"
         aria-label="Remove item"
         title="Remove item"

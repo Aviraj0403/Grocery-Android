@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addItem, removeItem } from "../../features/cart/cartSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useCartActions } from "../../hooks/useCartActions";
+import { useAuth } from "../../context/AuthContext"; // ✅ Import useAuth
 
 const ProductCard = ({ product }) => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [imgError, setImgError] = useState(false);
 
@@ -14,57 +14,52 @@ const ProductCard = ({ product }) => {
 
   if (!product || !hasVariants) return null;
 
-  const [selectedVariant, setSelectedVariant] = useState(product.activeVariant || defaultVariant.unit);
-  const [quantity, setQuantity] = useState(0);
+  const [selectedVariant, setSelectedVariant] = useState(
+    product.activeVariant || defaultVariant.unit
+  );
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const activeVariant =
-    product.variants.find((v) => v.unit === selectedVariant) || defaultVariant;
+  const activeVariant = product.variants.find((v) => v.unit === selectedVariant) || defaultVariant;
+
+  const { addOrUpdateItem, removeItem } = useCartActions();
+  const { cartSyncing } = useAuth(); // ✅ Destructure from context
+
+  const cartItems = useSelector((state) => state.cart.items);
+
+  const getCartQuantity = (productId, unit) => {
+    const item = cartItems.find(
+      (i) => i.id === productId && i.selectedVariant.unit === unit
+    );
+    return item?.quantity || 0;
+  };
+
+  const quantity = getCartQuantity(product._id, selectedVariant);
 
   const handleCardClick = () => navigate(`/product/${product._id}`);
 
-  const handleVariantSelect = (unit) => {
-    setSelectedVariant(unit);
-    setQuantity(0);
-  };
+  const handleVariantSelect = (unit) => setSelectedVariant(unit);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (activeVariant.stockQty <= quantity) {
       toast.error("Stock limit reached");
       return;
     }
 
     setIsProcessing(true);
-    dispatch(
-      addItem({
-        product,
-        selectedVariant: {
-          id: activeVariant.id || activeVariant.unit,
-          unit: activeVariant.unit,
-          price: activeVariant.price,
-          packaging: activeVariant.packaging,
-          stockQty: activeVariant.stockQty,
-        },
-        quantity: 1,
-      })
-    );
-    setQuantity((q) => q + 1);
+    const result = await addOrUpdateItem(product, activeVariant, 1);
+    if (!result.success) toast.error(result.message || "Failed to add item");
     setIsProcessing(false);
   };
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
     if (quantity <= 0) return;
 
     setIsProcessing(true);
-    dispatch(
-      removeItem({
-        productId: product._id,
-        variantUnit: activeVariant.unit,
-      })
-    );
-    setQuantity((q) => q - 1);
+    await removeItem(product._id, activeVariant.unit);
     setIsProcessing(false);
   };
+
+  const isDisabled = isProcessing || cartSyncing;
 
   return (
     <div className="bg-white rounded-xl shadow hover:shadow-lg transition p-4 relative">
@@ -76,12 +71,11 @@ const ProductCard = ({ product }) => {
           alt={product.name}
           className="h-36 object-contain mx-auto mb-3 rounded"
         />
-
         <h3 className="text-sm font-semibold text-gray-800 truncate">{product.name}</h3>
         <p className="text-xs text-gray-500 mb-2">{product.brand}</p>
       </div>
 
-      {/* Variant selector (Blinkit style) */}
+      {/* Variant selector */}
       <div className="flex flex-wrap gap-2 mb-2">
         {product.variants.map((v) => (
           <button
@@ -101,7 +95,6 @@ const ProductCard = ({ product }) => {
       {/* Price + Discount */}
       <div className="flex items-center justify-between text-sm mb-2">
         <span className="text-green-700 font-bold">₹{activeVariant.price}</span>
-
         {product.discount > 0 && (
           <div className="flex items-center gap-1">
             <span className="text-xs line-through text-gray-400">
@@ -127,15 +120,16 @@ const ProductCard = ({ product }) => {
       {quantity === 0 ? (
         <button
           onClick={handleAdd}
-          disabled={isProcessing || activeVariant.stockQty === 0}
+          disabled={isDisabled || activeVariant.stockQty === 0}
           className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
         >
-          Add
+          {cartSyncing ? "Syncing..." : "Add"}
         </button>
       ) : (
         <div className="flex justify-between items-center border border-green-600 rounded">
           <button
             onClick={handleRemove}
+            disabled={isDisabled}
             className="w-1/3 text-xl font-bold py-1 text-green-600 hover:bg-green-100"
           >
             –
@@ -143,6 +137,7 @@ const ProductCard = ({ product }) => {
           <span className="w-1/3 text-center font-medium">{quantity}</span>
           <button
             onClick={handleAdd}
+            disabled={isDisabled}
             className="w-1/3 text-xl font-bold py-1 text-green-600 hover:bg-green-100"
           >
             +

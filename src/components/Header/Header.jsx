@@ -5,9 +5,10 @@ import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
   const location = useLocation();
-  const { user, logout } = useAuth(); // Now also get logout function
-  const { items = [] } = useSelector((state) => state.cart || {});
+  const { user, logout } = useAuth();
 
+  const items = useSelector((state) => state.cart.items || []);
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
   const isDashboard = location.pathname.startsWith('/dashboard');
 
   return (
@@ -36,9 +37,9 @@ const Header = () => {
           {/* Cart */}
           <Link to="/dashboard/cart" className="relative text-green-600 hover:text-green-700">
             <FaShoppingCart size={30} />
-            {items.length > 0 && (
+            {totalQuantity > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
-                {items.length}
+                {totalQuantity}
               </span>
             )}
           </Link>

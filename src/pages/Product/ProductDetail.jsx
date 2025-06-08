@@ -10,16 +10,13 @@ import {
   FaClock,
   FaBoxOpen,
 } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../../features/cart/cartSlice"; // adjust path as needed
-
+// import { addItem } from "../../features/cart/cartSlice"; // no longer needed
 import axios from "../../utils/Axios";
+import { useCartActions } from "../../hooks/useCartActions"; // NEW
 
 const tabs = ["Description", "Variants", "Reviews"];
 
-
 const ProductDetail = () => {
-  const dispatch = useDispatch();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -28,8 +25,14 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState("Variants");
   const [quantity, setQuantity] = useState(1);
   const [activeVariantUnit, setActiveVariantUnit] = useState(null);
-  const cartItems = useSelector((state) => state.cart.items);
 
+  // Use your custom cart hook to handle cart actions
+  const {
+    addOrUpdateItem,
+    loading: cartLoading,
+    error: cartError,
+    cartItems,
+  } = useCartActions();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -81,10 +84,8 @@ const ProductDetail = () => {
   const renderStars = (rating) =>
     Array.from({ length: 5 }).map((_, i) => {
       const index = i + 1;
-      if (rating >= index)
-        return <FaStar key={i} className="text-yellow-400" />;
-      if (rating >= index - 0.5)
-        return <FaStarHalfAlt key={i} className="text-yellow-400" />;
+      if (rating >= index) return <FaStar key={i} className="text-yellow-400" />;
+      if (rating >= index - 0.5) return <FaStarHalfAlt key={i} className="text-yellow-400" />;
       return <FaRegStar key={i} className="text-yellow-400" />;
     });
 
@@ -107,6 +108,35 @@ const ProductDetail = () => {
     product.discount > 0
       ? (activeVariant.price / (1 - product.discount / 100)).toFixed(0)
       : null;
+
+  // Handle add to cart click
+  const handleAddToCart = async () => {
+    const existingItem = cartItems.find(
+      (item) =>
+        item.id === product._id &&
+        item.selectedVariant.unit === activeVariant.unit
+    );
+
+    const newQuantity = existingItem ? existingItem.quantity + quantity : quantity;
+
+    if (newQuantity > activeVariant.stockQty) {
+      toast.error("Cannot add more than available stock.");
+      return;
+    }
+
+    const result = await addOrUpdateItem(product, activeVariant, quantity);
+
+    if (result.success) {
+      toast.success(
+        existingItem
+          ? `Updated ${product.name} quantity to ${newQuantity}`
+          : `${quantity} ${product.name} added to cart`
+      );
+    } else {
+      toast.error(result.message || "Failed to add item to cart.");
+    }
+  };
+
 
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
@@ -230,53 +260,18 @@ const ProductDetail = () => {
             )}
 
             <button
-              className={`flex items-center justify-center gap-2 mt-6 w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition ${activeVariant.stockQty === 0 ? "opacity-50 cursor-not-allowed" : ""
+              className={`flex items-center justify-center gap-2 mt-6 w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition ${activeVariant.stockQty === 0 || cartLoading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-              disabled={activeVariant.stockQty === 0}
-              onClick={() => {
-                const existingItem = cartItems.find(
-                  (item) =>
-                    item.id === product._id &&
-                    item.selectedVariant.unit === activeVariant.unit
-                );
-
-                const newQuantity = existingItem
-                  ? existingItem.quantity + quantity
-                  : quantity;
-
-                if (newQuantity > activeVariant.stockQty) {
-                  toast.error("Cannot add more than available stock.");
-                  return;
-                }
-
-                const cartItem = {
-                  id: product._id,
-                  name: product.name,
-                  image: images[0],
-                  selectedVariant: activeVariant,
-                  quantity,
-                  brand: product.brand,
-                };
-
-                dispatch(addItem(cartItem));
-
-                toast.success(
-                  existingItem
-                    ? `Updated ${product.name} quantity to ${newQuantity}`
-                    : `${quantity} ${product.name} added to cart`
-                );
-              }}
-              
-
+              disabled={activeVariant.stockQty === 0 || cartLoading}
+              onClick={handleAddToCart}
             >
-              <FaShoppingCart /> Add to Cart
+              <FaShoppingCart /> {cartLoading ? "Adding..." : "Add to Cart"}
             </button>
-
           </div>
         </div>
       </div>
 
-      {/* --- Tabs Section (without Suggestions) --- */}
+      {/* --- Tabs Section --- */}
       <div className="bg-white rounded-xl shadow-md p-6 mb-8">
         {/* Tabs Header */}
         <nav className="flex border-b border-gray-200 mb-6 overflow-x-auto" aria-label="Product detail tabs">
@@ -285,8 +280,8 @@ const ProductDetail = () => {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`py-3 px-6 whitespace-nowrap font-semibold border-b-4 transition ${activeTab === tab
-                ? "border-green-600 text-green-700"
-                : "border-transparent text-gray-600 hover:text-green-600"
+                  ? "border-green-600 text-green-700"
+                  : "border-transparent text-gray-600 hover:text-green-600"
                 }`}
               role="tab"
               aria-selected={activeTab === tab}
@@ -346,21 +341,26 @@ const ProductDetail = () => {
                     <th className="border border-gray-300 px-3 py-2">Price (₹)</th>
                     <th className="border border-gray-300 px-3 py-2">Stock Qty</th>
                     <th className="border border-gray-300 px-3 py-2">Packaging</th>
+                    <th className="border border-gray-300 px-3 py-2">Expiry Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {product.variants.map((v) => (
+                  {product.variants.map((variant) => (
                     <tr
-                      key={v.unit}
-                      onClick={() => setActiveVariantUnit(v.unit)}
-                      className={`cursor-pointer hover:bg-green-50 ${v.unit === activeVariantUnit ? "bg-green-200 font-semibold" : ""
+                      key={variant.unit}
+                      className={`cursor-pointer ${variant.unit === activeVariantUnit
+                          ? "bg-green-50 font-semibold"
+                          : "hover:bg-gray-50"
                         }`}
-                      title="Click to select this variant"
+                      onClick={() => setActiveVariantUnit(variant.unit)}
                     >
-                      <td className="border border-gray-300 px-3 py-2">{v.unit || "N/A"}</td>
-                      <td className="border border-gray-300 px-3 py-2">₹{v.price}</td>
-                      <td className="border border-gray-300 px-3 py-2">{v.stockQty}</td>
-                      <td className="border border-gray-300 px-3 py-2">{v.packaging || "N/A"}</td>
+                      <td className="border border-gray-300 px-3 py-2">{variant.unit}</td>
+                      <td className="border border-gray-300 px-3 py-2">₹{variant.price}</td>
+                      <td className="border border-gray-300 px-3 py-2">{variant.stockQty}</td>
+                      <td className="border border-gray-300 px-3 py-2">{variant.packaging || "-"}</td>
+                      <td className="border border-gray-300 px-3 py-2">
+                        {variant.expiryDate ? new Date(variant.expiryDate).toLocaleDateString() : "-"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -369,54 +369,38 @@ const ProductDetail = () => {
           )}
 
           {activeTab === "Reviews" && (
-            <div className="space-y-6">
-              {product.reviewCount > 0 ? (
-                <>
-                  <div className="flex items-center gap-3 text-yellow-400">
-                    {renderStars(product.rating)}
-                    <span className="text-gray-600 text-lg">({product.reviewCount} reviews)</span>
-                  </div>
-                  {/* Placeholder for actual review content */}
-                  <p className="italic text-gray-500">Reviews content not implemented.</p>
-                </>
-              ) : (
-                <p>No reviews yet for this product.</p>
-              )}
+            <div>
+              {/* You can add review rendering and submission here */}
+              <p>No reviews available yet.</p>
             </div>
           )}
         </section>
       </div>
 
-      {/* --- Suggestions (Always visible) --- */}
-      <section aria-label="Related products">
-        <h2 className="text-2xl font-extrabold mb-4">You may also like</h2>
-        {relatedProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {relatedProducts.map((prod) => (
-              <Link
-                key={prod._id}
-                to={`/product/${prod._id}`}
-                className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center focus:outline-green-500 focus:ring-2 focus:ring-green-600"
-              >
-                <img
-                  src={prod.images?.[0] || "/images/placeholder.png"}
-                  alt={prod.name}
-                  className="h-28 w-full object-contain mb-3"
-                />
-                <h3 className="text-sm font-semibold text-gray-800 truncate w-full text-center">
-                  {prod.name}
-                </h3>
-                <p className="text-xs text-gray-500 capitalize">{prod.brand}</p>
-                <p className="text-green-700 font-semibold text-sm mt-1">
-                  ₹{prod.variants[0]?.price || "N/A"}
-                </p>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <p>No suggestions available.</p>
+      {/* --- Related Products Section --- */}
+      <div>
+        <h2 className="text-2xl font-bold mb-6">Related Products</h2>
+        {relatedProducts.length === 0 && (
+          <p className="text-gray-600">No related products found.</p>
         )}
-      </section>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          {relatedProducts.map((rp) => (
+            <Link
+              key={rp._id}
+              to={`/products/${rp._id}`}
+              className="border rounded p-3 flex flex-col items-center hover:shadow-lg transition"
+            >
+              <img
+                src={rp.images?.[0] || "/images/placeholder.png"}
+                alt={rp.name}
+                className="w-full h-40 object-contain mb-2"
+              />
+              <p className="text-center font-semibold">{rp.name}</p>
+              <p className="text-green-700 font-bold">₹{rp.variants?.[0]?.price || "N/A"}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
