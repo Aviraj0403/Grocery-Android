@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import brush1 from "../../assets/Tooth2.png";
 
 const products = [
-  // Toothpaste
+  // ... [Same products list as before] ...
   {
     id: 1,
     category: "Toothpaste",
@@ -40,21 +41,19 @@ const products = [
     price: "₹60",
     image: "https://www.bigbasket.com/media/uploads/p/l/1201414_3-dabur-red-toothpaste.jpg",
   },
-
-  // Toothbrush
   {
     id: 6,
     category: "Toothbrush",
     name: "Colgate Slim Soft",
     price: "₹30",
-    image: "https://www.bigbasket.com/media/uploads/p/l/40071613_2-colgate-toothbrush-slim-soft.jpg",
+    image: brush1,
   },
   {
     id: 7,
     category: "Toothbrush",
     name: "Oral-B All Rounder",
     price: "₹25",
-    image: "https://www.bigbasket.com/media/uploads/p/l/261831_6-oral-b-toothbrush-all-rounder.jpg",
+    image: brush1,
   },
   {
     id: 8,
@@ -77,197 +76,205 @@ const products = [
     price: "₹20",
     image: "https://www.bigbasket.com/media/uploads/p/l/40071457_3-dabur-herbal-toothbrush.jpg",
   },
-
-  // Home Cleaning Essentials
-{
-  id: 11,
-  category: "Home Cleaning",
-  name: "Lizol Disinfectant Surface Cleaner",
-  price: "₹99",
-  image: "https://www.bigbasket.com/media/uploads/p/l/10000395_15-lizol-disinfectant-surface-cleaner.jpg",
-},
-{
-  id: 12,
-  category: "Home Cleaning",
-  name: "Harpic Toilet Cleaner",
-  price: "₹85",
-  image: "https://www.bigbasket.com/media/uploads/p/l/241580_10-harpic-toilet-cleaner.jpg",
-},
-{
-  id: 13,
-  category: "Home Cleaning",
-  name: "Vim Dishwash Gel",
-  price: "₹95",
-  image: "https://www.bigbasket.com/media/uploads/p/l/40004944_9-vim-dishwash-gel-lemon.jpg",
-},
-{
-  id: 14,
-  category: "Home Cleaning",
-  name: "Dettol Antiseptic Liquid",
-  price: "₹115",
-  image: "https://www.bigbasket.com/media/uploads/p/l/221124_15-dettol-antiseptic-liquid.jpg",
-},
-{
-  id: 15,
-  category: "Home Cleaning",
-  name: "Scotch-Brite Scrub Pad",
-  price: "₹30",
-  image: "https://www.bigbasket.com/media/uploads/p/l/40075382_4-scotch-brite-scrub-pad.jpg",
-},
-
+  {
+    id: 11,
+    category: "Home Cleaning",
+    name: "Lizol Disinfectant Surface Cleaner",
+    price: "₹99",
+    image: "https://www.bigbasket.com/media/uploads/p/l/10000395_15-lizol-disinfectant-surface-cleaner.jpg",
+  },
+  {
+    id: 12,
+    category: "Home Cleaning",
+    name: "Harpic Toilet Cleaner",
+    price: "₹85",
+    image: "https://www.bigbasket.com/media/uploads/p/l/241580_10-harpic-toilet-cleaner.jpg",
+  },
+  {
+    id: 13,
+    category: "Home Cleaning",
+    name: "Vim Dishwash Gel",
+    price: "₹95",
+    image: "https://www.bigbasket.com/media/uploads/p/l/40004944_9-vim-dishwash-gel-lemon.jpg",
+  },
+  {
+    id: 14,
+    category: "Home Cleaning",
+    name: "Dettol Antiseptic Liquid",
+    price: "₹115",
+    image: "https://www.bigbasket.com/media/uploads/p/l/221124_15-dettol-antiseptic-liquid.jpg",
+  },
+  {
+    id: 15,
+    category: "Home Cleaning",
+    name: "Scotch-Brite Scrub Pad",
+    price: "₹30",
+    image: "https://www.bigbasket.com/media/uploads/p/l/40075382_4-scotch-brite-scrub-pad.jpg",
+  },
 ];
 
-const ITEMS_PER_PAGE = 4;
+const ITEMS_PER_PAGE = 8;
 
 const Toothpaste = () => {
   const [wishlist, setWishlist] = useState([]);
-  const [currentPage, setCurrentPage] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleWishlistToggle = (product) => {
-    setWishlist((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
-      return exists ? prev.filter((item) => item.id !== product.id) : [...prev, product];
-    });
+    setWishlist((prev) =>
+      prev.some((item) => item.id === product.id)
+        ? prev.filter((item) => item.id !== product.id)
+        : [...prev, product]
+    );
   };
 
-  const handlePageChange = (category, newPage) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setCurrentPage((prev) => ({
-        ...prev,
-        [category]: newPage,
-      }));
-      setIsLoading(false);
-    }, 500); // Simulated loading time
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
-  const grouped = products.reduce((acc, item) => {
-    acc[item.category] = [...(acc[item.category] || []), item];
-    return acc;
-  }, {});
+  const categories = ["All", ...new Set(products.map((p) => p.category))];
+
+  const filteredProducts = products
+    .filter((p) => selectedCategory === "All" || p.category === selectedCategory)
+    .filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  const paginatedItems = filteredProducts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
   return (
-    <>
-      <marquee className="text-sm text-white bg-orange-400 py-2 font-semibold tracking-wide">
-        🎉 Get Tootpaste Brushes and Home Cleaning Essintails 🎉
-      </marquee>
-      <div className="p-4 bg-green-50 min-h-screen">
-        <Link to={"/"}>
-          <h2 className="text-2xl font-bold text-orange-500 mb-4">
-            Toothpaste & Home Cleaning
-          </h2>
-        </Link>
+    <div className="p-4 bg-gradient-to-br from-green-50 to-yellow-50 min-h-screen">
+      <Link to="/" className="block text-center">
+        <h2 className="text-4xl font-extrabold text-orange-600 mb-6 underline underline-offset-4">
+          Oral & Home Care Products
+        </h2>
+      </Link>
 
-        {Object.entries(grouped).map(([category, items]) => {
-          const page = currentPage[category] || 1;
-          const startIndex = (page - 1) * ITEMS_PER_PAGE;
-          const paginatedItems = items.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-          const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+      {/* Category Buttons */}
+      <div className="flex flex-wrap justify-center gap-2 mb-6">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            className={`px-4 py-1 rounded-full font-medium border ${
+              selectedCategory === cat
+                ? "bg-orange-500 text-white border-orange-500"
+                : "bg-white text-gray-700 border-gray-300 hover:border-orange-400"
+            }`}
+            onClick={() => {
+              setSelectedCategory(cat);
+              setCurrentPage(1);
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Search Input */}
+      <div className="mb-6 text-center">
+        <input
+          type="text"
+          placeholder="Search product name..."
+          className="px-4 py-2 w-72 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-400"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
+
+      {/* Product Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+        {paginatedItems.map((product) => {
+          const isWishlisted = wishlist.some((item) => item.id === product.id);
 
           return (
-            <div key={category} className="mb-8">
-              <h3 className="text-xl font-semibold text-orange-500 mb-2">{category}</h3>
+            <motion.div
+              key={product.id}
+              className="relative bg-white rounded-2xl shadow-lg p-4 hover:shadow-2xl transition-all"
+              whileHover={{ scale: 1.02 }}
+            >
+              <button
+                onClick={() => handleWishlistToggle(product)}
+                className={`absolute top-2 right-2 text-xl z-10 ${
+                  isWishlisted ? "text-red-500" : "text-gray-400 hover:text-red-500"
+                }`}
+              >
+                {isWishlisted ? <FaHeart /> : <FaRegHeart />}
+              </button>
 
-              {isLoading ? (
-                <div className="flex justify-center items-center h-32">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-orange-500 border-solid" />
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {paginatedItems.map((product) => {
-                    const isWishlisted = wishlist.some((item) => item.id === product.id);
-
-                    return (
-                      <motion.div
-                        key={product.id}
-                        className="relative bg-white rounded-xl shadow-md p-3 hover:shadow-lg transition"
-                        whileHover={{ scale: 1.03 }}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <motion.button
-                          onClick={() => handleWishlistToggle(product)}
-                          whileTap={{ scale: 1.3 }}
-                          className={`absolute top-2 right-2 text-xl ${
-                            isWishlisted ? "text-red-500" : "text-gray-400 hover:text-red-500"
-                          }`}
-                        >
-                          {isWishlisted ? <FaHeart /> : <FaRegHeart />}
-                        </motion.button>
-
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-32 object-contain mb-2"
-                        />
-                        <h4 className="text-md font-semibold">{product.name}</h4>
-                        <p className="text-sm text-gray-600">{product.price}</p>
-                        <button className="mt-2 w-full bg-orange-400 text-white py-1 px-2 rounded hover:bg-orange-600">
-                          Add to Cart
-                        </button>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Pagination Controls */}
-              <div className="flex justify-center mt-4 gap-2">
-                <button
-                  disabled={page === 1 || isLoading}
-                  onClick={() => handlePageChange(category, page - 1)}
-                  className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-                >
-                  Prev
-                </button>
-                <span className="text-sm text-gray-700 mt-1">
-                  Page {page} of {totalPages}
-                </span>
-                <button
-                  disabled={page === totalPages || isLoading}
-                  onClick={() => handlePageChange(category, page + 1)}
-                  className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-32 object-contain mb-3"
+              />
+              <h4 className="text-md font-semibold">{product.name}</h4>
+              <p className="text-sm text-gray-600">{product.price}</p>
+              <button className="mt-3 w-full bg-orange-500 text-white py-1.5 rounded-xl hover:bg-orange-600 font-semibold transition-all">
+                Add to Cart
+              </button>
+            </motion.div>
           );
         })}
-
-        {/* Wishlist Section */}
-        {wishlist.length > 0 && (
-          <div className="mt-10">
-            <h3 className="text-xl font-bold text-red-600 mb-4">Your Wishlist</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <AnimatePresence>
-                {wishlist.map((item) => (
-                  <motion.div
-                    key={item.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-white rounded-xl shadow p-3"
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-32 object-contain mb-2"
-                    />
-                    <h4 className="text-md font-semibold">{item.name}</h4>
-                    <p className="text-sm text-gray-600">{item.price}</p>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
-        )}
       </div>
-    </>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-6 gap-3">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
+          >
+            ⬅ Prev
+          </button>
+          <span className="text-sm mt-1 text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
+          >
+            Next ➡
+          </button>
+        </div>
+      )}
+
+      {/* Wishlist Section */}
+      {wishlist.length > 0 && (
+        <div className="mt-12">
+          <h3 className="text-2xl font-bold text-red-600 mb-6">❤️ Your Wishlist</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+            <AnimatePresence>
+              {wishlist.map((item) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white rounded-xl shadow-md p-3"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-32 object-contain mb-2"
+                  />
+                  <h4 className="text-md font-semibold">{item.name}</h4>
+                  <p className="text-sm text-gray-600">{item.price}</p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
