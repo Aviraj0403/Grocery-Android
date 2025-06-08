@@ -7,7 +7,7 @@ import { Slide, Zoom } from "react-awesome-reveal";
 // import abouticon from "../assets/about.svg";
 import aboutImage from "../../assets/about.svg";
 import adbanner from "../../assets/dio1.png";
-import adbanner1 from "../../assets/Skin4.png";
+import adbanner1 from "../../assets/skin4.png";
 import adbanner2 from "../../assets/coffe1.png";
 
 // import { Zoom } from "react-toastify";
