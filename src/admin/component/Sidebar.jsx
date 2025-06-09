@@ -48,7 +48,7 @@ function Sidebar({ className, toggleSidebar }) {
 
         {/* PROMOTIONS */}
         <NavSection title="Promotions">
-          <NavItem to="coupons" label="Coupons" icon={<FaTags size={20} />} onClick={toggleSidebar} />
+          {/* <NavItem to="coupons" label="Coupons" icon={<FaTags size={20} />} onClick={toggleSidebar} /> */}
           <NavItem to="offers" label="Offers & Deals" icon={<FaTags size={20} />} onClick={toggleSidebar} />
         </NavSection>
 

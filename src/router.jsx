@@ -25,6 +25,7 @@ import {
   CategoryManager,
   UserList,
   AdminOrderManager,
+  OffersList,
 } from "./admin";
 
 // Other Pages
@@ -125,6 +126,9 @@ const router = createBrowserRouter([
           { path: "product-details/:id", element: <ProductDetails /> },
           { path: "categories", element: <CategoryManager /> },
           { path: "users", element: <UserList /> },
+          // { path: "orders", element: <AdminOrderManager /> },
+          // Offers management
+          { path: "offers", element: <OffersList/> },
           { path: "orders", element: <AdminOrderManager /> },
         ],
       },

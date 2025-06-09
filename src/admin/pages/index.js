@@ -6,3 +6,5 @@ export {default as CategoryManager} from "./Category/CategoryManager.jsx";
 export {default as UserList} from "./UserList/UserList.jsx";
 // export {default as UserDetails} from "./UserList/UserDetails.jsx";
 export {default as AdminOrderManager} from "./Orders/AdminOrderManager.jsx";
+// export {default as OrderDetails} from "./Orders/OrderDetails.jsx";
+export { default as OffersList } from "./Offers/OffersList.jsx";

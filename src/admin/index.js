@@ -17,6 +17,8 @@ export {
   CategoryManager,
   UserList,
   AdminOrderManager,
+  // OrderDetails,
+  OffersList,
 } from "./pages/index.js";
 
 // export {addProduct } from "./pages/AddProduct/index.js";

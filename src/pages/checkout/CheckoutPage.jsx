@@ -16,6 +16,7 @@ const CheckoutPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
+    phoneNumber: "",
     street: "",
     city: "",
     state: "",
@@ -50,12 +51,14 @@ const CheckoutPage = () => {
             ...defaultAddr,
             fullName: userData.userName || "",
             email: userData.email || "",
+            phoneNumber: defaultAddr.phoneNumber || "",
           });
           setAddingNewAddress(false);
         } else {
           setFormData({
             fullName: userData.userName || "",
             email: userData.email || "",
+            phoneNumber: addr.phoneNumber || user?.phoneNumber || "",
             street: "",
             city: "",
             state: "",
@@ -80,6 +83,7 @@ const CheckoutPage = () => {
         setFormData({
           fullName: user?.userName || "",
           email: user?.email || "",
+          phoneNumber: addr.phoneNumber || user?.phoneNumber || "",
           street: addr.street,
           city: addr.city,
           state: addr.state,
@@ -100,6 +104,7 @@ const CheckoutPage = () => {
     const requiredFields = [
       "fullName",
       "email",
+      "phoneNumber",
       "street",
       "city",
       "state",
@@ -112,6 +117,10 @@ const CheckoutPage = () => {
     if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Invalid email address";
     }
+//     if (formData.phoneNumber && !/^\d{10}$/.test(formData.phoneNumber)) {
+//   newErrors.phoneNumber = "Invalid phone number (10 digits required)";
+// }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -173,6 +182,7 @@ const CheckoutPage = () => {
           ...shippingAddress,
           fullName: formData.fullName,
           email: formData.email,
+          phoneNumber: formData.phoneNumber,
         },
         paymentMethod,
         orderDate: new Date().toISOString(),
@@ -254,22 +264,23 @@ const CheckoutPage = () => {
             </>
           ) : (
             <>
-              {["fullName", "email", "street", "city", "state", "postalCode", "country"].map((field) => (
-                <div key={field}>
-                  <label className="block mb-1 capitalize">{field.replace(/([A-Z])/g, " $1")}</label>
-                  <input
-                    name={field}
-                    value={formData[field] || ""}
-                    onChange={handleChange}
-                    className={`w-full border px-3 py-2 rounded-md ${
-                      errors[field] ? "border-red-500" : "border-gray-300"
-                    }`}
-                  />
-                  {errors[field] && (
-                    <p className="text-red-500 text-sm">{errors[field]}</p>
-                  )}
-                </div>
-              ))}
+              {["fullName", "email", "phoneNumber", "street", "city", "state", "postalCode", "country"].map((field) => (
+  <div key={field}>
+    <label className="block mb-1 capitalize">{field.replace(/([A-Z])/g, " $1")}</label>
+    <input
+      name={field}
+      value={formData[field] || ""}
+      onChange={handleChange}
+      className={`w-full border px-3 py-2 rounded-md ${
+        errors[field] ? "border-red-500" : "border-gray-300"
+      }`}
+    />
+    {errors[field] && (
+      <p className="text-red-500 text-sm">{errors[field]}</p>
+    )}
+  </div>
+))}
+
               <button
                 type="button"
                 className="text-blue-600 hover:underline mt-2 font-medium"
