@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  getProfile, 
-  updateProfile, 
+import {
+  getProfile,
+  updateProfile,
   uploadAvatar,
   addAddress,
   updateAddress,
@@ -38,6 +38,7 @@ const Dashboard = () => {
     state: '',
     postalCode: '',
     country: 'India',
+    phoneNumber: ''
   });
   const [editingAddressId, setEditingAddressId] = useState(null);
   const openAddressesTab = () => setActiveTab('addresses');
@@ -208,9 +209,8 @@ const Dashboard = () => {
                 {addresses.map((addr) => (
                   <div
                     key={addr.id}
-                    className={`p-4 border rounded-lg shadow-sm flex justify-between items-center ${
-                      addr.isDefault ? 'border-green-500 bg-green-50' : 'border-gray-300'
-                    }`}
+                    className={`p-4 border rounded-lg shadow-sm flex justify-between items-center ${addr.isDefault ? 'border-green-500 bg-green-50' : 'border-gray-300'
+                      }`}
                   >
                     <div>
                       <div className="font-semibold text-lg">
@@ -223,7 +223,9 @@ const Dashboard = () => {
                         {addr.street}, {addr.city}, {addr.state} - {addr.postalCode}
                       </div>
                       <div>{addr.country}</div>
-                      <div>Contact: {profile.phoneNumber}</div>
+                      {/* <div>Contact: {profile.phoneNumber}</div> */}
+                      <div>Contact: {addr.phoneNumber || profile.phoneNumber || 'N/A'}</div>
+
                     </div>
                     <div className="flex gap-2">
                       {!addr.isDefault && (
@@ -267,6 +269,17 @@ const Dashboard = () => {
                         onChange={handleAddressInputChange}
                         className="w-full border p-2 rounded"
                       />
+                      <input
+                       type="tel"
+                       pattern="[0-9]{10}"
+                       title="Enter a 10-digit number"
+                        name="phoneNumber"
+                        placeholder="Phone Number"
+                        value={addressForm.phoneNumber}
+                        onChange={handleAddressInputChange}
+                        className="w-full border p-2 rounded"
+                      />
+
                       <input
                         name="street"
                         placeholder="Street"

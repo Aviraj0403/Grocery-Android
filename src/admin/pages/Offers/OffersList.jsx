@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../utils/Axios';
 import toast from 'react-hot-toast';
-import OfferForm from './OfferForm'; // Adjust the import path as needed
+import OfferForm from './OfferForm';
 
 const OffersList = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Form state
   const [showForm, setShowForm] = useState(false);
   const [editOfferId, setEditOfferId] = useState(null);
 
@@ -37,19 +35,16 @@ const OffersList = () => {
     }
   };
 
-  // Open form for adding new offer
   const handleAddClick = () => {
     setEditOfferId(null);
     setShowForm(true);
   };
 
-  // Open form for editing existing offer
   const handleEditClick = (id) => {
     setEditOfferId(id);
     setShowForm(true);
   };
 
-  // Close the form and reload offers
   const handleFormClose = () => {
     setShowForm(false);
     setEditOfferId(null);
@@ -70,9 +65,8 @@ const OffersList = () => {
         </button>
       </div>
 
-      {offers.length === 0 ? (
-        <div className="p-4 text-center">No offers found.</div>
-      ) : (
+      {/* Desktop Table */}
+      <div className="hidden md:block">
         <table className="w-full border-collapse border border-gray-300 rounded">
           <thead>
             <tr className="bg-gray-100">
@@ -97,25 +91,60 @@ const OffersList = () => {
                 <td className="border border-gray-300 p-2 text-center space-x-2">
                   <button
                     onClick={() => handleEditClick(offer._id)}
-                    className="text-blue-600 hover:underline"
+                    className="text-blue-600 hover:text-blue-800 text-xl"
+                    title="Edit"
                   >
-                    Edit
+                    ✏️
                   </button>
                   <button
                     onClick={() => handleDelete(offer._id)}
-                    className="text-red-600 hover:underline"
-                    type="button"
+                    className="text-red-600 hover:text-red-800 text-xl"
+                    title="Delete"
                   >
-                    Delete
+                    🗑️
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      )}
+      </div>
 
-      {/* Inline Offer Form */}
+      {/* Mobile Cards */}
+      <div className="md:hidden space-y-4">
+        {offers.map((offer) => (
+          <div key={offer._id} className="border rounded p-4 shadow-sm bg-white">
+            <div className="flex justify-between items-center">
+              <h3 className="font-semibold">{offer.name || 'Unnamed Offer'}</h3>
+              <div className="space-x-2">
+                <button
+                  onClick={() => handleEditClick(offer._id)}
+                  className="text-blue-600 hover:text-blue-800 text-lg"
+                  title="Edit"
+                >
+                  ✏️
+                </button>
+                <button
+                  onClick={() => handleDelete(offer._id)}
+                  className="text-red-600 hover:text-red-800 text-lg"
+                  title="Delete"
+                >
+                  🗑️
+                </button>
+              </div>
+            </div>
+            <div className="mt-2 text-sm text-gray-700 space-y-1">
+              <p><strong>Code:</strong> {offer.code?.toUpperCase() || '—'}</p>
+              <p><strong>Discount:</strong> {offer.discountPercentage ?? '—'}%</p>
+              <p><strong>Status:</strong> {offer.status}</p>
+              <p><strong>Valid From:</strong> {new Date(offer.startDate).toLocaleDateString()}</p>
+              <p><strong>Valid To:</strong> {new Date(offer.endDate).toLocaleDateString()}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Inline Form */}
       {showForm && (
         <div className="mt-8 border p-6 rounded shadow bg-white">
           <OfferForm offerId={editOfferId} onClose={handleFormClose} />

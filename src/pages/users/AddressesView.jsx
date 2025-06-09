@@ -15,20 +15,24 @@ const emptyAddress = {
   state: '',
   postalCode: '',
   country: 'India',
+  phoneNumber: '',
 };
 
-const AddressesView = ({ phoneNumber }) => {
+const AddressesView = () => {
   const [addresses, setAddresses] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyAddress);
   const [loading, setLoading] = useState(false);
+  const [userPhone, setUserPhone] = useState('');
 
   useEffect(() => {
     const fetchProfileAddresses = async () => {
       setLoading(true);
       try {
         const { data } = await getProfile();
-        setAddresses(data.userProfileDetail.addresses || []);
+        const profile = data.userProfileDetail;
+        setAddresses(profile.addresses || []);
+        setUserPhone(profile.phoneNumber || '');
       } catch {
         toast.error('Failed to load addresses');
       }
@@ -39,7 +43,7 @@ const AddressesView = ({ phoneNumber }) => {
 
   const startEdit = (address) => {
     setEditingId(address.id);
-    setForm(address);
+    setForm({ ...emptyAddress, ...address });
   };
 
   const cancelEdit = () => {
@@ -54,17 +58,12 @@ const AddressesView = ({ phoneNumber }) => {
 
   const saveAddress = async () => {
     try {
-      if (editingId) {
-        // update address
-        const res = await updateAddress(editingId, form);
-        setAddresses(res.data.addresses);
-        toast.success('Address updated');
-      } else {
-        // add new address
-        const res = await addAddress(form);
-        setAddresses(res.data.addresses);
-        toast.success('Address added');
-      }
+      const action = editingId ? updateAddress : addAddress;
+      const res = editingId
+        ? await updateAddress(editingId, form)
+        : await addAddress(form);
+      setAddresses(res.data.addresses);
+      toast.success(editingId ? 'Address updated' : 'Address added');
       cancelEdit();
     } catch {
       toast.error('Failed to save address');
@@ -96,7 +95,7 @@ const AddressesView = ({ phoneNumber }) => {
     <div className="max-w-4xl mx-auto bg-white p-6 rounded-md shadow-md">
       <h2 className="text-2xl font-semibold mb-4">Your Addresses</h2>
       <p className="mb-6 text-gray-600">
-        Phone for delivery: <strong>{phoneNumber}</strong>
+        Primary Phone Number: <strong>{userPhone || '—'}</strong>
       </p>
 
       {loading ? (
@@ -108,7 +107,7 @@ const AddressesView = ({ phoneNumber }) => {
           {addresses.map((addr) => (
             <div
               key={addr.id}
-              className={`border p-4 rounded-md mb-4 flex justify-between items-center ${
+              className={`border p-4 rounded-md mb-4 flex justify-between items-start ${
                 addr.isDefault ? 'border-green-500 bg-green-50' : 'border-gray-300'
               }`}
             >
@@ -116,11 +115,14 @@ const AddressesView = ({ phoneNumber }) => {
                 <h3 className="font-semibold text-lg">
                   {addr.label} {addr.isDefault && <span className="text-green-600">(Default)</span>}
                 </h3>
-                <p>
+                <p className="text-sm text-gray-700">
                   {addr.street}, {addr.city}, {addr.state}, {addr.postalCode}, {addr.country}
                 </p>
+                <p className="text-sm text-gray-700 mt-1">
+                  📞 <strong>{addr.phoneNumber || userPhone || '—'}</strong>
+                </p>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex flex-col space-y-1 items-end">
                 {!addr.isDefault && (
                   <button
                     onClick={() => makeDefault(addr.id)}
@@ -156,6 +158,14 @@ const AddressesView = ({ phoneNumber }) => {
                 value={form.label}
                 onChange={handleChange}
                 placeholder="Label (e.g. Home, Work)"
+                className="border rounded px-3 py-2 w-full"
+              />
+              <input
+                type="text"
+                name="phoneNumber"
+                value={form.phoneNumber}
+                onChange={handleChange}
+                placeholder="Phone Number"
                 className="border rounded px-3 py-2 w-full"
               />
               <input

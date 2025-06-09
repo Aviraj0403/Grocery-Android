@@ -4,12 +4,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { clearCart } from "../../features/cart/cartSlice";
 import { getProfile, addAddress } from "../../services/authApi";
+import { useLocation } from "react-router-dom";
 
 const CheckoutPage = () => {
   const { user } = useAuth();
   const { items, totalQuantity, totalAmount } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const discount = Number(location.state?.discount) || 0;
+  const finalAmount = Number(location.state?.finalAmount) || Number(totalAmount);
 
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
@@ -117,9 +121,9 @@ const CheckoutPage = () => {
     if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Invalid email address";
     }
-//     if (formData.phoneNumber && !/^\d{10}$/.test(formData.phoneNumber)) {
-//   newErrors.phoneNumber = "Invalid phone number (10 digits required)";
-// }
+    //     if (formData.phoneNumber && !/^\d{10}$/.test(formData.phoneNumber)) {
+    //   newErrors.phoneNumber = "Invalid phone number (10 digits required)";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -178,6 +182,8 @@ const CheckoutPage = () => {
         items,
         totalQuantity,
         totalAmount,
+        finalAmount,     // ← include this
+        discount, 
         shipping: {
           ...shippingAddress,
           fullName: formData.fullName,
@@ -221,11 +227,10 @@ const CheckoutPage = () => {
                   {addresses.map((addr) => (
                     <label
                       key={addr.id}
-                      className={`block border rounded-md p-4 cursor-pointer transition ${
-                        selectedAddressId === addr.id
-                          ? "border-green-600 bg-green-50"
-                          : "border-gray-300 hover:border-green-400"
-                      }`}
+                      className={`block border rounded-md p-4 cursor-pointer transition ${selectedAddressId === addr.id
+                        ? "border-green-600 bg-green-50"
+                        : "border-gray-300 hover:border-green-400"
+                        }`}
                     >
                       <input
                         type="radio"
@@ -265,21 +270,20 @@ const CheckoutPage = () => {
           ) : (
             <>
               {["fullName", "email", "phoneNumber", "street", "city", "state", "postalCode", "country"].map((field) => (
-  <div key={field}>
-    <label className="block mb-1 capitalize">{field.replace(/([A-Z])/g, " $1")}</label>
-    <input
-      name={field}
-      value={formData[field] || ""}
-      onChange={handleChange}
-      className={`w-full border px-3 py-2 rounded-md ${
-        errors[field] ? "border-red-500" : "border-gray-300"
-      }`}
-    />
-    {errors[field] && (
-      <p className="text-red-500 text-sm">{errors[field]}</p>
-    )}
-  </div>
-))}
+                <div key={field}>
+                  <label className="block mb-1 capitalize">{field.replace(/([A-Z])/g, " $1")}</label>
+                  <input
+                    name={field}
+                    value={formData[field] || ""}
+                    onChange={handleChange}
+                    className={`w-full border px-3 py-2 rounded-md ${errors[field] ? "border-red-500" : "border-gray-300"
+                      }`}
+                  />
+                  {errors[field] && (
+                    <p className="text-red-500 text-sm">{errors[field]}</p>
+                  )}
+                </div>
+              ))}
 
               <button
                 type="button"
@@ -336,8 +340,8 @@ const CheckoutPage = () => {
             {isProcessing
               ? "Processing..."
               : addingNewAddress
-              ? "Save & Place Order"
-              : "Place Order"}
+                ? "Save & Place Order"
+                : "Place Order"}
           </button>
         </form>
 
@@ -361,10 +365,35 @@ const CheckoutPage = () => {
             <span>Total Items:</span>
             <span>{totalQuantity}</span>
           </div>
-          <div className="mt-2 flex justify-between font-semibold text-green-700">
+          <div className="mt-2 flex justify-between font-semibold text-red-700 line-through">
             <span>Total Amount:</span>
-            <span>₹{totalAmount.toFixed(2)}</span>
+            <span>₹{Number(totalAmount).toFixed(2)}</span>
           </div>
+
+          {discount > 0 ? (
+            <>
+              {/* <div className="mt-2 flex justify-between text-sm text-gray-500 line-through">
+      <span>Original Price:</span>
+      <span>₹{Number(totalAmount).toFixed(2)}</span>
+    </div> */}
+
+              <div className="flex justify-between font-semibold text-green-700 text-lg">
+                <span>You Pay:</span>
+                <span>₹{Number(finalAmount).toFixed(2)}</span>
+              </div>
+
+              <p className="text-sm text-right text-green-600 font-medium italic">
+                You saved ₹{Number(discount).toFixed(2)}!
+              </p>
+            </>
+          ) : (
+            <div className="mt-2 flex justify-between font-semibold text-green-700 text-lg">
+              <span>Total Amount:</span>
+              <span>₹{Number(finalAmount).toFixed(2)}</span>
+            </div>
+          )}
+
+
           <Link to="/cart" className="block mt-6 text-green-600 hover:underline text-center">
             Back to Cart
           </Link>

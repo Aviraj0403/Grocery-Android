@@ -1,14 +1,22 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import CartItem from "./CartItem";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import CartSummary from "./CartSummary"; // import the reusable component
 
 const CartPage = () => {
+  const dispatch = useDispatch();
   const { items, totalQuantity, totalAmount, loading } = useSelector(
     (state) => state.cart
   );
+
+  const handleClearCart = () => {
+    if (window.confirm("Are you sure you want to clear the cart?")) {
+      dispatch(clearCart());
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 min-h-screen bg-gray-50">
@@ -34,33 +42,19 @@ const CartPage = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Cart Items List */}
+          {/* Cart Items */}
           <div className="md:col-span-2 space-y-4 sm:space-y-6">
             {items.map((item, idx) => (
               <CartItem key={idx} item={item} />
             ))}
           </div>
 
-          {/* Order Summary */}
-          <div className="border rounded-lg p-5 sm:p-6 bg-white shadow-lg h-fit sticky top-4">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-800">
-              Order Summary
-            </h2>
-            <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
-              <span>Total Items</span>
-              <span>{totalQuantity}</span>
-            </div>
-            <div className="flex justify-between font-bold text-xl sm:text-2xl text-green-700 border-t pt-3 mt-3">
-              <span>Total Amount</span>
-              <span>₹{totalAmount.toFixed(2)}</span>
-            </div>
-            <Link
-              to="/checkout"
-              className="block mt-6 bg-green-600 hover:bg-green-700 transition-colors text-white text-center py-3 rounded-full font-semibold shadow-md text-sm sm:text-base"
-            >
-              Proceed to Checkout
-            </Link>
-          </div>
+          {/* Order Summary using reusable component */}
+          <CartSummary
+            totalAmount={totalAmount}
+            totalQuantity={totalQuantity}
+            onClearCart={handleClearCart}
+          />
         </div>
       )}
     </div>
