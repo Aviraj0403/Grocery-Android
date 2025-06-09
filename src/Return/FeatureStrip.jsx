@@ -26,7 +26,7 @@ const FeatureStrip = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="my-4">
+    <section className="py-6 mb-0">
       <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 p-4 rounded-xl border border-green-300 bg-gradient-to-br from-green-50 via-white to-green-100 shadow-md min-h-[60px]">
         {features.map((item, idx) => (
           <React.Fragment key={item.id}>

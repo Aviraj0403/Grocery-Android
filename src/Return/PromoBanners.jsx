@@ -14,7 +14,7 @@ const banners = [
     code: "CARE02",
     link: "deo",
     img: adbanner,
-    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(255,115,0,0.6)]", // orange
+    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(255,115,0,0.6)]",
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ const banners = [
     code: "CARE02",
     link: "cleaning",
     img: adbanner1,
-    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(234,179,8,0.6)]", // yellow
+    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(234,179,8,0.6)]",
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ const banners = [
     code: "CARE12",
     link: "Coofe",
     img: adbanner2,
-    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(34,197,94,0.6)]", // green
+    hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(34,197,94,0.6)]",
   },
 ];
 
@@ -42,7 +42,7 @@ const PromoBanners = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="px-4 max-w-7xl mx-auto py-8">
+    <section className="px-4 max-w-7xl mx-auto pt-2 pb-8 mt-[-24px]">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {banners.map((banner, index) => {
           const Wrapper = index < 2 ? Zoom : Slide;
@@ -62,7 +62,8 @@ const PromoBanners = () => {
                     {banner.cashback}
                   </p>
                   <p className="text-sm text-gray-700 mb-4">
-                    Code: <span className="font-semibold text-black">{banner.code}</span>
+                    Code:{" "}
+                    <span className="font-semibold text-black">{banner.code}</span>
                   </p>
                   <Link
                     to="#"
