@@ -1,46 +1,16 @@
 {
-    "routes": [
-        {
-            "src":"/",
-            "dest":"/"
-        },
-      {
-        "src": "/admin/(.*)",
-        "dest": "/"
-      },
-      {
-        "src": "/dashboard/(.*)",
-        "dest": "/"
-      },
-      {
-        "src": "/user/(.*)",
-        "dest": "/"
-      },
-      {
-        "src": "/search",
-        "dest": "/"
-      },
-      {
-        "src": "/login",
-        "dest": "/"
-      },
-      {
-        "src": "/register",
-        "dest": "/"
-      },
-      {
-        "src": "/forgot-password",
-        "dest": "/"
-      },
-      {
-        "src": "/verification-otp",
-        "dest": "/"
-      },
-      {
-        "src": "/reset-password",
-        "dest": "/"
-      }
-     
-    ]
-  }
-  
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/files/(.*)",
+      "destination": "/files/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}
