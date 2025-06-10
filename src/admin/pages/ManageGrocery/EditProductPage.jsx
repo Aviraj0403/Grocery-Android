@@ -91,17 +91,44 @@ const EditProductPage = () => {
     }, [id]);
 
     // Handle new image file selection for update.
-    const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
-        // Enforce selection of either exactly 1 or exactly 3 images.
-        if (files.length !== 1 && files.length !== 3) {
-            toast.error("Please select either 1 or 3 images.");
-            return;
-        }
-        setSelectedFiles(files);
-        const filePreviews = files.map(file => URL.createObjectURL(file));
-        setPreviews(filePreviews);
-    };
+ // Inside handleFileChange:
+const handleFileChange = (e) => {
+  const files = Array.from(e.target.files);
+  const totalSelected = selectedFiles.length + files.length;
+
+  if (totalSelected > 3) {
+    toast.error("You can upload a maximum of 3 images.");
+    return;
+  }
+
+  const newPreviews = files.map(file => URL.createObjectURL(file));
+
+  setSelectedFiles(prev => [...prev, ...files]);
+  setPreviews(prev => [...prev, ...newPreviews]);
+};
+
+// Inside handleSave (image update part):
+if (selectedFiles.length > 0) {
+  if (selectedFiles.length === 1 || selectedFiles.length === 3) {
+    const formData = new FormData();
+    selectedFiles.forEach(file => formData.append('files', file));
+    try {
+      axiosInstance.post(
+        `/products/${id}/images`,
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+      toast.success("Images updated successfully!");
+      removeImages();
+    } catch (error) {
+      toast.error("Failed to update images.");
+    }
+  } else {
+    toast.error("Please select either 1 or 3 images for update.");
+    return;
+  }
+}
+
 
     // Remove selected images.
     const removeImages = () => {
@@ -181,62 +208,80 @@ const EditProductPage = () => {
             </h1>
 
             {/* Image Section */}
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">Product Image</h2>
-                <div className="flex flex-col items-center">
-                    {previews.length > 0 ? (
-                        <div className="relative w-full max-w-md bg-yellow-50 border-2 border-orange-400 border-dashed rounded-lg p-4 flex flex-col items-center">
-                            {previews.map((src, index) => (
-                                <img
-                                    key={index}
-                                    src={src}
-                                    alt={`Preview ${index + 1}`}
-                                    className="max-w-full max-h-48 rounded-lg mb-2"
-                                />
-                            ))}
-                            <button
-                                type="button"
-                                onClick={removeImages}
-                                className="absolute top-2 right-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="w-full max-w-md">
-                            {product.images && product.images.length > 0 ? (
-                                <img
-                                    src={product.images[0]}
-                                    alt={product.name}
-                                    className="w-full h-48 object-cover rounded-lg mb-2"
-                                />
-                            ) : (
-                                <div className="w-full h-48 bg-gray-200 flex items-center justify-center rounded-lg mb-2">
-                                    No Image
-                                </div>
-                            )}
-                            <div className="flex justify-center">
-                                <input
-                                    type="file"
-                                    id="image"
-                                    name="image"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    className="hidden"
-                                />
-                                <label
-                                    htmlFor="image"
-                                    className="bg-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer"
-                                >
-                                    {product.images && product.images.length > 0
-                                        ? "Update Product Image(s)"
-                                        : "Upload Product Image(s)"}
-                                </label>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
+   {/* Image Section */}
+<div className="mb-6">
+  <h2 className="text-lg font-semibold text-gray-700 mb-2">Product Images</h2>
+
+  <div className="flex flex-wrap gap-4">
+    {/* Existing images with remove option */}
+    {product.images?.map((src, index) => (
+      <div key={`existing-${index}`} className="relative group">
+        <img
+          src={src}
+          alt={`Product ${index + 1}`}
+          className="w-32 h-32 object-cover rounded-lg border"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            // Remove existing image at index
+            const updatedImages = product.images.filter((_, i) => i !== index);
+            setProduct({ ...product, images: updatedImages });
+          }}
+          className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+          aria-label="Remove image"
+        >
+          &times;
+        </button>
+      </div>
+    ))}
+
+    {/* New image previews */}
+    {previews.map((src, index) => (
+      <div key={`new-${index}`} className="relative group">
+        <img
+          src={src}
+          alt={`Preview ${index + 1}`}
+          className="w-32 h-32 object-cover rounded-lg border"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            // Remove new selected image at index
+            setSelectedFiles((files) => files.filter((_, i) => i !== index));
+            setPreviews((prev) => prev.filter((_, i) => i !== index));
+          }}
+          className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+          aria-label="Remove selected image"
+        >
+          &times;
+        </button>
+      </div>
+    ))}
+
+    {/* Show "Add Image" button only if total images < 3 */}
+    {(product.images?.length || 0) + previews.length < 3 && (
+      <div className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-orange-400 rounded-lg">
+        <input
+          type="file"
+          id="image-upload"
+          accept="image/*"
+          multiple
+          onChange={handleFileChange}
+          className="hidden"
+        />
+        <label
+          htmlFor="image-upload"
+          className="cursor-pointer text-orange-500 text-sm text-center"
+        >
+          + Add Image
+        </label>
+      </div>
+    )}
+  </div>
+</div>
+
+
 
             {/* Edit Form */}
             <form className="mt-6 space-y-6">

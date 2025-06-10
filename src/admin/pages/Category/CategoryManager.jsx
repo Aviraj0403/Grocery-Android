@@ -18,6 +18,7 @@ const CategoryManager = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const fetchCategories = async () => {
     try {
@@ -38,19 +39,25 @@ const CategoryManager = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     if (name === 'image') {
-      setForm(prev => ({ ...prev, image: files[0] }));
+      const file = files[0];
+      setForm(prev => ({ ...prev, image: file }));
+      if (file) {
+        setImagePreview(URL.createObjectURL(file));
+      } else if (editingCategory?.imageUrl) {
+        setImagePreview(editingCategory.imageUrl);
+      } else {
+        setImagePreview(null);
+      }
     } else {
       setForm(prev => ({
         ...prev,
         [name]: type === 'checkbox' ? checked : value
       }));
-    }
 
-    if (name === 'name') {
-      setForm(prev => ({
-        ...prev,
-        slug: slugify(value || '', { lower: true, strict: true })
-      }));
+      if (name === 'name') {
+        const newSlug = slugify(value || '', { lower: true, strict: true });
+        setForm(prev => ({ ...prev, slug: newSlug }));
+      }
     }
   };
 
@@ -67,9 +74,8 @@ const CategoryManager = () => {
       if (form.type === 'Sub') {
         formData.set('parentCategory', form.parentCategory);
       } else {
-        formData.delete('parentCategory'); // <- this is the key fix
+        formData.delete('parentCategory');
       }
-      
 
       if (editingCategory) {
         await axios.put(`/updateCategory/${editingCategory._id}`, formData, {
@@ -103,6 +109,7 @@ const CategoryManager = () => {
       isActive: true
     });
     setEditingCategory(null);
+    setImagePreview(null);
   };
 
   const handleEdit = (cat) => {
@@ -112,12 +119,15 @@ const CategoryManager = () => {
       description: cat.description || '',
       type: cat.type,
       parentCategory: cat.parentCategory?._id || '',
-      image: null, // reset file input
+      image: null,
       displayOrder: cat.displayOrder,
       isActive: cat.isActive
     });
     setEditingCategory(cat);
     setShowModal(true);
+    // Assuming cat.imageUrl holds the image URL
+   setImagePreview(cat.image?.[0] || null);
+
   };
 
   const handleDelete = async (id) => {
@@ -135,7 +145,6 @@ const CategoryManager = () => {
     resetForm();
     setShowModal(true);
   };
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
       <div className="flex justify-between items-center mb-6 flex-wrap gap-3">

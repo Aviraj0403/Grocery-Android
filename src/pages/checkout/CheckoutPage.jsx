@@ -5,7 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { clearCart } from "../../features/cart/cartSlice";
 import { getProfile, addAddress } from "../../services/authApi";
 import { useLocation } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { createOrder as createOrderApi } from "../../services/orderApi";
 const CheckoutPage = () => {
   const { user } = useAuth();
   const { items, totalQuantity, totalAmount } = useSelector((state) => state.cart);
@@ -132,7 +134,79 @@ const CheckoutPage = () => {
   const mockOnlinePayment = () =>
     new Promise((resolve) => setTimeout(() => resolve(true), 2000));
 
-  const handlePlaceOrder = async (e) => {
+  // const handlePlaceOrder = async (e) => {
+  //   e.preventDefault();
+  //   if (!user) return navigate("/login");
+  //   if (!validateForm()) return;
+  //   if (items.length === 0) return alert("Your cart is empty!");
+
+  //   setIsProcessing(true);
+
+  //   let shippingAddress = null;
+
+  //   try {
+  //     // Save new address if needed
+  //     if (addingNewAddress) {
+  //       const res = await addAddress(formData);
+  //       if (res.status === 201) {
+  //         const updatedAddresses = res.data.addresses;
+  //         const newAddr = updatedAddresses[updatedAddresses.length - 1];
+  //         setAddresses(updatedAddresses);
+  //         setSelectedAddressId(newAddr.id);
+  //         shippingAddress = newAddr;
+  //         setAddingNewAddress(false);
+  //       } else {
+  //         alert("Failed to save address.");
+  //         setIsProcessing(false);
+  //         return;
+  //       }
+  //     } else {
+  //       shippingAddress = addresses.find((a) => a.id === selectedAddressId);
+  //       if (!shippingAddress) {
+  //         alert("Please select a valid address.");
+  //         setIsProcessing(false);
+  //         return;
+  //       }
+  //     }
+
+  //     if (paymentMethod === "online") {
+  //       const paymentSuccess = await mockOnlinePayment();
+  //       if (!paymentSuccess) {
+  //         alert("Payment failed.");
+  //         setIsProcessing(false);
+  //         return;
+  //       }
+  //     }
+
+  //     const order = {
+  //       id: Date.now().toString(),
+  //       userId: user.id,
+  //       items,
+  //       totalQuantity,
+  //       totalAmount,
+  //       finalAmount,     // ← include this
+  //       discount, 
+  //       shipping: {
+  //         ...shippingAddress,
+  //         fullName: formData.fullName,
+  //         email: formData.email,
+  //         phoneNumber: formData.phoneNumber,
+  //       },
+  //       paymentMethod,
+  //       orderDate: new Date().toISOString(),
+  //       status: paymentMethod === "cod" ? "Pending" : "Paid",
+  //     };
+
+  //     console.log("Order Placed", order);
+  //     dispatch(clearCart());
+  //     navigate("/order-confirmation", { state: { order } });
+  //   } catch (error) {
+  //     alert("Order failed: " + error.message);
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
+const handlePlaceOrder = async (e) => {
     e.preventDefault();
     if (!user) return navigate("/login");
     if (!validateForm()) return;
@@ -167,8 +241,9 @@ const CheckoutPage = () => {
         }
       }
 
+      // If online payment, mock payment success (replace with real payment flow if any)
       if (paymentMethod === "online") {
-        const paymentSuccess = await mockOnlinePayment();
+        const paymentSuccess = await new Promise((resolve) => setTimeout(() => resolve(true), 2000));
         if (!paymentSuccess) {
           alert("Payment failed.");
           setIsProcessing(false);
@@ -176,35 +251,48 @@ const CheckoutPage = () => {
         }
       }
 
-      const order = {
-        id: Date.now().toString(),
-        userId: user.id,
-        items,
-        totalQuantity,
+      // Prepare order payload matching your backend
+      const orderPayload = {
+        items: items.map(item => ({
+          product: item.id,
+          quantity: item.quantity,
+          selectedVariant: item.selectedVariant || null,
+          price: item.selectedVariant?.price || item.price || 0,
+          name: item.name
+        })),
         totalAmount,
-        finalAmount,     // ← include this
-        discount, 
+        finalAmount,
+        discount,
+        offerApplied: null, // add if you have offer data
         shipping: {
-          ...shippingAddress,
           fullName: formData.fullName,
-          email: formData.email,
           phoneNumber: formData.phoneNumber,
+          street: formData.street,
+          addressLine2: formData.addressLine2 || "", // add if you have it in formData
+          city: formData.city,
+          state: formData.state,
+          postalCode: formData.postalCode,
+          country: formData.country,
         },
-        paymentMethod,
-        orderDate: new Date().toISOString(),
-        status: paymentMethod === "cod" ? "Pending" : "Paid",
+        paymentMethod: paymentMethod.toUpperCase() // match backend expected values: 'COD' or 'ONLINE'
       };
 
-      console.log("Order Placed", order);
-      dispatch(clearCart());
-      navigate("/order-confirmation", { state: { order } });
+      // Call backend API to create order
+      const response = await createOrderApi(orderPayload);
+
+      if (response.success) {
+        toast.success("Order placed successfully!");
+        dispatch(clearCart());
+        navigate("/order-confirmation", { state: { order: response.order } });
+      } else {
+        toast.error("Failed to place order: " + (response.message || "Unknown error"));
+      }
     } catch (error) {
-      alert("Order failed: " + error.message);
+      toast.errors("Order failed: " + error.message);
     } finally {
       setIsProcessing(false);
     }
   };
-
   return (
     <div className="max-w-5xl mx-auto p-6 min-h-screen">
       <h1 className="text-3xl font-semibold mb-8">Checkout</h1>

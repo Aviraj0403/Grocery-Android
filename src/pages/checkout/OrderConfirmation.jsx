@@ -21,7 +21,7 @@ const OrderConfirmation = () => {
     document.body.innerHTML = printContent;
     window.print();
     document.body.innerHTML = originalContent;
-    window.location.reload();  // Reload to reset React state after print
+    window.location.reload(); // Reload to reset React state after print
   };
 
   return (
@@ -29,26 +29,34 @@ const OrderConfirmation = () => {
       <h1 className="text-3xl font-bold mb-6 text-green-700 text-center">Order Receipt</h1>
       
       <p className="mb-2">Order ID: <strong>{order.id}</strong></p>
-      <p className="mb-2">Order Date: <strong>{new Date(order.orderDate).toLocaleString()}</strong></p>
+      <p className="mb-2">
+        Order Date: <strong>{new Date(order.orderDate).toLocaleString()}</strong>
+      </p>
       <p className="mb-4">
-        Payment Method: <strong>{order.paymentMethod === "cod" ? "Cash on Delivery" : "Online Payment"}</strong>
+        Payment Method: <strong>{order.paymentMethod?.toUpperCase() === "COD" ? "Cash on Delivery" : "Online Payment"}</strong>
       </p>
 
       <h2 className="text-xl font-semibold mb-3 border-b pb-1">Shipping Information</h2>
       <div className="mb-6 space-y-1">
-        <p>{order.shipping.fullName}</p>
-        <p>{order.shipping.address}, {order.shipping.city}</p>
-        <p>{order.shipping.postalCode}, {order.shipping.country}</p>
-        <p>Email: {order.shipping.email}</p>
-        <p>Phone: {order.shipping.phoneNumber}</p> 
+        <p>{order.shipping?.fullName || "N/A"}</p>
+        <p>
+          {order.shipping?.street || "N/A"}
+          {order.shipping?.addressLine2 ? `, ${order.shipping.addressLine2}` : ""}
+          , {order.shipping?.city || "N/A"}
+        </p>
+        <p>
+          {order.shipping?.postalCode || "N/A"}, {order.shipping?.country || "N/A"}
+        </p>
+        <p>Email: {order.shipping?.email || "N/A"}</p>
+        <p>Phone: {order.shipping?.phoneNumber || "N/A"}</p> 
       </div>
 
       <h2 className="text-xl font-semibold mb-3 border-b pb-1">Order Summary</h2>
       <ul className="divide-y divide-gray-300 mb-4">
-        {order.items.map((item, idx) => (
+        {order.items?.map((item, idx) => (
           <li key={idx} className="py-2 flex justify-between">
             <span>{item.name} x {item.quantity}</span>
-            <span>₹{((item.selectedVariant?.price || 0) * item.quantity).toFixed(2)}</span>
+            <span>₹{((item.selectedVariant?.price || item.price || 0) * item.quantity).toFixed(2)}</span>
           </li>
         ))}
       </ul>

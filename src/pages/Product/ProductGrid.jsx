@@ -7,7 +7,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Zoom } from 'react-awesome-reveal';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-const perPage = 8;
+const perPage = 12;
 
 const ProductGrid = () => {
   const [products, setProducts] = useState([]);
@@ -92,25 +92,46 @@ const ProductGrid = () => {
       </section>
 
       {/* Filter + Search */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-        <input
-          type="text"
-          className="border border-gray-300 px-4 py-2 rounded w-full md:w-1/3"
-          placeholder="Search product..."
-          value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-        />
-        <select
-          value={sortBy}
-          onChange={(e) => { setSortBy(e.target.value); setPage(1); }}
-          className="border border-gray-300 px-4 py-2 rounded w-full md:w-1/4"
-        >
-          <option value="">Sort By</option>
-          <option value="priceLow">Price: Low → High</option>
-          <option value="priceHigh">Price: High → Low</option>
-          <option value="rating">Rating</option>
-        </select>
-      </div>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 bg-white p-4 rounded-lg shadow-sm">
+  {/* Search Input */}
+  <div className="relative w-full md:w-1/3">
+    <input
+      type="text"
+      className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
+      placeholder="🔍 Search for products..."
+      value={search}
+      onChange={(e) => {
+        setSearch(e.target.value);
+        setPage(1);
+      }}
+    />
+    <svg
+      className="absolute right-3 top-2.5 text-gray-400 w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+    </svg>
+  </div>
+
+  {/* Sort Select */}
+  <select
+    value={sortBy}
+    onChange={(e) => {
+      setSortBy(e.target.value);
+      setPage(1);
+    }}
+    className="w-full md:w-1/4 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200 bg-white"
+  >
+    <option value="">🧮 Sort By</option>
+    <option value="priceLow">💰 Price: Low → High</option>
+    <option value="priceHigh">💸 Price: High → Low</option>
+    <option value="rating">⭐ Rating</option>
+  </select>
+</div>
+
 
       {/* Product Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -125,25 +146,26 @@ const ProductGrid = () => {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-3 mt-8">
-          <button
-            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-          >
-            Prev
-          </button>
-          <span className="px-4 py-2">
-            Page {page} of {totalPages}
-          </span>
-          <button
-            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page === totalPages}
-          >
-            Next
-          </button>
-        </div>
+        <div className="flex justify-center items-center gap-4 mt-8">
+  <button
+    onClick={() => handlePageChange(page - 1)}
+    disabled={page === 1}
+    className="px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
+  >
+    ◀️ Previous
+  </button>
+  <span className="text-gray-600 font-medium">
+    Page {page} of {totalPages}
+  </span>
+  <button
+    onClick={() => handlePageChange(page + 1)}
+    disabled={page === totalPages}
+    className="px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
+  >
+    Next ▶️
+  </button>
+</div>
+
       )}
     </div>
   );
