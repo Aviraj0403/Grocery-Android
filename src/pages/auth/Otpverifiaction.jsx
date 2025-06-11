@@ -1,24 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { resetPassword } from '../../services/authApi';
+import { verifyOtp } from '../../services/authApi';
 
-const Otpverifiaction = () => {
+const OtpVerification = () => {
   const [data, setData] = useState(["", "", "", "", "", ""]);
   const inputRef = useRef([]);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 🔒 Redirect if no email in state
   useEffect(() => {
     if (!location?.state?.email) {
       navigate("/forgot-password");
+    } else {
+      inputRef.current[0]?.focus();
     }
   }, [location, navigate]);
 
   const handleOtpChange = (e, index) => {
     const value = e.target.value;
-    if (!/^\d?$/.test(value)) return; // only digits
+    if (!/^\d?$/.test(value)) return;
 
     const newData = [...data];
     newData[index] = value;
@@ -26,27 +27,33 @@ const Otpverifiaction = () => {
 
     if (value && index < 5) {
       inputRef.current[index + 1].focus();
+    } else if (!value && index > 0) {
+      inputRef.current[index - 1].focus();
     }
   };
 
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
-      const response = await resetPassword({
+      const response = await verifyOtp({
         otp: data.join(""),
         email: location?.state?.email,
       });
 
       console.log(response);
       toast.success("OTP Verified!");
-      navigate("/reset-password");
+      navigate("/reset-password", {
+        state: { email: location?.state?.email, data: { success: true } },
+      });
     } catch (err) {
       console.error(err);
       toast.error("Invalid OTP");
+      setData(["", "", "", "", "", ""]);
+      inputRef.current[0]?.focus();
     }
   };
 
-  const isValid = data.every((el) => el);
+  const isValid = data.every((el) => /^\d$/.test(el));
 
   return (
     <section className='w-full container mx-auto px-4'>
@@ -74,9 +81,7 @@ const Otpverifiaction = () => {
           <button
             type="submit"
             disabled={!isValid}
-            className={`${
-              isValid ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"
-            } text-white py-2 rounded font-semibold my-3 tracking-wide`}
+            className={`${isValid ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"} text-white py-2 rounded font-semibold my-3 tracking-wide`}
           >
             Verify OTP
           </button>
@@ -91,4 +96,4 @@ const Otpverifiaction = () => {
   );
 };
 
-export default Otpverifiaction;
+export default OtpVerification;

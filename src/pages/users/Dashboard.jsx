@@ -65,14 +65,24 @@ const Dashboard = () => {
   };
 
   const handleSave = async () => {
-    try {
-      await updateProfile(draftProfile);
-      setProfile(draftProfile);
-      toast.success('Profile updated successfully!');
-    } catch {
-      toast.error('Update failed');
-    }
-  };
+  const { firstName, lastName, phoneNumber, avatar, address } = draftProfile;
+
+  try {
+    await updateProfile({
+      firstName,
+      lastName,
+      phoneNumber,
+      avatar,
+      address
+    });
+    setProfile(draftProfile);
+    toast.success('Profile updated successfully!');
+  } catch (error) {
+    console.error('Update failed:', error.response?.data || error.message);
+    toast.error('Update failed');
+  }
+};
+
 
   const handleCancel = () => {
     if (window.confirm('Discard changes?')) {

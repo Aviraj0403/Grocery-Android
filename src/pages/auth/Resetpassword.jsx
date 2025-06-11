@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { resetPassword } from "../../services/authApi"; // Updated import for API calls
+import { resetPassword } from "../../services/authApi";
 
-const Resetpassword = () => {
+const ResetPassword = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [data, setData] = useState({
@@ -39,19 +39,24 @@ const Resetpassword = () => {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
 
+    if (data.newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+
     if (data.newPassword !== data.confirmPassword) {
       toast.error("New password and confirm password must be the same");
       return;
     }
 
     try {
-      const response = await resetPassword(data); // Using updated resetPassword API
+      const response = await resetPassword(data);
       console.log(response);
       toast.success("Password successfully updated");
       navigate("/login");
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong, please try again.");
+      toast.error(err?.response?.data?.message || "Something went wrong, please try again.");
     }
   };
 
@@ -79,6 +84,7 @@ const Resetpassword = () => {
               <div
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="cursor-pointer"
+                title={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
               </div>
@@ -100,6 +106,7 @@ const Resetpassword = () => {
               <div
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
                 className="cursor-pointer"
+                title={showConfirmPassword ? "Hide password" : "Show password"}
               >
                 {showConfirmPassword ? <FaRegEye /> : <FaRegEyeSlash />}
               </div>
@@ -128,4 +135,4 @@ const Resetpassword = () => {
   );
 };
 
-export default Resetpassword;
+export default ResetPassword;

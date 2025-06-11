@@ -4,6 +4,7 @@ import Axios from '../utils/Axios';
 export const register = (data) => Axios.post('/user/register', data);
 export const login = (data) => Axios.post('/user/login', data);
 export const forgotPassword = (data) => Axios.post('/user/forgotPassword', data);
+export const verifyOtp = (data) => Axios.post('/user/verifyOtp', data);
 export const resetPassword = (data) => Axios.post('/user/resetPassword', data);
 export const googleLogin = (data) => Axios.post('/user/googleLogin', data);
 
@@ -16,11 +17,14 @@ export const logout = async () => {
 };
 export const getProfile = () => Axios.get('/user/profile');
 export const updateProfile = (data) => Axios.patch('/user/updateProfile', data);
-export const uploadAvatar = (formData) => Axios.post('/user/uploadAvatar', formData, {
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
-});
+export const uploadAvatar = async (formData) => {
+  const response = await Axios.post('/user/uploadAvatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
 export const getMe = () => Axios.get('/me');
 export const refreshToken = () => Axios.post('/auth/refresh-token');
 

@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { FaRegEyeSlash } from "react-icons/fa6";
-import { FaRegEye } from "react-icons/fa";
 import toast from 'react-hot-toast';
-import Axios from '../../utils/Axios';
 import { forgotPassword } from '../../services/authApi';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -23,18 +20,24 @@ const Forgotpassword = () => {
   const handleregister = async (e) => {
     e.preventDefault();
 
+    const isValidEmail = /\S+@\S+\.\S+/.test(data.email);
+    if (!isValidEmail) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
     try {
       const response = await forgotPassword(data);
       console.log(response);
       toast.success("OTP sent to your email");
-      navigate('/verification-otp');
+      navigate('/verification-otp', { state: { email: data.email } });
     } catch (error) {
       console.error(error);
       toast.error("Failed to send OTP");
     }
   };
 
-  const validvalue = Object.values(data).every(el => el);
+  const validEmail = /\S+@\S+\.\S+/.test(data.email);
 
   return (
     <section className='w-full container mx-auto px-4'>
@@ -58,8 +61,8 @@ const Forgotpassword = () => {
 
           <button
             type="submit"
-            disabled={!validvalue}
-            className={`${validvalue ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"} text-white py-2 rounded font-semibold my-3 tracking-wide`}
+            disabled={!validEmail}
+            className={`${validEmail ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"} text-white py-2 rounded font-semibold my-3 tracking-wide`}
           >
             Send OTP
           </button>

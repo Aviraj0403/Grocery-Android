@@ -9,6 +9,7 @@ import aboutImage from "../../assets/about.svg";
 import adbanner from "../../assets/dio1.png";
 import adbanner1 from "../../assets/skin4.png";
 import adbanner2 from "../../assets/coffe.png";
+import ChatWidget from "./ChatWidget"; // adjust path if needed
 
 // import { Zoom } from "react-toastify";
 import {
@@ -53,6 +54,7 @@ const Home = () => {
     setLoading(true);
     setTimeout(() => navigate("/arrivals"), 500);
   };
+   
 
   return (
     <div className="bg-gray-50">
@@ -157,6 +159,7 @@ const Home = () => {
 
       {/* Call to Action */}
       <StayUpdated/>
+      <ChatWidget />
     </div>
   );
 };
