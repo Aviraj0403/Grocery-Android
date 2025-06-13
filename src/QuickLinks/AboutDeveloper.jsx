@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
-
+import image1 from "../assets/sunnyti.jpeg"
+import image2 from "../assets/aviraj.png"
 const AboutDeveloper = () => {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-100 to-yellow-100 p-6">
@@ -17,7 +18,7 @@ const AboutDeveloper = () => {
         <div className="relative bg-green-50 rounded-xl shadow-md p-6 mb-6 hover:bg-green-100 transition-all duration-500">
           {/* Developer Image */}
           <img 
-            src="https://via.placeholder.com/60" // Replace with Sunny's image URL
+            src={image1} // Replace with Sunny's image URL
             alt="Sunny Tiwari" 
             className="absolute top-4 right-4 w-16 h-16 rounded-full object-cover shadow-md border-2 border-green-300"
           />
@@ -34,7 +35,7 @@ const AboutDeveloper = () => {
         <div className="relative bg-green-50 rounded-xl shadow-md p-6 hover:bg-green-100 transition-all duration-500">
           {/* Developer Image */}
           <img 
-            src="https://via.placeholder.com/60" // Replace with Aviraj's image URL
+            src={image2} // Replace with Aviraj's image URL
             alt="Aviraj Singh" 
             className="absolute top-4 right-4 w-16 h-16 rounded-full object-cover shadow-md border-2 border-green-300"
           />

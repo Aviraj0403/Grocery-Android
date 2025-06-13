@@ -1,39 +1,38 @@
 import React from "react";
 import { Slide, Zoom } from "react-awesome-reveal";
 import { Link, useNavigate } from "react-router-dom";
+import { FaSprayCan, FaLeaf, FaMugHot } from "react-icons/fa"; // Icons
 import adbanner from "../assets/dio1.png";
 import adbanner1 from "../assets/skin4.png";
 import adbanner2 from "../assets/tea1.png";
 
+// Banners with icons
 const banners = [
   {
     id: 1,
     bgColor: "bg-orange-200",
-    title: "Get discount on Body Spray & Deodrant's",
+    title: "Smell Great with Shanumart Deals!",
     cashback: "Max cashback: 2%",
     code: "CARE02",
-    link: "deo",
     img: adbanner,
+    icon: <FaSprayCan className="text-3xl text-orange-600 mb-2" />,
     hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(255,115,0,0.6)]",
   },
   {
     id: 2,
     bgColor: "bg-yellow-200",
-    title: "Get discount on Body & Skin Care",
-    cashback: "Max cashback: 2%",
-    code: "CARE02",
-    link: "cleaning",
+    title: "Glow Naturally Shop Skincare at Shanumart!",
     img: adbanner1,
+    icon: <FaLeaf className="text-3xl text-yellow-700 mb-2" />,
     hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(234,179,8,0.6)]",
   },
   {
     id: 3,
     bgColor: "bg-green-200",
-    title: "2% cashback on Tea, Coffee & Drinks",
-    cashback: "Max cashback: 40",
+    title: "Have Great Day with Shanumart Tea 🐄!",
     code: "CARE12",
-    link: "Coofe",
     img: adbanner2,
+    icon: <FaMugHot className="text-3xl text-green-700 mb-2" />,
     hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(34,197,94,0.6)]",
   },
 ];
@@ -55,16 +54,10 @@ const PromoBanners = () => {
               >
                 {/* Text Content */}
                 <div className="w-1/2 p-5 flex flex-col justify-center items-start text-left">
+                  {banner.icon}
                   <h3 className="text-xl sm:text-2xl font-bold mb-2 leading-snug">
                     {banner.title}
                   </h3>
-                  <p className="text-sm text-gray-700 mb-1 font-semibold">
-                    {banner.cashback}
-                  </p>
-                  <p className="text-sm text-gray-700 mb-4">
-                    Code:{" "}
-                    <span className="font-semibold text-black">{banner.code}</span>
-                  </p>
                   <Link
                     to="#"
                     onClick={() => navigate(banner.link)}

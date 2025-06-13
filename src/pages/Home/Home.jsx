@@ -135,7 +135,7 @@ const Home = () => {
 
       <Slide direction="right">
         <section className="relative w-full overflow-hidden">
-          <div className="relative" onClick={() => navigate("raksha")}>
+          <div className="relative">
             {/* Mobile Banner */}
             <img
               src={mobileBanner}
