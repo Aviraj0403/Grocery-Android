@@ -7,23 +7,29 @@ import { resetPassword } from "../../services/authApi";
 const ResetPassword = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [data, setData] = useState({
     email: "",
+    otp: "",               // OTP included here
     newPassword: "",
     confirmPassword: "",
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // All fields including otp must be filled for button to enable
   const validValue = Object.values(data).every((el) => el);
 
   useEffect(() => {
     if (!location?.state?.data?.success) {
       navigate("/");
     }
-    if (location?.state?.email) {
+    if (location?.state?.email && location?.state?.otp) {
       setData((prev) => ({
         ...prev,
-        email: location?.state?.email,
+        email: location.state.email,
+        otp: location.state.otp,
       }));
     }
   }, [location, navigate]);
@@ -50,8 +56,11 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await resetPassword(data);
-      console.log(response);
+      await resetPassword({
+        email: data.email,
+        otp: data.otp,
+        newPassword: data.newPassword,
+      });
       toast.success("Password successfully updated");
       navigate("/login");
     } catch (err) {

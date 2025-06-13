@@ -1,40 +1,49 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { useAuth } from '../../context/AuthContext';
+import { useState, useEffect } from 'react';
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
+  const [searchQuery, setSearchQuery] = useState('');
   const items = useSelector((state) => state.cart.items || []);
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-  const isDashboard = location.pathname.startsWith('/dashboard');
+
+  const showSearchBar =
+    location.pathname === '/' ||
+    location.pathname === '/dashboard/cart' ;
+  // Navigate immediately when typing (with trim)
+  useEffect(() => {
+    const trimmed = searchQuery.trim();
+    if (trimmed) {
+      navigate(`/search?query=${encodeURIComponent(trimmed)}`);
+    }
+  }, [searchQuery, navigate]);
 
   return (
     <header className="bg-white sticky top-0 z-50 shadow">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        
-        {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-green-600">
           🛒 Shanu-Mart
         </Link>
 
-        {/* Search bar */}
-        {isDashboard && (
+        {showSearchBar && (
           <div className="hidden md:flex flex-1 mx-6">
             <input
               type="text"
               placeholder="Search groceries..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-2 border rounded-full outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
         )}
 
-        {/* Right icons */}
         <div className="flex items-center gap-5">
-          
-          {/* Cart */}
           <Link to="/dashboard/cart" className="relative text-green-600 hover:text-green-700">
             <FaShoppingCart size={30} />
             {totalQuantity > 0 && (
@@ -44,12 +53,8 @@ const Header = () => {
             )}
           </Link>
 
-          {/* User - Login / Profile */}
           {!user ? (
-            <Link
-              to="/login"
-              className="flex items-center gap-2 text-green-600 hover:text-green-700"
-            >
+            <Link to="/login" className="flex items-center gap-2 text-green-600 hover:text-green-700">
               <div className="font-semibold">Login</div>
             </Link>
           ) : (
@@ -71,7 +76,6 @@ const Header = () => {
                 <span className="hidden sm:inline text-sm font-medium">{user.userName}</span>
               </Link>
 
-              {/* Logout button */}
               <button
                 onClick={logout}
                 className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded-full"
@@ -83,12 +87,13 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile search */}
-      {isDashboard && (
+      {showSearchBar && (
         <div className="md:hidden px-4 pb-3">
           <input
             type="text"
             placeholder="Search groceries..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>

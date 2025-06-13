@@ -54,6 +54,7 @@ import Exploremore from "./pages/ShopingSection/Exploremore";
 import Arrivals from "./pages/ShopingSection/Arrivals";
 import CategoryPage from "./pages/category/CategoryPage";
 import ChatWidget from "./pages/Home/ChatWidget";
+import SearchResults from "./pages/Search/SearchResults";
 
 // 🆕 User Dashboard Pages (make sure these exist)
 // import Profile from "./pages/Profile";
@@ -75,6 +76,7 @@ const router = createBrowserRouter([
           { path: "forgot-password", element: <Forgotpassword /> },
           { path: "verification-otp", element: <Otpverifiaction /> },
           { path: "reset-password", element: <Resetpassword /> },
+          { path: "search", element: <SearchResults /> },
           { path: "dashboard/cart", element: <CartPage /> },
           { path: "checkout", element: <CheckoutPage /> },
           { path: "whatsappchat",element:ChatWidget},

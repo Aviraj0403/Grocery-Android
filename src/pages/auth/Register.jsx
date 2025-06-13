@@ -15,7 +15,6 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
@@ -27,14 +26,8 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
     if (data.password !== data.confirmPassword) {
       toast.error('Password and confirm password must match');
-      return;
-    }
-
-    if (!/^\d{10}$/.test(data.phoneNumber)) {
-      toast.error('Phone number must be exactly 10 digits');
       return;
     }
 
@@ -42,10 +35,11 @@ const Register = () => {
       const res = await register({
         userName: data.userName,
         email: data.email,
-        phoneNumber: `+91${data.phoneNumber}`, // Add country code
+        phoneNumber: data.phoneNumber,
         password: data.password
       });
 
+      // backend returns 201 on success
       if (res.status === 201) {
         toast.success(res.data.message);
         setData({
@@ -106,26 +100,18 @@ const Register = () => {
             />
           </div>
 
-          {/* Phone Number */}
+          {/* Phone */}
           <div className="grid gap-1">
-            <label htmlFor="phoneNumber">Phone Number:</label>
-            <div className="flex items-center bg-blue-50 p-2 border rounded focus-within:border-green-700">
-              <span className="text-gray-700 pr-2">+91</span>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={data.phoneNumber}
-                onChange={handleChange}
-                onInput={(e) => {
-                  e.target.value = e.target.value.replace(/\D/g, '');
-                }}
-                inputMode="numeric"
-                maxLength={10}
-                placeholder="Enter 10-digit mobile number"
-                className="w-full outline-none bg-blue-50"
-              />
-            </div>
+            <label htmlFor="phoneNumber">Number:</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={data.phoneNumber}
+              onChange={handleChange}
+              placeholder="Enter your number"
+              className="bg-blue-50 p-2 border rounded outline-none focus:border-green-700"
+            />
           </div>
 
           {/* Password */}
@@ -142,7 +128,7 @@ const Register = () => {
                 className="w-full outline-none bg-blue-50"
               />
               <div onClick={() => setShowPassword(p => !p)} className="cursor-pointer">
-                {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                {showPassword ? <FaRegEye/> : <FaRegEyeSlash/>}
               </div>
             </div>
           </div>
@@ -161,7 +147,7 @@ const Register = () => {
                 className="w-full outline-none bg-blue-50"
               />
               <div onClick={() => setShowConfirmPassword(p => !p)} className="cursor-pointer">
-                {showConfirmPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                {showConfirmPassword ? <FaRegEye/> : <FaRegEyeSlash/>}
               </div>
             </div>
           </div>
