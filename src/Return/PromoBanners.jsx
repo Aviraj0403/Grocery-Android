@@ -15,6 +15,7 @@ const banners = [
     cashback: "Max cashback: 2%",
     code: "CARE02",
     img: adbanner,
+    link: "/category/68474771cace49c52299e5d2", // Example link to detergent category
     icon: <FaSprayCan className="text-3xl text-orange-600 mb-2" />,
     hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(255,115,0,0.6)]",
   },

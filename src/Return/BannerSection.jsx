@@ -30,7 +30,7 @@ const banners = [
     iconColor: "text-blue-500",
     bgColor: "bg-blue-50",
     // ✅ Link to detergent category
-    link: "/category/68454f595b1b7564a62a29ec",
+    link: "/category/684b1611bf7dd733103b0c0f",
     hoverShadow: "hover:shadow-[0_6px_25px_-3px_rgba(59,130,246,0.4)]",
   },
 ];
