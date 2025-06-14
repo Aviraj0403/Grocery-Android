@@ -6,9 +6,7 @@ import CategoriesSection from "../category/CategoriesSection.jsx";
 import { Slide, Zoom } from "react-awesome-reveal";
 // import abouticon from "../assets/about.svg";
 import aboutImage from "../../assets/about.svg";
-import adbanner from "../../assets/dio1.png";
-import adbanner1 from "../../assets/skin4.png";
-import adbanner2 from "../../assets/coffe.png";
+
 import ChatWidget from "./ChatWidget"; // adjust path if needed
 
 // import { Zoom } from "react-toastify";
@@ -37,16 +35,6 @@ import PromoBanners from "../../Return/PromoBanners.jsx";
 
 // import logo from '..\assets\logo2.png'
 
-const products = [
-  { id: 1, name: "Apple", price: "70", image: "/images/apple.png" },
-  { id: 2, name: "Milk", price: "60", image: "/images/milk.png" },
-  { id: 3, name: "Bread", price: "50", image: "/images/bread.png" },
-  { id: 4, name: "Carrots", price: "40", image: "/images/carrots.png" },
-  { id: 4, name: "Carrots", price: "40", image: "/images/carrots.png" },
-  { id: 4, name: "Carrots", price: "40", image: "/images/carrots.png" },
-  { id: 4, name: "Carrots", price: "40", image: "/images/carrots.png" },
-  { id: 4, name: "Carrots", price: "40", image: "/images/carrots.png" },
-];
 
 const Home = () => {
   const navigate = useNavigate();

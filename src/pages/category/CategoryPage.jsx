@@ -1,122 +1,138 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const ITEMS_PER_PAGE = 8;
+import axios from "../../utils/Axios";
+import ProductCard from "../Product/ProductCard";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const CategoryPage = () => {
   const { categoryId } = useParams();
-  const [products, setProducts] = useState([]);
   const [categoryName, setCategoryName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [subcategories, setSubcategories] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState("All");
+  const [loading, setLoading] = useState(true);
 
-  // Fetch category details and products
-  const fetchCategoryAndProducts = async () => {
-    try {
+  useEffect(() => {
+    const fetchCategoryData = async () => {
       setLoading(true);
-
-      // Fetch category info (for name, etc.)
-      const catRes = await fetch(`/api/categories/${categoryId}`);
-      const catData = await catRes.json();
-      if (catData.success) {
-        setCategoryName(catData.category.name);
+      try {
+        const res = await axios.get(`/getCategoryDetails/${categoryId}`);
+        setSubcategories(res.data.subcategories);
+        setAllProducts(res.data.products);
+        setFilteredProducts(res.data.products);
+        setCategoryName(res.data.categoryName || "Category");
+      } catch (error) {
+        console.error("Error fetching category details", error);
       }
-
-      // Fetch products by category
-      const productsRes = await fetch(`/api/products?category=${categoryId}`);
-      const productsData = await productsRes.json();
-      if (productsData.success) {
-        setProducts(productsData.products);
-      }
-
       setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      toast.error("Failed to load products.");
+    };
+
+    fetchCategoryData();
+  }, [categoryId]);
+
+  const handleSubcategoryClick = (subId) => {
+    setSelectedSubcategoryId(subId);
+    if (subId === "All") {
+      setFilteredProducts(allProducts);
+    } else {
+      const filtered = allProducts.filter(
+        (product) => product.subCategory === subId
+      );
+      setFilteredProducts(filtered);
     }
   };
 
-  useEffect(() => {
-    fetchCategoryAndProducts();
-    setCurrentPage(1); // Reset page when category changes
-  }, [categoryId]);
-
-  const handleAddToCart = (product) => toast.success(`${product.name} added to cart!`);
-
-  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedProducts = products.slice(startIdx, startIdx + ITEMS_PER_PAGE);
-  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
   return (
-    <>
-      <marquee className="text-sm text-white bg-pink-500 py-2 font-semibold tracking-wide">
-        Distance can never break the bond we share. Happy Raksha Bandhan!
-      </marquee>
-
-      <div className="bg-pink-50 py-10 px-4 relative min-h-screen">
-        <h2 className="text-3xl font-bold text-pink-700 text-center mb-8">{categoryName || "Category"}</h2>
-
-        {loading && (
-          <div className="fixed inset-0 bg-white bg-opacity-60 flex justify-center items-center z-50">
-            <div className="w-10 h-10 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        )}
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {paginatedProducts.map((product) => (
-            <div
-              key={product._id}
-              className="relative bg-white rounded-2xl shadow-md p-4 border border-pink-200 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl flex flex-col items-center"
-            >
-              <button className="absolute top-2 right-2 text-pink-400 hover:text-pink-600 text-xl">❤</button>
-              <img
-                src={product.images && product.images[0] ? product.images[0] : "/images/default.jpg"}
-                alt={product.name}
-                className="w-full h-32 object-cover rounded-xl mb-3"
-              />
-              <h3 className="text-pink-600 font-semibold text-sm mb-1">{product.name}</h3>
-              {/* Show price of active variant */}
-              <p className="text-gray-600 text-sm mb-2">
-                ₹{product.variants && product.variants.length > 0
-                  ? product.variants.find(v => v.unit === product.activeVariant)?.price || product.variants[0].price
-                  : "N/A"}
-              </p>
-              <button
-                onClick={() => handleAddToCart(product)}
-                className="mt-auto bg-pink-500 text-white px-4 py-1 rounded-full text-sm hover:bg-pink-600 transition-colors duration-300"
-              >
-                Add to Cart
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex justify-center mt-8 gap-2">
-          {Array.from({ length: totalPages }).map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => handlePageChange(idx + 1)}
-              disabled={loading}
-              className={`px-3 py-1 rounded-full border ${
-                currentPage === idx + 1
-                  ? "bg-pink-600 text-white"
-                  : "bg-white text-pink-600 border-pink-600"
-              } hover:bg-pink-500 hover:text-white transition-colors duration-300 disabled:opacity-50`}
-            >
-              {idx + 1}
-            </button>
-          ))}
-        </div>
-
-        <ToastContainer position="top-right" />
+    <div className="min-h-screen bg-gray-50 px-6 py-10 md:py-14">
+      {/* Category Heading */}
+      <div className="max-w-3xl mx-auto text-center mb-12">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 capitalize relative inline-block pb-3">
+          {categoryName || "Category"}
+          <span className="block absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-green-500 rounded-full"></span>
+        </h1>
+        <p className="mt-3 text-gray-600 text-lg">
+          Discover the best products under{" "}
+          <strong className="text-green-600">{categoryName}</strong>
+        </p>
       </div>
-    </>
+
+      <div className="flex flex-col lg:flex-row max-w-7xl mx-auto gap-8">
+        {/* Sidebar - Subcategories */}
+        <aside className="w-full lg:w-64">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-6 text-gray-700">Subcategories</h2>
+            <div className="overflow-x-auto lg:overflow-visible">
+              <div className="flex lg:flex-col gap-4 min-w-max lg:min-w-full">
+                {/* All option */}
+                <button
+                  onClick={() => handleSubcategoryClick("All")}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md border transition-shadow duration-300 focus:outline-none focus:ring-2 focus:ring-green-400 ${
+                    selectedSubcategoryId === "All"
+                      ? "bg-green-100 border-green-500 shadow-md"
+                      : "bg-white border-gray-200 hover:shadow hover:bg-gray-50"
+                  }`}
+                >
+                  <img
+                    src="https://via.placeholder.com/40?text=All"
+                    alt="All"
+                    className="w-10 h-10 object-cover rounded-full"
+                    onError={(e) => (e.target.src = "https://via.placeholder.com/40?text=All")}
+                  />
+                  <span className="text-sm font-medium whitespace-nowrap">All</span>
+                </button>
+
+                {/* Subcategories */}
+                {subcategories.map((sub) => (
+                  <button
+                    key={sub._id}
+                    onClick={() => handleSubcategoryClick(sub._id)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-md border transition-shadow duration-300 focus:outline-none focus:ring-2 focus:ring-green-400 ${
+                      selectedSubcategoryId === sub._id
+                        ? "bg-green-100 border-green-500 shadow-md"
+                        : "bg-white border-gray-200 hover:shadow hover:bg-gray-50"
+                    }`}
+                  >
+                    <img
+                      src={sub.image?.[0] || "https://via.placeholder.com/40?text=IMG"}
+                      alt={sub.name}
+                      className="w-10 h-10 object-cover rounded-full"
+                      onError={(e) => (e.target.src = "https://via.placeholder.com/40?text=IMG")}
+                    />
+                    <span className="text-sm font-medium whitespace-nowrap">{sub.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* Product Grid */}
+        <main className="flex-1">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+            {loading
+              ? Array(12)
+                  .fill(0)
+                  .map((_, i) => <Skeleton key={i} height={280} className="rounded-lg" />)
+              : filteredProducts.length === 0 ? (
+                <p className="text-center text-gray-500 col-span-full mt-10">
+                  No products found in this subcategory.
+                </p>
+              ) : (
+                filteredProducts.map((product) => (
+                  <div
+                    key={product._id}
+                    className="transform hover:scale-[1.03] transition-transform duration-300"
+                  >
+                    <ProductCard product={product} />
+                  </div>
+                ))
+              )}
+          </div>
+        </main>
+      </div>
+    </div>
   );
 };
 

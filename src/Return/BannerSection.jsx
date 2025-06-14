@@ -8,30 +8,33 @@ import image2 from "../assets/Surf1.png";
 const BannerSection = () => {
   const navigate = useNavigate();
 
-  const banners = [
-    {
-      id: 1,
-      image: image1,
-      title: "Keep Your Smile Bright",
-      prompt: "✨ Shine brighter every morning – get your oral care essentials today!",
-      icon: FaTooth,
-      iconColor: "text-yellow-500",
-      bgColor: "bg-yellow-50",
-      link: "/toothpaste",
-      hoverShadow: "hover:shadow-[0_6px_25px_-3px_rgba(34,197,94,0.4)]",
-    },
-    {
-      id: 2,
-      image: image2,
-      title: "Clean Clothes, Happy Home",
-      prompt: "🧺 Tough on stains, gentle on clothes – stock up now and save!",
-      icon: FaSoap,
-      iconColor: "text-blue-500",
-      bgColor: "bg-blue-50",
-      link: "/deter",
-      hoverShadow: "hover:shadow-[0_6px_25px_-3px_rgba(59,130,246,0.4)]",
-    },
-  ];
+const banners = [
+  {
+    id: 1,
+    image: image1,
+    title: "Keep Your Smile Bright",
+    prompt: "✨ Shine brighter every morning – get your oral care essentials today!",
+    icon: FaTooth,
+    iconColor: "text-yellow-500",
+    bgColor: "bg-yellow-50",
+    // ✅ Link to toothpaste category
+    link: "/category/68454f595b1b7564a62a29ec",
+    hoverShadow: "hover:shadow-[0_6px_25px_-3px_rgba(34,197,94,0.4)]",
+  },
+  {
+    id: 2,
+    image: image2,
+    title: "Clean Clothes, Happy Home",
+    prompt: "🧺 Tough on stains, gentle on clothes – stock up now and save!",
+    icon: FaSoap,
+    iconColor: "text-blue-500",
+    bgColor: "bg-blue-50",
+    // ✅ Link to detergent category
+    link: "/category/68454f595b1b7564a62a29ec",
+    hoverShadow: "hover:shadow-[0_6px_25px_-3px_rgba(59,130,246,0.4)]",
+  },
+];
+
 
   return (
     <section className="py-6 bg-gray-50">
