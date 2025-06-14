@@ -64,8 +64,8 @@ const Dashboard = () => {
     setDraftProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = async () => {
-  const { firstName, lastName, phoneNumber, avatar, address } = draftProfile;
+const handleSave = async (updatedProfile) => {
+  const { firstName, lastName, phoneNumber, avatar, address } = updatedProfile;
 
   try {
     await updateProfile({
@@ -75,7 +75,9 @@ const Dashboard = () => {
       avatar,
       address
     });
-    setProfile(draftProfile);
+    setProfile(updatedProfile);
+    setDraftProfile(updatedProfile); // <--- Keep UI in sync too
+
     toast.success('Profile updated successfully!');
   } catch (error) {
     console.error('Update failed:', error.response?.data || error.message);
@@ -174,24 +176,27 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen flex bg-green-50">
-      <Sidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        userName={profile.userName}
-        logout={logout}
-      />
+ <Sidebar
+  activeTab={activeTab}
+  setActiveTab={setActiveTab}
+  sidebarOpen={sidebarOpen}
+  setSidebarOpen={setSidebarOpen}
+  userName={`${profile?.firstName || ''} ${profile?.lastName || ''}`.trim()}
+  logout={logout}
+/>
+
+
       <div className="flex-1 flex flex-col">
         <MobileNavbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 p-5">
           {activeTab === 'profile' && (
             <ProfileView
-              profile={profile}
-              avatarPreview={avatarPreview}
-              onAvatarChange={handleAvatarChange}
-              onManageAddresses={openAddressesTab}
-            />
+  profile={draftProfile}
+  avatarPreview={avatarPreview}
+  onAvatarChange={handleAvatarChange}
+  onSave={handleSave}                // ✅ Make sure this is passed
+  onManageAddresses={openAddressesTab}
+/>
           )}
           {activeTab === 'orders' && <Orders />}
           {activeTab === 'settings' && (

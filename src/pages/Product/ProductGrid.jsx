@@ -75,27 +75,26 @@ const { searchQuery, setSearchQuery } = useSearch();
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Categories List */}
       <section className="mb-4">
-        <Zoom>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <div onClick={() => setSelectedCat('All')}>
-              <CategoryCard
-                name="All"
-                img="/path/to/default-all-icon.png"
-                isSelected={selectedCat === 'All'}
-              />
-            </div>
-            {categories.map((cat) => (
-              <div key={cat._id} onClick={() => setSelectedCat(cat._id)}>
-                <CategoryCard
-                  name={cat.name}
-                  img={cat.image[0]}
-                  isSelected={selectedCat === cat._id}
-                />
-              </div>
-            ))}
-          </div>
-        </Zoom>
-      </section>
+  <div className="flex flex-wrap gap-4 justify-center">
+    <div onClick={() => setSelectedCat('All')}>
+      <CategoryCard
+        name="All"
+        img="/path/to/default-all-icon.png"
+        isSelected={selectedCat === 'All'}
+      />
+    </div>
+    {categories.map((cat) => (
+      <div key={cat._id} onClick={() => setSelectedCat(cat._id)}>
+        <CategoryCard
+          name={cat.name}
+          img={cat.image[0]}
+          isSelected={selectedCat === cat._id}
+        />
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* Filter + Search */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 bg-white p-4 rounded-lg shadow-sm">

@@ -27,7 +27,9 @@ const Sidebar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen, userNam
           </button>
           <div className="flex flex-col items-center space-y-2 mt-8 md:mt-0">
             <FaUserCircle className="text-5xl text-green-500" />
-            <h2 className="text-lg font-semibold">Hello, {userName.split(' ')[0]}!</h2>
+            <h2 className="text-lg font-semibold">
+              Hello, {(userName || 'User').split(' ')[0]}!
+            </h2>
           </div>
           <nav className="flex flex-col gap-2 mt-8">
             {menuItems.map((item) => (

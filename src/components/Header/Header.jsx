@@ -86,18 +86,6 @@ const Header = () => {
           )}
         </div>
       </div>
-
-      {showSearchBar && (
-        <div className="md:hidden px-4 pb-3">
-          <input
-            type="text"
-            placeholder="Search groceries..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-      )}
     </header>
   );
 };

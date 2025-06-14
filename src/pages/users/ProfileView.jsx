@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { FaMapMarkerAlt, FaEdit } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const ProfileView = ({ profile, avatarPreview, onAvatarChange, onSave,onManageAddresses }) => {
+const ProfileView = ({ profile, avatarPreview, onAvatarChange, onSave, onManageAddresses }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedProfile, setEditedProfile] = useState({
-    userName: profile.userName,
-    email: profile.email,
-    phoneNumber: profile.phoneNumber,
-  });
+  firstName: profile.firstName || '',
+  lastName: profile.lastName || '',
+  phoneNumber: profile.phoneNumber || '',
+});
 
-  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -22,18 +21,24 @@ const ProfileView = ({ profile, avatarPreview, onAvatarChange, onSave,onManageAd
     setEditedProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSaveClick = () => {
-    onSave(editedProfile);
-    setEditMode(false);
-  };
+const handleSaveClick = async () => {
+  try {
+    await onSave(editedProfile);
+    setEditMode(false); // Only exit edit mode after successful save
+  } catch (err) {
+    console.error('Failed to save profile:', err);
+    // Optionally show a toast or visual error
+  }
+};
+
 
   const toggleEditMode = () => {
     setEditMode(!editMode);
     if (!editMode) {
       setEditedProfile({
-        userName: profile.userName,
-        email: profile.email,
-        phoneNumber: profile.phoneNumber,
+        firstName: profile.firstName || '',
+        lastName: profile.lastName || '',
+        phoneNumber: profile.phoneNumber || '',
       });
     }
   };
@@ -45,7 +50,6 @@ const ProfileView = ({ profile, avatarPreview, onAvatarChange, onSave,onManageAd
         <button
           onClick={toggleEditMode}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-green-700 font-semibold border-2 border-green-700 hover:bg-green-700 hover:text-white transition"
-          aria-label={editMode ? 'Cancel editing' : 'Edit profile info'}
         >
           <FaEdit size={20} />
           {editMode ? 'Cancel' : 'Edit Info'}
@@ -64,8 +68,7 @@ const ProfileView = ({ profile, avatarPreview, onAvatarChange, onSave,onManageAd
             />
             <label
               htmlFor="avatar-upload"
-              className="absolute inset-0 bg-green-700 bg-opacity-70 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white font-semibold text-lg transition cursor-pointer select-none"
-              title="Change avatar"
+              className="absolute inset-0 bg-green-700 bg-opacity-70 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white font-semibold text-lg transition cursor-pointer"
             >
               Change Avatar
             </label>
@@ -80,34 +83,36 @@ const ProfileView = ({ profile, avatarPreview, onAvatarChange, onSave,onManageAd
 
           {/* Editable Fields */}
           <div className="grid sm:grid-cols-2 gap-6 flex-grow text-lg">
-            {['userName', 'email', 'phoneNumber'].map((field) => (
+            {['firstName', 'lastName', 'phoneNumber'].map((field) => (
               <div key={field} className="flex flex-col">
-                <label
-                  htmlFor={field}
-                  className="text-green-600 font-semibold mb-1 select-none"
-                >
-                  {field === 'userName'
-                    ? 'Full Name'
-                    : field === 'email'
-                    ? 'Email Address'
+                <label className="text-green-600 font-semibold mb-1">
+                  {field === 'firstName'
+                    ? 'First Name'
+                    : field === 'lastName'
+                    ? 'Last Name'
                     : 'Phone Number'}
                 </label>
                 {editMode ? (
                   <input
-                    id={field}
                     name={field}
-                    type={field === 'email' ? 'email' : 'text'}
+                    type="text"
                     value={editedProfile[field]}
                     onChange={handleChange}
-                    placeholder={`Enter your ${field === 'userName' ? 'full name' : field}`}
-                    className="border border-green-400 rounded-md p-3 text-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    placeholder={`Enter ${field}`}
+                    className="border border-green-400 rounded-md p-3 text-green-900 focus:outline-none focus:ring-2 focus:ring-green-500"
                     autoComplete="off"
                   />
                 ) : (
-                  <p className="text-green-900 font-medium select-text">{profile[field] || '—'}</p>
+                  <p className="text-green-900 font-medium">{profile[field] || '—'}</p>
                 )}
               </div>
             ))}
+
+            {/* Read-only email */}
+            <div className="flex flex-col">
+              <label className="text-green-600 font-semibold mb-1">Email Address</label>
+              <p className="text-green-900 font-medium select-text">{profile.email}</p>
+            </div>
           </div>
         </div>
 
@@ -117,17 +122,16 @@ const ProfileView = ({ profile, avatarPreview, onAvatarChange, onSave,onManageAd
             <button
               onClick={handleSaveClick}
               className="px-8 py-3 bg-green-700 text-white rounded-xl font-semibold shadow-md hover:bg-green-800 transition"
-              aria-label="Save profile changes"
             >
               Save Changes
             </button>
           </div>
         )}
 
-        {/* Primary Address */}
+        {/* Address */}
         {profile.addresses?.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-2xl font-bold text-green-800 mb-4 flex items-center gap-3 select-none">
+            <h2 className="text-2xl font-bold text-green-800 mb-4 flex items-center gap-3">
               <FaMapMarkerAlt size={26} />
               Primary Address
             </h2>
@@ -150,7 +154,6 @@ const ProfileView = ({ profile, avatarPreview, onAvatarChange, onSave,onManageAd
             <button
               onClick={onManageAddresses}
               className="mt-4 inline-block text-green-700 font-semibold hover:underline text-lg"
-              aria-label="Manage addresses"
             >
               Manage Addresses →
             </button>
