@@ -73,7 +73,7 @@ const Home = () => {
         <div className="flex flex-col justify-center items-center lg:items-start space-y-4">
           <div>
             <h1 className="text-4xl font-bold text-green-800 mb-2 animate-fade-in-up">
-              Welcome to Shanu-Mart
+              Welcome to <span className="text-yellow-500">Shanu-</span>Mart
             </h1>
             <p className="text-lg text-green-700 max-w-xl animate-fade-in-up delay-100">
               Grab Your First Order From Shanu Mart &{" "}

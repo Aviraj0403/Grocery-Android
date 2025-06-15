@@ -23,7 +23,7 @@ const HeroBanner = () => {
         <h1 className="whitespace-nowrap overflow-hidden text-ellipsis text-[clamp(1.75rem,6vw,3.5rem)] font-extrabold text-green-900 mb-6 tracking-tight leading-tight drop-shadow-xl">
           <Slide direction="right">
             <span className="inline-block animate-glow-text">
-              {heroData.title}
+              Welcome to <span className="text-yellow-500">Shanu-</span>Mart
             </span>
           </Slide>
         </h1>
