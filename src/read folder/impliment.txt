@@ -1,5 +1,0 @@
-1- add the section which i upload and update my profile pic and avtar for parmanently,
-2 - add the section of saved adress where user saved his adress 
-3 - add the section of cupons when admin share his offer then he will impliment or use in future
-4 - add wishlist for user, where user add his own fav product there and browse whenever his/her need 
-5- 

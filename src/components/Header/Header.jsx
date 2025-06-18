@@ -28,7 +28,7 @@ const Header = () => {
     <header className="bg-white sticky top-0 z-50 shadow">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="text-2xl font-bold text-green-600">
-          🛒 Shanu-Mart
+          🛒  <span className="text-yellow-500">Shanu-</span>Mart
         </Link>
 
         {showSearchBar && (
