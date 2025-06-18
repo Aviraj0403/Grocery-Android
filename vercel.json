@@ -9,6 +9,10 @@
       "destination": "/files/$1"
     },
     {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
       "source": "/(.*)",
       "destination": "/"
     }
