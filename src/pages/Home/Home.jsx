@@ -85,7 +85,7 @@ const Home = () => {
           <Link to="#">
             <button
               className="bg-green-600 hover:bg-green-700 text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md animate-fade-in-up delay-200"
-              onClick={() => navigate("grab")}
+              onClick={() => navigate("/category/684dc612f21525212b194366")}
             >
               Grab Your First Order Here
             </button>
@@ -143,7 +143,7 @@ const Home = () => {
 
       {/* <div className="scroll-to-top bg-green-500">
     <button className="scroll-to-top-button show">↑</button>
-  </div> */}
+  </div> 
 
       {/* Call to Action */}
       <StayUpdated/>

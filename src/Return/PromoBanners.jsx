@@ -15,7 +15,7 @@ const banners = [
     cashback: "Max cashback: 2%",
     code: "CARE02",
     img: adbanner,
-    link: "/category/68474771cace49c52299e5d2", // Example link to detergent category
+    link: "/category/684dc29ff21525212b194314", // Example link to detergent category
     icon: <FaSprayCan className="text-3xl text-orange-600 mb-2" />,
     hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(255,115,0,0.6)]",
   },
@@ -24,6 +24,7 @@ const banners = [
     bgColor: "bg-yellow-200",
     title: "Glow Naturally Shop Skincare at Shanumart!",
     img: adbanner1,
+    link:"/category/68474771cace49c52299e5d2",
     icon: <FaLeaf className="text-3xl text-yellow-700 mb-2" />,
     hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(234,179,8,0.6)]",
   },
@@ -33,6 +34,7 @@ const banners = [
     title: "Have Great Day with Shanumart Tea 🐄!",
     code: "CARE12",
     img: adbanner2,
+    link:"/category/684580bb5b1b7564a62a37ce",
     icon: <FaMugHot className="text-3xl text-green-700 mb-2" />,
     hoverShadow: "hover:shadow-[0_10px_15px_-3px_rgba(34,197,94,0.6)]",
   },
@@ -62,7 +64,7 @@ const PromoBanners = () => {
                   <Link
                     to="#"
                     onClick={() => navigate(banner.link)}
-                    className="bg-slate-700 text-white px-4 py-2 rounded hover:bg-white hover:text-orange-300 transition-all duration-700"
+                    className="bg-slate-700 text-white px-4 py-2 rounded-full hover:bg-white hover:text-orange-300 transition-all duration-700"
                   >
                     Shop Now
                   </Link>

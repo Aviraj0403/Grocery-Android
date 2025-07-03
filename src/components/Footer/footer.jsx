@@ -108,7 +108,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="font-semibold text-green-700 dark:text-green-400 hover:underline"
           >
-            Webla
+            Webala
           </a>
         </div>
       </div>

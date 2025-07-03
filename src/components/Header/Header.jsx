@@ -1,21 +1,20 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
-import { useAuth } from '../../context/AuthContext';
-import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { useAuth } from "../../context/AuthContext";
+import { useState, useEffect } from "react";
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const items = useSelector((state) => state.cart.items || []);
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const showSearchBar =
-    location.pathname === '/' ||
-    location.pathname === '/dashboard/cart' ;
+    location.pathname === "/" || location.pathname === "/dashboard/cart";
   // Navigate immediately when typing (with trim)
   useEffect(() => {
     const trimmed = searchQuery.trim();
@@ -27,8 +26,12 @@ const Header = () => {
   return (
     <header className="bg-white sticky top-0 z-50 shadow">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-green-600">
-          🛒  <span className="text-yellow-500">Shanu-</span>Mart
+        <Link
+          to="/"
+          className="text-2xl font-bold text-green-600 flex items-center gap-1"
+        >
+          <FaShoppingCart className="text-yellow-500" />
+          <span className="text-yellow-500">Shanu-</span>Mart
         </Link>
 
         {showSearchBar && (
@@ -44,7 +47,10 @@ const Header = () => {
         )}
 
         <div className="flex items-center gap-5">
-          <Link to="/dashboard/cart" className="relative text-green-600 hover:text-green-700">
+          <Link
+            to="/dashboard/cart"
+            className="relative text-green-600 hover:text-green-700"
+          >
             <FaShoppingCart size={30} />
             {totalQuantity > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
@@ -54,7 +60,10 @@ const Header = () => {
           </Link>
 
           {!user ? (
-            <Link to="/login" className="flex items-center gap-2 text-green-600 hover:text-green-700">
+            <Link
+              to="/login"
+              className="flex items-center gap-2 text-green-600 hover:text-green-700"
+            >
               <div className="font-semibold">Login</div>
             </Link>
           ) : (
@@ -73,7 +82,9 @@ const Header = () => {
                 ) : (
                   <FaUserCircle size={30} />
                 )}
-                <span className="hidden sm:inline text-sm font-medium">{user.userName}</span>
+                <span className="hidden sm:inline text-sm font-medium">
+                  {user.userName}
+                </span>
               </Link>
 
               <button
