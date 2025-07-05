@@ -17,7 +17,7 @@ const BannerSection = () => {
       icon: FaTooth,
       iconColor: "text-yellow-500",
       bgColor: "bg-yellow-50",
-      link: "/category/684b1611bf7dd733103b0c0f",
+      link: "/category/6868c7ef1f4f1ee21d3fdba7",
       hoverShadow: "hover:shadow-[0_6px_25px_-3px_rgba(34,197,94,0.4)]",
     },
     {

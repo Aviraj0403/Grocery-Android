@@ -7,7 +7,7 @@ const heroData = {
   subtitle:
     "Discover fresh groceries, daily deals, and quick delivery — all at your footstep!",
   buttonText: "Shop Now",
-  buttonLink: "/shopnow",
+  buttonLink: "/category/68642b881f4f1ee21d3fd511",
 };
 
 const HeroBanner = () => {

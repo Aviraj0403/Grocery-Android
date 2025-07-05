@@ -12,10 +12,10 @@ const Contact = () => {
           We’re here to help — anytime, anywhere!
         </p>
         <p className="text-gray-700 text-lg mb-2">
-          📞 <a href="tel:7352205506" className="text-yellow-600 hover:underline">7352205506</a>
+          📞 <a href="tel:7352205506" className="text-yellow-600 hover:underline">91-8757561623</a>
         </p>
         <p className="text-gray-700 text-lg mb-6">
-          📧 <a href="mailto:tiwarisunny7352@gmail.com" className="text-yellow-600 hover:underline">tiwarisunny7352@gmail.com</a>
+          📧 <a href="mailto:tiwarisunny7352@gmail.com" className="text-yellow-600 hover:underline">shanu@shanumart.in</a>
         </p>
         <p className="text-gray-600 text-base">
           If you have any problem, don't hesitate to contact us. We are available <strong>24/7</strong> for your help!

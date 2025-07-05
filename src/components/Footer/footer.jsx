@@ -67,7 +67,7 @@ const Footer = () => {
             </li>
             <li className="flex items-center gap-2">
               <FaEnvelope />
-              <a href="mailto:support@shanumart.com" className="hover:underline">support@shanumart.com</a>
+              <a href="mailto:support@shanumart.com" className="hover:underline">shanu@shanumart.in</a>
             </li>
           </ul>
         </div>
@@ -101,7 +101,7 @@ const Footer = () => {
       <div className="text-center text-sm mt-10 border-t border-green-200 dark:border-green-700 pt-4">
         &copy; {new Date().getFullYear()} Shanu-Mart. All rights reserved.
         <div className="mt-1 text-xs text-gray-600 dark:text-gray-400 animate-pulse">
-          Co-powered by{" "}
+          powered by{" "}
           <a
             href="https://portfolio-react-xi-mauve.vercel.app/"
             target="_blank"
